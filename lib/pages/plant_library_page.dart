@@ -10,13 +10,8 @@ class PlantLibraryPage extends StatefulWidget {
 class _PlantLibraryPageState extends State<PlantLibraryPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Plant Library Page'),
-      ),
-      body: Center(
-        child: Text('Plant Library Page'),
-      ),
+    return Center(
+      child: Text('Plant Library Page'),
     );
   }
 }
