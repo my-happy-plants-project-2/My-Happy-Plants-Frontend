@@ -9,13 +9,9 @@ class LoginPage extends StatelessWidget {
       body: Center(
         child: ElevatedButton(
           onPressed: () {
-            Navigator.pushNamed(context, '/my_plants_page');
+            Navigator.pushNamed(context, '/home_page');
           },
-          child: Text(
-            'Login',
-            style:
-                TextStyle(color: Theme.of(context).colorScheme.inversePrimary),
-          ),
+          child: Text('Login'),
         ),
       ),
     );
