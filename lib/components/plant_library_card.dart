@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:my_happy_plants_flutter/components/plant_library_addbutton.dart';
 import 'package:my_happy_plants_flutter/components/plant_library_image.dart';
 import 'package:my_happy_plants_flutter/model/plant.dart';
 
 class PlantLibraryCard extends StatelessWidget {
   final Plant plant;
-  const PlantLibraryCard({super.key, required this.plant});
+  PlantLibraryCard({super.key, required this.plant});
+
+  final _controller =
+      TextEditingController(); //Här får vi tillgång till namnet vi gett plantan
 
   @override
   Widget build(BuildContext context) {
@@ -71,12 +75,31 @@ class PlantLibraryCard extends StatelessWidget {
     );
   }
 
+  //Save a plant name that user put in
+  void saveNewPlantName() {
+    //Här ska skrivas det som sparas till en planta och sen vidare till databasen
+  }
+
+  void giveSpecificPlantName(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return PlantLibraryAddbutton(
+          controller: _controller,
+          plant: plant,
+          onSave: saveNewPlantName,
+          onCancel: () => Navigator.of(context).pop(),
+        );
+      },
+    );
+  }
+
   Widget _buildAddButton(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         IconButton(
-          onPressed: () {},
+          onPressed: () => giveSpecificPlantName(context),
           icon: Icon(
             Icons.add,
             size: 40,
