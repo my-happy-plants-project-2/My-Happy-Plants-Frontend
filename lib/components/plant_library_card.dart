@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_happy_plants_flutter/components/custom_icon_button.dart';
 import 'package:my_happy_plants_flutter/components/plant_library_addbutton.dart';
 import 'package:my_happy_plants_flutter/components/plant_library_image.dart';
 import 'package:my_happy_plants_flutter/model/plant.dart';
@@ -14,7 +15,7 @@ class PlantLibraryCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: 450,
-      height: 530,
+      height: 500,
       child: Container(
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
@@ -45,7 +46,14 @@ class PlantLibraryCard extends StatelessWidget {
                 ..._buildPlantInfo(context),
               ],
             ),
-            _buildAddButton(context),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                CustomIconButton(
+                    icon: Icons.add,
+                    onPressed: () => giveSpecificPlantName(context)),
+              ],
+            )
           ],
         ),
       ),
@@ -84,34 +92,16 @@ class PlantLibraryCard extends StatelessWidget {
     showDialog(
       context: context,
       builder: (context) {
-        return PlantLibraryAddbutton(
+        return PlantLibraryAddDialog(
           controller: _controller,
           plant: plant,
           onSave: saveNewPlantName,
-          onCancel: () => Navigator.of(context).pop(),
+          onCancel: () {
+            _controller.clear();
+            Navigator.pop(context);
+          },
         );
       },
-    );
-  }
-
-  Widget _buildAddButton(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        IconButton(
-          onPressed: () => giveSpecificPlantName(context),
-          icon: Icon(
-            Icons.add,
-            size: 40,
-            color: Theme.of(context).colorScheme.onSurface,
-          ),
-          style: ButtonStyle(
-            backgroundColor: WidgetStatePropertyAll(
-              Colors.white.withAlpha(100),
-            ),
-          ),
-        ),
-      ],
     );
   }
 }
