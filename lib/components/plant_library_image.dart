@@ -61,7 +61,7 @@ class PlantImage extends StatelessWidget {
           const SizedBox(width: 3),
           _buildIndicator(
             icon: Icons.water_drop,
-            color: Colors.blue.shade900,
+            color: Colors.blue.shade700.withAlpha(200),
             value: plant.waterFrequency.toString(),
           ),
         ],

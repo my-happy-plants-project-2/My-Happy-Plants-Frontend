@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:my_happy_plants_flutter/components/plant_library_savecancelbutton.dart';
+import 'package:my_happy_plants_flutter/components/custom_text_button.dart';
 import 'package:my_happy_plants_flutter/model/plant.dart';
 
-class PlantLibraryAddbutton extends StatelessWidget {
-  final controller;
+class PlantLibraryAddDialog extends StatelessWidget {
+  final TextEditingController controller;
   final Plant plant;
   final VoidCallback onSave;
   final VoidCallback onCancel;
 
-  PlantLibraryAddbutton({
+  const PlantLibraryAddDialog({
     super.key,
     required this.controller,
     required this.plant,
@@ -35,7 +35,8 @@ class PlantLibraryAddbutton extends StatelessWidget {
             TextField(
               controller: controller,
               decoration: InputDecoration(
-                border: OutlineInputBorder(),
+                border:
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
                 hintText: "Fill in a name for your plant!",
               ),
             ),
@@ -44,10 +45,9 @@ class PlantLibraryAddbutton extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                PlantLibrarySavecancelbutton(text: "Save", onPressed: onSave),
+                CustomTextButton(text: "Save", onPressed: onSave),
                 const SizedBox(width: 5),
-                PlantLibrarySavecancelbutton(
-                    text: "Cancel", onPressed: onCancel),
+                CustomTextButton(text: "Cancel", onPressed: onCancel),
               ],
             ),
           ],
@@ -80,6 +80,7 @@ class PlantLibraryAddbutton extends StatelessWidget {
     );
   }
 
+/*
   Widget _buildIndicator({
     required IconData icon,
     required Color color,
@@ -99,4 +100,5 @@ class PlantLibraryAddbutton extends StatelessWidget {
       ],
     );
   }
+  */
 }
