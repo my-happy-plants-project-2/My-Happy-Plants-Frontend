@@ -4,6 +4,7 @@ import 'package:my_happy_plants_flutter/components/plant_library_addbutton.dart'
 import 'package:my_happy_plants_flutter/components/plant_library_image.dart';
 import 'package:my_happy_plants_flutter/model/plant.dart';
 
+// Card widget displaying plant information for some pre-set plants, with add to your own plants function
 class PlantLibraryCard extends StatelessWidget {
   final Plant plant;
   PlantLibraryCard({super.key, required this.plant});
@@ -60,6 +61,7 @@ class PlantLibraryCard extends StatelessWidget {
     );
   }
 
+  //Generates plant information as a row
   List<Widget> _buildPlantInfo(BuildContext context) {
     return [
       _buildInfoRow('Sci. name:', plant.scientificName),
@@ -69,6 +71,7 @@ class PlantLibraryCard extends StatelessWidget {
     ];
   }
 
+  //Creates a single information row with label and value
   Widget _buildInfoRow(String label, String value) {
     return Align(
       alignment: Alignment.centerLeft,
@@ -86,8 +89,10 @@ class PlantLibraryCard extends StatelessWidget {
   //Save a plant name that user put in
   void saveNewPlantName() {
     //Här ska skrivas det som sparas till en planta och sen vidare till databasen
+    //Det är i själva _controller den biten sparas och tanken är att det ska skickas till en post-endpoint
   }
 
+  //Shows dialog for specifying plant nickname, and what to do when pressing save/cancel
   void giveSpecificPlantName(BuildContext context) {
     showDialog(
       context: context,

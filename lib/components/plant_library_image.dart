@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:my_happy_plants_flutter/model/plant.dart';
 
+//Displays plant image with water and light indicators
 class PlantImage extends StatelessWidget {
   final Plant plant;
   const PlantImage({super.key, required this.plant});
@@ -33,7 +34,7 @@ class PlantImage extends StatelessWidget {
               const SizedBox(height: 15),
             ],
           ),
-          // Indikatorer
+          // Indicators
           Positioned(
             top: 12,
             right: 12,
@@ -44,6 +45,7 @@ class PlantImage extends StatelessWidget {
     );
   }
 
+  //Builds container for sun and water indicators
   Widget _buildIndicatorContainer() {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
@@ -69,6 +71,7 @@ class PlantImage extends StatelessWidget {
     );
   }
 
+  //creates a single indicator with icon and value
   Widget _buildIndicator({
     required IconData icon,
     required Color color,
