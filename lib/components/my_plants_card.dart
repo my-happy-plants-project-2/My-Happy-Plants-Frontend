@@ -131,6 +131,7 @@ class MyPlantsCard extends StatelessWidget {
     );
   }
 
+  // Helper method to build the Image button section
   Widget _buildCustomImageButton(
     BuildContext context, {
     required Widget child,
