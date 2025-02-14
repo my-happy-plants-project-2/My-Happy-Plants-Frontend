@@ -45,7 +45,8 @@ class PlantLibraryCard extends StatelessWidget {
                   color: Theme.of(context).colorScheme.onSurface,
                   thickness: 2,
                 ),
-                ..._buildPlantInfo(context),
+                ..._buildPlantInfo(
+                    context), // function returns a list of widgets and the ... is used to spread the list into individual widgets
               ],
             ),
             Row(

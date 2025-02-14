@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:my_happy_plants_flutter/components/my_plants_card.dart';
 import 'package:my_happy_plants_flutter/model/plant.dart';
 
+//@author Filip Claesson, Pehr Norten
 class MyPlantsPage extends StatefulWidget {
   MyPlantsPage({super.key});
 

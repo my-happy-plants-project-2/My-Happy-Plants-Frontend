@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
+//@author Pehr Norten
 class CustomIconButton extends StatelessWidget {
   final IconData icon;
-  final VoidCallback onPressed;
+  final void Function() onPressed;
 
   const CustomIconButton({
     super.key,

@@ -1,3 +1,4 @@
+//@author Filip Claesson, Pehr Norten
 class Plant {
   final String plantId;
   final String commonName;
