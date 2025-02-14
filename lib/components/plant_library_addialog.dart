@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:my_happy_plants_flutter/components/custom_text_button.dart';
 import 'package:my_happy_plants_flutter/model/plant.dart';
 
+//Dialog for adding a new plant to your own plants with a custom name
+//@author Filip Claesson, Pehr Norten
 class PlantLibraryAddDialog extends StatelessWidget {
   final TextEditingController controller;
   final Plant plant;
@@ -37,7 +39,7 @@ class PlantLibraryAddDialog extends StatelessWidget {
               decoration: InputDecoration(
                 border:
                     OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                hintText: "Fill in a name for your plant!",
+                hintText: "Input a nickname...",
               ),
             ),
             const SizedBox(height: 15),
@@ -56,6 +58,7 @@ class PlantLibraryAddDialog extends StatelessWidget {
     );
   }
 
+  //Builds the image in the dialog section with a plant image of the specific plant u pressed the add button for
   Widget _buildImageSection(BuildContext context) {
     return Container(
       height: 120,
@@ -79,26 +82,4 @@ class PlantLibraryAddDialog extends StatelessWidget {
       ),
     );
   }
-
-/*
-  Widget _buildIndicator({
-    required IconData icon,
-    required Color color,
-    required String value,
-  }) {
-    return Row(
-      children: [
-        Icon(icon, color: color, size: 20),
-        const SizedBox(width: 2),
-        Text(
-          value,
-          style: const TextStyle(
-            fontSize: 16,
-            fontFamily: 'Merienda',
-          ),
-        ),
-      ],
-    );
-  }
-  */
 }
