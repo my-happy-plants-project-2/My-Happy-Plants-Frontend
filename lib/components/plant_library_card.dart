@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:my_happy_plants_flutter/components/custom_icon_button.dart';
-import 'package:my_happy_plants_flutter/components/plant_library_addbutton.dart';
+import 'package:my_happy_plants_flutter/components/plant_library_addialog.dart';
 import 'package:my_happy_plants_flutter/components/plant_library_image.dart';
 import 'package:my_happy_plants_flutter/model/plant.dart';
 
 // Card widget displaying plant information for some pre-set plants, with add to your own plants function
+// @author Filip Claesson, Pehr Norten
 class PlantLibraryCard extends StatelessWidget {
   final Plant plant;
   PlantLibraryCard({super.key, required this.plant});
@@ -87,6 +88,7 @@ class PlantLibraryCard extends StatelessWidget {
   }
 
   //Save a plant name that user put in
+  //TO DO:
   void saveNewPlantName() {
     //Här ska skrivas det som sparas till en planta och sen vidare till databasen
     //Det är i själva _controller den biten sparas och tanken är att det ska skickas till en post-endpoint
