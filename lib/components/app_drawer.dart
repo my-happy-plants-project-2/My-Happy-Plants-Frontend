@@ -36,10 +36,8 @@ class AppDrawer extends StatelessWidget {
               ListTile(
                 title: const Text('My Plants'),
                 leading: const Icon(Icons.local_florist),
-                textColor:
-                    Theme.of(context).colorScheme.onSurface, // Use onSurface
-                iconColor:
-                    Theme.of(context).colorScheme.onSurface, // Use onSurface
+                textColor: Theme.of(context).colorScheme.onSurface,
+                iconColor: Theme.of(context).colorScheme.onSurface,
                 selectedColor: Theme.of(context).colorScheme.secondary,
                 selected: selectedIndex == 0,
                 onTap: () {
@@ -50,10 +48,8 @@ class AppDrawer extends StatelessWidget {
               ListTile(
                 title: const Text('Plant Library'),
                 leading: const Icon(Icons.library_add),
-                textColor:
-                    Theme.of(context).colorScheme.onSurface, // Use onSurface
-                iconColor:
-                    Theme.of(context).colorScheme.onSurface, // Use onSurface
+                textColor: Theme.of(context).colorScheme.onSurface,
+                iconColor: Theme.of(context).colorScheme.onSurface,
                 selectedColor: Theme.of(context).colorScheme.secondary,
                 selected: selectedIndex == 1,
                 onTap: () {
@@ -64,10 +60,8 @@ class AppDrawer extends StatelessWidget {
               ListTile(
                 title: const Text('Settings'),
                 leading: const Icon(Icons.settings),
-                textColor:
-                    Theme.of(context).colorScheme.onSurface, // Use onSurface
-                iconColor:
-                    Theme.of(context).colorScheme.onSurface, // Use onSurface
+                textColor: Theme.of(context).colorScheme.onSurface,
+                iconColor: Theme.of(context).colorScheme.onSurface,
                 selectedColor: Theme.of(context).colorScheme.secondary,
                 selected: selectedIndex == 2,
                 onTap: () {
@@ -85,13 +79,11 @@ class AppDrawer extends StatelessWidget {
                 ListTile(
                   title: const Text('Logout'),
                   leading: const Icon(Icons.logout),
-                  textColor:
-                      Theme.of(context).colorScheme.onSurface, // Use onSurface
-                  iconColor:
-                      Theme.of(context).colorScheme.onSurface, // Use onSurface
+                  textColor: Theme.of(context).colorScheme.onSurface,
+                  iconColor: Theme.of(context).colorScheme.onSurface,
                   selectedColor: Theme.of(context).colorScheme.secondary,
                   onTap: () {
-                    Navigator.pushNamed(context, '/login_page');
+                    Navigator.pushReplacementNamed(context, '/login_page');
                   },
                 ),
               ],
