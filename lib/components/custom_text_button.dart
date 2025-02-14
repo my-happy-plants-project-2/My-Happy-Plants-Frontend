@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-// @Author Filip Claesson, Pehr Norten
+// @Author Filip Claesson, Pehr Nortén
 // A customizable text button with consistent styling for the application, to make the buttons in the app look the same
 class CustomTextButton extends StatelessWidget {
   final String text;

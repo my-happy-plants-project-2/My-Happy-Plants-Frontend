@@ -4,8 +4,8 @@ import 'package:my_happy_plants_flutter/components/plant_library_addialog.dart';
 import 'package:my_happy_plants_flutter/components/plant_library_image.dart';
 import 'package:my_happy_plants_flutter/model/plant.dart';
 
+// @Author Filip Claesson, Pehr Nortén
 // Card widget displaying plant information for some pre-set plants, with add to your own plants function
-// @author Filip Claesson, Pehr Norten
 class PlantLibraryCard extends StatelessWidget {
   final Plant plant;
   PlantLibraryCard({super.key, required this.plant});

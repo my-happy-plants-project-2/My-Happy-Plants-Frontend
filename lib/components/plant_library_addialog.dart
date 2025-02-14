@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:my_happy_plants_flutter/components/custom_text_button.dart';
 import 'package:my_happy_plants_flutter/model/plant.dart';
 
+// @Author Filip Claesson, Pehr Nortén
 //Dialog for adding a new plant to your own plants with a custom name
-//@author Filip Claesson, Pehr Norten
 class PlantLibraryAddDialog extends StatelessWidget {
   final TextEditingController controller;
   final Plant plant;
