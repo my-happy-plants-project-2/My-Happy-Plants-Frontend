@@ -39,11 +39,11 @@ class PlantLibraryAddDialog extends StatelessWidget {
               decoration: InputDecoration(
                 border:
                     OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                hintText: "Input a nickname...",
+                hintText: "Input nickname...",
               ),
             ),
             const SizedBox(height: 15),
-            // Buttons -> Save + cancel
+            // Save and cancel buttons in a row
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [

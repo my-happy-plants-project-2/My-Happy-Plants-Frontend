@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+//@author Filip Claesson, Pehr Norten
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+//@author Pehr Norten
 class WaterBar extends StatelessWidget {
   final double value; // Value between 0.0 and 1.0
   const WaterBar({super.key, required this.value});

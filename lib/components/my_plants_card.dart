@@ -5,6 +5,7 @@ import 'package:my_happy_plants_flutter/components/custom_icon_button.dart';
 import 'package:my_happy_plants_flutter/components/water_bar.dart';
 import 'package:my_happy_plants_flutter/model/plant.dart';
 
+//@author Pehr Norten
 class MyPlantsCard extends StatelessWidget {
   final Plant plant;
 

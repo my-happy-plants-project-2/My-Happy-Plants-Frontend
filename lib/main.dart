@@ -4,6 +4,7 @@ import 'package:my_happy_plants_flutter/pages/login_page.dart';
 import 'package:my_happy_plants_flutter/pages/home_page.dart';
 import 'package:my_happy_plants_flutter/themes/light_mode.dart';
 
+//@author Filip Claesson, Pehr Norten
 void main() {
   runApp(const MyApp());
 }
@@ -24,7 +25,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: const LoginPage(),
-      theme: lightMode,
+      theme: lightMode, // Import the lightMode ThemeData from light_mode.dart
       routes: {
         '/login_page': (context) => const LoginPage(),
         '/home_page': (context) => const HomePage(),

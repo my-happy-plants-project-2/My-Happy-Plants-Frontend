@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-// A customizable text button with consistent styling for the application, to make the buttons in the app look the same
 // @Author Filip Claesson, Pehr Norten
+// A customizable text button with consistent styling for the application, to make the buttons in the app look the same
 class CustomTextButton extends StatelessWidget {
   final String text;
-  final VoidCallback onPressed;
+  final void Function() onPressed;
 
   const CustomTextButton({
     super.key,
@@ -23,6 +23,7 @@ class CustomTextButton extends StatelessWidget {
         foregroundColor: WidgetStateProperty.all<Color>(
           Theme.of(context).colorScheme.onSurface,
         ),
+        // Cutom shape with border
         shape: WidgetStateProperty.all<RoundedRectangleBorder>(
           RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),

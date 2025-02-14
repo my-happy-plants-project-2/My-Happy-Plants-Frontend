@@ -4,6 +4,7 @@ import 'package:my_happy_plants_flutter/pages/my_plants_page.dart';
 import 'package:my_happy_plants_flutter/pages/plant_library_page.dart';
 import 'package:my_happy_plants_flutter/pages/settings_page.dart';
 
+//@author Filip Claesson, Pehr Norten
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 

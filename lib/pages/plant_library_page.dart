@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:my_happy_plants_flutter/components/plant_library_card.dart';
 import 'package:my_happy_plants_flutter/model/plant.dart';
 
+//@author Filip Claesson, Pehr Norten
 //Main page for the plantlibrary
 class PlantLibraryPage extends StatefulWidget {
   PlantLibraryPage({super.key});
