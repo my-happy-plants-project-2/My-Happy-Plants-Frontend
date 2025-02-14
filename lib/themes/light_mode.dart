@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-//@author Filip Claesson, Pehr Norten
+// @Author Filip Claesson, Pehr Nortén
 ThemeData lightMode = ThemeData(
   colorScheme: ColorScheme.light(
     primary: Color.fromARGB(255, 122, 162, 79), // Primary color (green)

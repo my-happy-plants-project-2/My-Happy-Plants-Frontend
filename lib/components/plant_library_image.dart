@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:my_happy_plants_flutter/model/plant.dart';
 
+// @Author Filip Claesson, Pehr Nortén
 //Displays plant image with water and light indicators
-//@author Filip Claesson, Pehr Norten
 class PlantImage extends StatelessWidget {
   final Plant plant;
   const PlantImage({super.key, required this.plant});

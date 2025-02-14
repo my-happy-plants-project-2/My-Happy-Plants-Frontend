@@ -4,7 +4,7 @@ import 'package:my_happy_plants_flutter/pages/login_page.dart';
 import 'package:my_happy_plants_flutter/pages/home_page.dart';
 import 'package:my_happy_plants_flutter/themes/light_mode.dart';
 
-//@author Filip Claesson, Pehr Norten
+// @Author Filip Claesson, Pehr Nortén
 void main() {
   runApp(const MyApp());
 }

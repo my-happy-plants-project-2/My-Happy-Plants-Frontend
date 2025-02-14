@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-//@author Filip Claesson, Pehr Norten
+// @Author Filip Claesson, Pehr Nortén
 class AppDrawer extends StatelessWidget {
   final int selectedIndex;
   final Function(int) onItemTapped;
