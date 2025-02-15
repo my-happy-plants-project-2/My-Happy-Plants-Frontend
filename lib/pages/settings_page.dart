@@ -18,6 +18,7 @@ class _SettingsPageState extends State<SettingsPage> {
 }*/
 
 //TA BORT ALL KOD NEDANFÖR HÄR NÄR NI VILL JOBBA I SETTINGS OCH KONVERTERA IN DET OVAN, ALTERNATIVT KOLLA MED DEVGRUPP FÖR SPRINT 1
+//@author Rick Astley
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:webview_windows/webview_windows.dart';
