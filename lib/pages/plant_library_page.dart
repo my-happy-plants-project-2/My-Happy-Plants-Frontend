@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:my_happy_plants_flutter/components/plant_library_card.dart';
 import 'package:my_happy_plants_flutter/model/plant.dart';
+import 'package:provider/provider.dart';
+
+import '../providers/plant_provider.dart';
 
 //@author Filip Claesson, Pehr Norten
 //Main page for the plantlibrary
@@ -149,6 +152,11 @@ class PlantLibraryPage extends StatefulWidget {
 
 class _PlantLibraryPageState extends State<PlantLibraryPage> {
   @override
+  void initState() {
+    super.initState();
+    final plantProvider = Provider.of<PlantProvider>(context, listen: false);
+    plantProvider.fillLibraryList(widget.plants);
+  }
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface.withAlpha(200),

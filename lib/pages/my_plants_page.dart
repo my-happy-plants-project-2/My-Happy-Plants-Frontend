@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:my_happy_plants_flutter/components/my_plants_card.dart';
 import 'package:my_happy_plants_flutter/model/plant.dart';
+import 'package:provider/provider.dart';
+
+import '../providers/plant_provider.dart';
 
 //@author Filip Claesson, Pehr Norten
 class MyPlantsPage extends StatefulWidget {
   MyPlantsPage({super.key});
 
-  final List<Plant> plants = [
+  List<Plant> plants = [
     Plant(
       plantId: '1',
       commonName: 'Devil\'s Ivy',
@@ -141,25 +144,39 @@ class MyPlantsPage extends StatefulWidget {
     ),
   ];
 
+void remakeplantlist(List<Plant> newPlants) {
+  plants = newPlants;
+}
   @override
   State<MyPlantsPage> createState() => _MyPlantsPageState();
 }
 
 class _MyPlantsPageState extends State<MyPlantsPage> {
   @override
+  void initState() {
+    super.initState();
+    final plantProvider = Provider.of<PlantProvider>(context, listen: false);
+    plantProvider.fillUserList(widget.plants);
+  }
+
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(12),
-        child: Center(
-          child: Wrap(
-            spacing: 8.0, // Horizontal spacing between items
-            runSpacing: 8.0, // Vertical spacing between items
-            alignment: WrapAlignment.start, // Center the items
-            children: List.generate(widget.plants.length, (index) {
-              return MyPlantsCard(plant: widget.plants[index]);
-            }),
-          ),
+        child: Consumer<PlantProvider>(
+          builder: (context, plantProvider, child) {
+            return Wrap(
+              spacing: 8.0,
+              runSpacing: 8.0,
+              alignment: WrapAlignment.start,
+              children: List.generate(
+                plantProvider.userPlants.length,
+                    (index) {
+                  return MyPlantsCard(plant: plantProvider.userPlants[index]);
+                },
+              ),
+            );
+          },
         ),
       ),
     );
