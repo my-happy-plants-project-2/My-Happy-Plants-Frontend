@@ -22,6 +22,7 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="ROOT_SYNC" value="DONT_SYNC" />
   </component>
   <component name="InvalidFacetManager">
     <ignored-facets>
@@ -90,6 +91,7 @@
       <workItem from="1740074628838" duration="140000" />
       <workItem from="1740074954670" duration="129000" />
       <workItem from="1740075111268" duration="9000" />
+      <workItem from="1740076277726" duration="80000" />
     </task>
     <servers />
   </component>
