@@ -165,15 +165,17 @@ class _MyPlantsPageState extends State<MyPlantsPage> {
         padding: const EdgeInsets.all(12),
         child: Consumer<PlantProvider>(
           builder: (context, plantProvider, child) {
-            return Wrap(
-              spacing: 8.0,
-              runSpacing: 8.0,
-              alignment: WrapAlignment.start,
-              children: List.generate(
-                plantProvider.userPlants.length,
-                    (index) {
-                  return MyPlantsCard(plant: plantProvider.userPlants[index]);
-                },
+            return Center(
+              child: Wrap(
+                spacing: 8.0,
+                runSpacing: 8.0,
+                alignment: WrapAlignment.start,
+                children: List.generate(
+                  plantProvider.userPlants.length,
+                      (index) {
+                    return MyPlantsCard(plant: plantProvider.userPlants[index]);
+                  },
+                ),
               ),
             );
           },
