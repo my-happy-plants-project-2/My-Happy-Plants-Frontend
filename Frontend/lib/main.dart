@@ -9,17 +9,15 @@ import 'package:provider/provider.dart';
 
 // @Author Filip Claesson, Pehr Nortén
 void main() {
-  runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (context) => PlantProvider()),
-
-      ],
-      child: const MyApp(),
-    )
-  );
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider(create: (context) => PlantProvider()),
+    ],
+    child: const MyApp(),
+  ));
 }
 
+//
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
