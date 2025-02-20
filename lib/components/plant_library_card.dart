@@ -3,6 +3,9 @@ import 'package:my_happy_plants_flutter/components/custom_icon_button.dart';
 import 'package:my_happy_plants_flutter/components/plant_library_addialog.dart';
 import 'package:my_happy_plants_flutter/components/plant_library_image.dart';
 import 'package:my_happy_plants_flutter/model/plant.dart';
+import 'package:my_happy_plants_flutter/providers/library_provider.dart';
+import 'package:my_happy_plants_flutter/providers/plant_provider.dart';
+import 'package:provider/provider.dart';
 
 // @Author Filip Claesson, Pehr Nortén
 // Card widget displaying plant information for some pre-set plants, with add to your own plants function
@@ -88,13 +91,6 @@ class PlantLibraryCard extends StatelessWidget {
     );
   }
 
-  //Save a plant name that user put in
-  //TO DO:
-  void saveNewPlantName() {
-    //Här ska skrivas det som sparas till en planta och sen vidare till databasen
-    //Det är i själva _controller den biten sparas och tanken är att det ska skickas till en post-endpoint
-  }
-
   //Shows dialog for specifying plant nickname, and what to do when pressing save/cancel
   void giveSpecificPlantName(BuildContext context) {
     showDialog(
@@ -103,7 +99,15 @@ class PlantLibraryCard extends StatelessWidget {
         return PlantLibraryAddDialog(
           controller: _controller,
           plant: plant,
-          onSave: saveNewPlantName,
+          onSave:() {
+            final plantProvider = context.read<PlantProvider>();
+
+            print(_controller.text);
+            print(plant.nickname);
+            //plantProvider.saveNewPlantName(plant.plantId, _controller.text);
+            plantProvider.addPlants(plant, _controller.text);
+            Navigator.of(context, rootNavigator: true).pop();
+          },  //TODO: Add provider here so it connects to saveNameMethod.
           onCancel: () {
             _controller.clear();
             Navigator.pop(context);

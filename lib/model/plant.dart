@@ -1,12 +1,12 @@
 //@author Filip Claesson, Pehr Norten
 class Plant {
-  final String plantId;
+  String plantId;
   final String commonName;
   final String scientificName;
   final String familyName;
   final String imagePath;
-  final String nickname;
-  final DateTime lastWatered;
+  String nickname;
+  DateTime lastWatered;
   final int waterFrequency;
   final int light;
 
@@ -21,4 +21,6 @@ class Plant {
     required this.waterFrequency,
     required this.light,
   });
+
+  //TODO: Add a getter for updated waterlevels on login.
 }

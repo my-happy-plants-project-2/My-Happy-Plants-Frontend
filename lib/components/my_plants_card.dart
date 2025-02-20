@@ -4,15 +4,19 @@ import 'package:flutter/material.dart';
 import 'package:my_happy_plants_flutter/components/custom_icon_button.dart';
 import 'package:my_happy_plants_flutter/components/water_bar.dart';
 import 'package:my_happy_plants_flutter/model/plant.dart';
+import 'package:my_happy_plants_flutter/providers/plant_provider.dart';
+import 'package:provider/provider.dart';
 
 // @Author Filip Claesson, Pehr Nortén
 class MyPlantsCard extends StatelessWidget {
   final Plant plant;
 
-  const MyPlantsCard({
+  MyPlantsCard({
     super.key,
     required this.plant,
   });
+
+  final _controller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -106,9 +110,7 @@ class MyPlantsCard extends StatelessWidget {
           children: [
             CustomIconButton(
               icon: Icons.edit,
-              onPressed: () {
-                // Todo: Add edit functionality here
-              },
+              onPressed: () => _editPlantName(context),
             ),
             _buildCustomImageButton(
               context,
@@ -129,6 +131,41 @@ class MyPlantsCard extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  void _editPlantName(BuildContext context) {
+    _controller.text = plant.nickname;
+
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title:const Text("Edit Plant Name"),
+            content: TextField(
+              controller: _controller,
+              decoration: const InputDecoration(hintText: "Enter new name"),
+            ),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    _controller.clear();
+                    Navigator.pop(context);
+                  },
+                  child: const Text("Cancel"),
+              ),
+              TextButton(onPressed: () {
+                final plantProvider = context.read<PlantProvider>();
+
+                plantProvider.changeNickName(plant.plantId, _controller.text);
+
+                Navigator.pop(context);
+              },
+                  child: const Text("Save")
+              ),
+            ],
+          );
+      },
     );
   }
 
