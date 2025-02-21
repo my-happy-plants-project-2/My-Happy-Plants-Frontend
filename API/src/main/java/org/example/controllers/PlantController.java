@@ -5,7 +5,6 @@ import io.javalin.http.Context;
 import org.example.model.Plant;
 import org.example.services.PlantService;
 import org.jetbrains.annotations.NotNull;
-
 import java.util.List;
 
 public class PlantController {

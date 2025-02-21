@@ -1,5 +1,4 @@
 package org.example.controllers;
-
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 import org.example.model.OwnedPlant;
@@ -72,7 +71,4 @@ public class UserController {
     public void waterPlant(@NotNull Context ctx) {
         userService.waterPlant(ctx);
     }
-
-
-
 }

@@ -23,7 +23,7 @@ public class Plant {
     public String getPlantID() {
         return plantID;
     }
-
+  
     public void setPlantID(String plantID) {
         this.plantID = plantID;
     }

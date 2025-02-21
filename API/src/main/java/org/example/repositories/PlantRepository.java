@@ -18,7 +18,6 @@ public class PlantRepository {
         plants.add(new Plant("3", "Cactus", "Cactus", "Cactaceae", "cactus.jpg", 21));
 
         // ToDo: make actual request to database
-
         return  plants;
     }
 }
