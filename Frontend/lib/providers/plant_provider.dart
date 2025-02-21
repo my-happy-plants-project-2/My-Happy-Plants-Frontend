@@ -47,7 +47,7 @@ class PlantProvider extends ChangeNotifier{
       plant.nickname = newName;
     //TODO: Update the plantlist in the database.
       notifyListeners();
-    }
+    } //This already happens when creating a new plant. Might be removed.
 
     void changeNickName(String plantId, String newName) {
       _userPlants.firstWhere((p) => p.plantId == plantId).nickname = newName;

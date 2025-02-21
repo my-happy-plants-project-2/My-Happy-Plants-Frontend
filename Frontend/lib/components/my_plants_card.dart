@@ -32,8 +32,7 @@ class MyPlantsCard extends StatelessWidget {
           children: [
             _buildPlantInfo(context),
             _buildPlantImage(context,
-                value: Random()
-                    .nextDouble()), // Set a random value between 0 and 1 for now can be calculated from the plant's water frequency and last watered date
+                value: plant.calculateWaterLevel), // Set a random value between 0 and 1 for now can be calculated from the plant's water frequency and last watered date
             _buildActionButtons(context),
           ],
         ),
@@ -45,8 +44,12 @@ class MyPlantsCard extends StatelessWidget {
   Widget _buildPlantInfo(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: Column(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
           Text(
             plant.nickname,
             style: const TextStyle(
@@ -57,6 +60,12 @@ class MyPlantsCard extends StatelessWidget {
           Text(plant.commonName),
         ],
       ),
+      CustomIconButton(
+        icon: Icons.delete,
+        onPressed: () => _deletePlant(context)
+      ),
+    ],
+    ),
     );
   }
 
@@ -118,9 +127,8 @@ class MyPlantsCard extends StatelessWidget {
                 'lib/assets/images/watering_can.png',
                 color: Theme.of(context).colorScheme.onSurface,
               ),
-              onPressed: () {
+              onPressed: () => _waterPlant(context),
                 // Todo: Add watering functionality here
-              },
             ),
             CustomIconButton(
               icon: Icons.info_outline,
@@ -167,6 +175,18 @@ class MyPlantsCard extends StatelessWidget {
           );
       },
     );
+  }
+
+  void _waterPlant(BuildContext context) {
+    final plantProvider = context.read<PlantProvider>();
+
+    plantProvider.waterPlant(plant.plantId);
+  }
+
+  void _deletePlant(BuildContext context) {
+    final plantProvider = context.read<PlantProvider>();
+
+    plantProvider.removePlant(plant.plantId);
   }
 
   // Helper method to build the Image button section
