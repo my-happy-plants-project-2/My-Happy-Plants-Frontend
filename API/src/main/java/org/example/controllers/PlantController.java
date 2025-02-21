@@ -1,42 +1,30 @@
 package org.example.controllers;
 
+import io.javalin.Javalin;
 import io.javalin.http.Context;
 import org.example.model.Plant;
 import org.example.services.PlantService;
 import org.jetbrains.annotations.NotNull;
+import java.util.List;
 
 public class PlantController {
     private final PlantService plantService;
 
-    public PlantController() {
-        this.plantService = new PlantService();
+    public PlantController(PlantService plantService) {
+        this.plantService = plantService;
     }
 
-    public void addPlant(@NotNull Context ctx) {
-        Plant plant = ctx.bodyAsClass(Plant.class);
-        if (plantService.addPlant(plant)) {
-            ctx.status(201);
+    public void registerRoutes(Javalin app) {
+        app.get("/api/v1/plants", this::getAllPlants);
+    }
+
+    public void getAllPlants(@NotNull Context ctx) {
+        List<Plant> plants = plantService.getAllPlants();
+
+        if (plants.isEmpty()) {
+            ctx.status(200).json("[]");
         } else {
-            ctx.status(400);
+            ctx.json(plants);
         }
-    }
-
-    public void deletePlant(@NotNull Context ctx) {
-        String email = ctx.pathParam("email");
-        String id = ctx.pathParam("id");
-        if(plantService.deletePlant(email, id)) {
-            ctx.status(204);
-        } else {
-            ctx.status(404);
-        }
-    }
-
-    public void getPlantsByEmail(@NotNull Context ctx) {
-        String email = ctx.pathParam("email");
-        ctx.json(plantService.getPlantsByEmail(email));
-    }
-
-    public void getAllPlants(Context ctx) {
-        ctx.json(plantService.getAllPlants());
     }
 }
