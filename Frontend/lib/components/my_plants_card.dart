@@ -118,8 +118,19 @@ class MyPlantsCard extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             CustomIconButton(
-              icon: Icons.edit,
-              onPressed: () => _editPlantName(context),
+                icon: Icons.edit,
+                popupMenuItems: [
+                  PopupMenuItem<int>(
+                      value: 0,
+                      child: const Text('Edit Name'),
+                      onTap: () => _editPlantName(context),
+                  ),
+                  PopupMenuItem<int>(
+                    value: 1,
+                    child: const Text('Delete Plant'),
+                    onTap: () => _deletePlant(context),
+                  ),
+                ],
             ),
             _buildCustomImageButton(
               context,
@@ -128,12 +139,10 @@ class MyPlantsCard extends StatelessWidget {
                 color: Theme.of(context).colorScheme.onSurface,
               ),
               onPressed: () => _waterPlant(context),
-                // Todo: Add watering functionality here
             ),
             CustomIconButton(
               icon: Icons.info_outline,
               onPressed: () {
-                // Todo: Add delete functionality here
               },
             ),
           ],
@@ -186,7 +195,7 @@ class MyPlantsCard extends StatelessWidget {
   void _deletePlant(BuildContext context) {
     final plantProvider = context.read<PlantProvider>();
 
-    plantProvider.removePlant(plant.plantId);
+    plantProvider.removePlant(context, plant.plantId);
   }
 
   // Helper method to build the Image button section

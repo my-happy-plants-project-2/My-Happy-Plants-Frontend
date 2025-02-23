@@ -33,5 +33,4 @@ class Plant {
 
     return waterLevel.clamp(0.0, 1.0);
   }
-  //TODO: Add a getter for updated waterlevels on login.
 }
