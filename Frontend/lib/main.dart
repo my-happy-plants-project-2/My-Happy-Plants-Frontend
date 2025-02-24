@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:my_happy_plants_flutter/pages/login_page.dart';
 import 'package:my_happy_plants_flutter/pages/home_page.dart';
 import 'package:my_happy_plants_flutter/providers/library_provider.dart';
+import 'package:my_happy_plants_flutter/providers/login_provider.dart';
 import 'package:my_happy_plants_flutter/providers/plant_provider.dart';
 import 'package:my_happy_plants_flutter/themes/light_mode.dart';
 import 'package:provider/provider.dart';
@@ -12,6 +13,7 @@ void main() {
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (context) => PlantProvider()),
+      ChangeNotifierProvider(create: (context) => LoginProvider()),
     ],
     child: const MyApp(),
   ));

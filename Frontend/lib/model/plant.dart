@@ -22,5 +22,15 @@ class Plant {
     required this.light,
   });
 
-  //TODO: Add a getter for updated waterlevels on login.
+  double get calculateWaterLevel {
+    DateTime now = DateTime.now();
+    int daysSinceWatered = now.difference(lastWatered).inDays;
+
+    double waterDepletion = 1.0/waterFrequency;
+    double lightFactor = 1 + (light/10.0);
+
+    double waterLevel = 1.0 - (daysSinceWatered * waterDepletion * lightFactor);
+
+    return waterLevel.clamp(0.0, 1.0);
+  }
 }
