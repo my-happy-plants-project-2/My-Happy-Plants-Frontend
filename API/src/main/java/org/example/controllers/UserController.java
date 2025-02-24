@@ -19,14 +19,16 @@ public class UserController {
         //  user routes
         app.post("/api/v1/user", this::addUser);
         app.post("/api/v1/user/login", this::login);
-        app.get("/api/v1/user/{email}", this::getUserByEmail);
-        app.delete("/api/v1/user/{email}", this::deleteUser);
+        app.delete("/api/v1/user", this::deleteUser);
+        //app.patch("/api/v1/user", this::changeUserName);
+        //app.patch("/api/v1/user/theme/{theme_id}", this::changeColorTheme);
 
         //  user plant library routes
         app.post("/api/v1/user/plant", this::addPlantToUserLibrary);
-        app.delete("/api/v1/user/{email}/plant/{id}", this::deletePlantFromUserLibrary);
-        app.get("/api/v1/user/{email}/plant", this::getUserPlants);
-        app.patch("/api/v1/user/{email}/plant/{id}/water", this::waterPlant);
+        app.delete("/api/v1/user/plant/{id}", this::deletePlantFromUserLibrary);
+        app.get("/api/v1/user/plant", this::getUserPlants);
+        app.patch("/api/v1/user/plant/water/{id}", this::waterPlant);
+        //app.patch("/api/v1/user/plant/note/{id}", this::updateNote);
     }
 
     public void addUser(@NotNull Context ctx) {

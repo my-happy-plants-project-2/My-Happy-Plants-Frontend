@@ -189,7 +189,7 @@ class MyPlantsCard extends StatelessWidget {
   void _waterPlant(BuildContext context) {
     final plantProvider = context.read<PlantProvider>();
 
-    plantProvider.waterPlant(plant.plantId);
+    plantProvider.waterPlant(context, plant.plantId);
   }
 
   void _deletePlant(BuildContext context) {
