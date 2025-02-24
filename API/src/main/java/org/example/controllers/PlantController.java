@@ -8,6 +8,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 public class PlantController {
+    private static final String API_VERSION = "/v1";
+
     private final PlantService plantService;
 
     public PlantController(PlantService plantService) {
@@ -15,7 +17,7 @@ public class PlantController {
     }
 
     public void registerRoutes(Javalin app) {
-        app.get("/api/v1/plants", this::getAllPlants);
+        app.get("/api" + API_VERSION + "/plants", this::getAllPlants);
     }
 
     public void getAllPlants(@NotNull Context ctx) {

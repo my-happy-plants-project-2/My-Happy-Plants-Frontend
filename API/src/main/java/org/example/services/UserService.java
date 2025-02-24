@@ -28,7 +28,7 @@ public class UserService {
     }
 
     public List<OwnedPlant> getUserPlants(Context context) {
-        return null;
+        return userRepository.getUserPlants(context);
     }
 
     public boolean addPlantToUserLibrary(Context ctx) {

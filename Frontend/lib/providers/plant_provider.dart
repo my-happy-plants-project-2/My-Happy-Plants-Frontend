@@ -1,6 +1,5 @@
 //Class for handling plant related logic and list of plant owned by user.
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import '../model/plant.dart';
 

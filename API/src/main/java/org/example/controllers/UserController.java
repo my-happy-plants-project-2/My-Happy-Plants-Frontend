@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserController {
+    private static final String API_VERSION = "/v1";
+
     private final UserService userService;
 
     public UserController(UserService userService) {
@@ -17,16 +19,16 @@ public class UserController {
 
     public void registerRoutes(Javalin app) {
         //  user routes
-        app.post("/api/v1/user", this::addUser);
-        app.post("/api/v1/user/login", this::login);
-        app.get("/api/v1/user/{email}", this::getUserByEmail);
-        app.delete("/api/v1/user/{email}", this::deleteUser);
+        app.post("/api" + API_VERSION + "/user", this::addUser);
+        app.post("/api" + API_VERSION + "/user/login", this::login);
+        app.get("/api" + API_VERSION + "/user/{email}", this::getUserByEmail);
+        app.delete("/api" + API_VERSION + "/user/{email}", this::deleteUser);
 
         //  user plant library routes
-        app.post("/api/v1/user/plant", this::addPlantToUserLibrary);
-        app.delete("/api/v1/user/{email}/plant/{id}", this::deletePlantFromUserLibrary);
-        app.get("/api/v1/user/{email}/plant", this::getUserPlants);
-        app.patch("/api/v1/user/{email}/plant/{id}/water", this::waterPlant);
+        app.post("/api" + API_VERSION + "/user/plant", this::addPlantToUserLibrary);
+        app.delete("/api" + API_VERSION + "/user/{email}/plant/{id}", this::deletePlantFromUserLibrary);
+        app.get("/api" + API_VERSION + "/user/{email}/plant", this::getUserPlants);
+        app.patch("/api" + API_VERSION + "/user/{email}/plant/{id}/water", this::waterPlant);
     }
 
     public void addUser(@NotNull Context ctx) {
