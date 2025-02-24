@@ -8,7 +8,7 @@ import '../model/plant.dart';
 
 class PlantProvider extends ChangeNotifier{
 
-    final String _baseUrl = "/api/v1/user"; //TODO: Add actual URL
+    final String _baseUrl = "/api/v1"; //TODO: Add actual URL
     List<Plant> _allPlants = [];
     List<Plant> _userPlants = [];
     List<Plant> get userPlants => _userPlants;
@@ -28,7 +28,7 @@ class PlantProvider extends ChangeNotifier{
         String endpoint,
         BuildContext context,{
         Map<String, dynamic>? body,
-        })async {
+        }) async {
           final token = _getToken(context);
           if(token == null) {
             print("No token was found");
@@ -37,8 +37,14 @@ class PlantProvider extends ChangeNotifier{
           final url = Uri.parse("$_baseUrl/$endpoint");
 
           try {
-            var response = await (method == "POST"? http.post(url, headers: _headers(token), body: jsonEncode(body))
-            : method == "DELETE"? http.delete(url, headers: _headers(token))
+            var response = (method == "POST"
+                ? await http.post(url, headers: _headers(token), body: jsonEncode(body))
+            : method == "DELETE"
+                ? await http.delete(url, headers: _headers(token))
+            : method == "PATCH"
+                ? await http.patch(url, headers: _headers(token), body: jsonEncode(body))
+            : method == "GET"
+                ? await http.get(url, headers: _headers(token))
             : null);
 
             return response;
@@ -66,7 +72,7 @@ class PlantProvider extends ChangeNotifier{
     //Includes a token for verifications so might have to remove that.
 
     /**
-    final response = await _makeRequest("POST", "plant", context, body: {
+    final response = await _makeRequest("POST", "/yser/plant", context, body: {
       "plantId": newPlant.plantId,
       "commonName": newPlant.commonName,
       "scientifiName": newPlant.scientificName,
@@ -89,12 +95,12 @@ class PlantProvider extends ChangeNotifier{
       print("Error adding plant: $e");
     }
     */
-    _userPlants.add(newPlant); //TODO: Remove when not needed.
-    notifyListeners();//Placeholder.
+    _userPlants.add(newPlant);
+    notifyListeners();
   }
 
     Future <void> removePlant(BuildContext context, String plantId) async {
-      final response = await _makeRequest("DELETE", "{email}/plant/$plantId", context);
+      // final response = await _makeRequest("DELETE", "/user/plant/$plantId", context);
 
       /** //TODO: Add this to the code when back-end is ready.
        *
@@ -112,35 +118,67 @@ class PlantProvider extends ChangeNotifier{
     }
 
     Future<void> waterPlant(BuildContext context, String plantId) async {
-      final response = await _makeRequest("PATCH", "{email}/plant/$plantId/water", context);
+      /**
+      final response = await _makeRequest("PATCH", "/user/plant/water/$plantId", context);
 
-      /** //TODO: Add this to the code when back-end is ready.
-       *
+
           if(response != null && response.statusCode == 200) {
-          _userPlants.firstWhere((p) => p.plantId == plantId)lastWatered = DateTime.now();;
+          _userPlants.firstWhere((p) => p.plantId == plantId)lastWatered = DateTime.now();
           notifyListeners();
           print("Plant Watered");
           } else {
-          print("Failed to water plant"),
+          print("Failed to water plant");
           }
        */
 
       _userPlants.firstWhere((p) => p.plantId == plantId).lastWatered = DateTime.now();
-      //TODO: Update the plantlist in the database.
       notifyListeners();
     }
 
-    void changeNickName(String plantId, String newName) {
-      //TODO: Update the new name in database.
+    Future<void> changeNickName(BuildContext context, String plantId, String newName) async {
+      /*final response = await _makeRequest("PATCH", "/user/plant/$plantId", context);
+
+      if(response != null && response.statusCode == 200) {
+        _userPlants.firstWhere((p) => p.plantId == plantId).nickname = newName;
+        notifyListeners();
+        print("Plant nickname changed");
+      } else {
+        print("Failed to change nickname");
+      } */
+
       _userPlants.firstWhere((p) => p.plantId == plantId).nickname = newName;
       notifyListeners();
     }
 
     void fillLibraryList(List<Plant> plants) {
       _allPlants = plants;
-    } //TODO: Should remake so it collects the plants from server and THEN fills the list.
+    } //TODO: These two methods will be removed and replaced with the ones below them.
 
     void fillUserList(List<Plant> plants) {
       _userPlants = plants;
-    } //TODO: Should remake so it collects the plants from server and THEN fills the list.
+    }
+
+    Future<List<Plant>> getLibraryPlantList(BuildContext context) async {
+      final response = await _makeRequest("GET", "/plants", context);
+
+      if(response != null && response.statusCode == 200) {
+        List<dynamic> responseData = jsonDecode(response.body);
+        return responseData.map((plant) => Plant.fromJson(plant)).toList();
+      } else {
+        print("Failed to fetch plants");
+        return [];
+      }
+    }
+
+    Future<List<Plant>> getUserPlantList(BuildContext context) async {
+      final response = await _makeRequest("GET", "/plant", context);
+
+      if(response != null && response.statusCode == 200) {
+        List<dynamic> responseData = jsonDecode(response.body);
+        return responseData.map((plant) => Plant.fromJson(plant)).toList();
+      } else {
+        print("Failed to fetch plants");
+        return [];
+      }
+    }
 }

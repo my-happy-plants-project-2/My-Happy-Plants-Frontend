@@ -174,7 +174,7 @@ class MyPlantsCard extends StatelessWidget {
               TextButton(onPressed: () {
                 final plantProvider = context.read<PlantProvider>();
 
-                plantProvider.changeNickName(plant.plantId, _controller.text);
+                plantProvider.changeNickName(context, plant.plantId, _controller.text);
 
                 Navigator.pop(context);
               },
