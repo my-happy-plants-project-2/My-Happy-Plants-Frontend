@@ -16,20 +16,25 @@ public class UserController {
     }
 
     public void registerRoutes(Javalin app) {
+
+        // authoritzation routes
+        app.post("/api/v1/auth/login", this::login);
+
         //  user routes
         app.post("/api/v1/user", this::addUser);
-        app.post("/api/v1/user/login", this::login);
         app.delete("/api/v1/user", this::deleteUser);
         //app.patch("/api/v1/user", this::changeUserName);
         //app.patch("/api/v1/user/theme/{theme_id}", this::changeColorTheme);
 
         //  user plant library routes
-        app.post("/api/v1/user/plant", this::addPlantToUserLibrary);
-        app.delete("/api/v1/user/plant/{id}", this::deletePlantFromUserLibrary);
-        app.get("/api/v1/user/plant", this::getUserPlants);
-        app.patch("/api/v1/user/plant/water/{id}", this::waterPlant);
-        //app.patch("/api/v1/user/plant/{id}", this::changeNickName);
-        //app.patch("/api/v1/user/plant/note/{id}", this::updateNote);
+
+        //Collections
+        app.post("/api/v1/user/plants", this::addPlantToUserLibrary);
+        app.delete("/api/v1/user/plants/{id}", this::deletePlantFromUserLibrary);
+        app.get("/api/v1/user/plants", this::getUserPlants);
+        app.patch("/api/v1/user/plants/water/{id}", this::waterPlant);
+        //app.patch("/api/v1/user/plants/{id}", this::changeNickName);
+        //app.patch("/api/v1/user/plants/note/{id}", this::updateNote);
     }
 
     public void addUser(@NotNull Context ctx) {

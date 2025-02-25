@@ -15,10 +15,10 @@ public class PlantController {
     }
 
     public void registerRoutes(Javalin app) {
-        app.get("/api/v1/plants", this::getAllPlants);
+        app.get("/api/v1/species", this::getAllSpecies);
     }
 
-    public void getAllPlants(@NotNull Context ctx) {
+    public void getAllSpecies(@NotNull Context ctx) {
         List<Plant> plants = plantService.getAllPlants();
 
         if (plants.isEmpty()) {
