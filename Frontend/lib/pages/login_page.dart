@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_happy_plants_flutter/components/error_message_overlay.dart';
 import 'package:my_happy_plants_flutter/providers/login_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -19,12 +20,19 @@ class _LoginPageState extends State<LoginPage> {
     final email = _emailController.text.trim();
     final password = _passwordController.text.trim();
 
-    if(email.isEmpty || password.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Please enter both a valid email and password")),
-      );
+    // Check if email or password is empty, if so show a snackbar and return.
+    if (email.isEmpty && password.isEmpty) {
+      errorMessageOverlay(context, "Email and password is empty!");
       return;
-    } //TODO: Här nere ligger en potentiell login metod, den är bortkommenterad för att jag inte har en login logik fixad.
+    } else if (email.isEmpty) {
+      errorMessageOverlay(context, "Email is empty!");
+      return;
+    } else if (password.isEmpty) {
+      errorMessageOverlay(context, "Password is empty!");
+      return;
+    }
+
+    //TODO: Här nere ligger en potentiell login metod, den är bortkommenterad för att jag inte har en login logik fixad.
     /*
     final success = await loginProvider.login(email, password);
 
@@ -56,16 +64,17 @@ class _LoginPageState extends State<LoginPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Text(
-                  "Login",
-                  style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                  ),
+                "Login",
+                style: TextStyle(
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const SizedBox(height: 25),
               _buildTextField("Email", Icons.email, _emailController, false),
               const SizedBox(height: 15),
-              _buildTextField("Password", Icons.lock, _passwordController, true),
+              _buildTextField(
+                  "Password", Icons.lock, _passwordController, true),
               const SizedBox(height: 5),
               Align(
                 alignment: Alignment.centerRight,
@@ -87,14 +96,18 @@ class _LoginPageState extends State<LoginPage> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20),
                   ),
-                  padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 50),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 14, horizontal: 50),
                 ),
-                onPressed: () {
-                 // () => _login(context);   ------- Detta är troligtvis så login kommer funka senare.
-                  //TODO: Här ska login funktionen vara. Den ska checka ditt lösenord osv. Nu kommer du alltid in.
-                  Navigator.pushNamed(context, '/home_page');
-                },
-                child: const Text("Login", style: TextStyle(fontSize: 18),),
+                onPressed: () => _login(
+                    context), // ------- Detta är troligtvis så login kommer funka senare.
+                //TODO: Här ska login funktionen vara. Den ska checka ditt lösenord osv. Nu kommer du alltid in.
+                //Navigator.pushNamed(context, '/home_page');
+
+                child: const Text(
+                  "Login",
+                  style: TextStyle(fontSize: 18),
+                ),
               ),
               const Spacer(),
               TextButton(
@@ -113,7 +126,8 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _buildTextField(String hint, IconData icon, TextEditingController controller, bool isPassword) {
+  Widget _buildTextField(String hint, IconData icon,
+      TextEditingController controller, bool isPassword) {
     return TextField(
       controller: controller,
       obscureText: isPassword,
@@ -130,4 +144,3 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 }
-
