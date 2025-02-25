@@ -28,6 +28,7 @@ public class UserController {
         app.delete("/api/v1/user/plant/{id}", this::deletePlantFromUserLibrary);
         app.get("/api/v1/user/plant", this::getUserPlants);
         app.patch("/api/v1/user/plant/water/{id}", this::waterPlant);
+        //app.patch("/api/v1/user/plant/{id}", this::changeNickName);
         //app.patch("/api/v1/user/plant/note/{id}", this::updateNote);
     }
 

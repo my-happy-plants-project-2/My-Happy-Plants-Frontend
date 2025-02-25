@@ -1,4 +1,8 @@
 //@author Filip Claesson, Pehr Norten
+import 'package:json_annotation/json_annotation.dart';
+part 'plant.g.dart';
+
+@JsonSerializable()
 class Plant {
   String plantId;
   final String commonName;
@@ -33,4 +37,6 @@ class Plant {
 
     return waterLevel.clamp(0.0, 1.0);
   }
+  factory Plant.fromJson(Map<String, dynamic> json) => _$PlantFromJson(json);
+  Map<String, dynamic> toJson() => _$PlantToJson(this);
 }
