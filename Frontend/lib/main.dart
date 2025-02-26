@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:my_happy_plants_flutter/pages/login_page.dart';
 import 'package:my_happy_plants_flutter/pages/home_page.dart';
+import 'package:my_happy_plants_flutter/providers/authentication_provider.dart';
 import 'package:my_happy_plants_flutter/providers/library_provider.dart';
 import 'package:my_happy_plants_flutter/providers/login_provider.dart';
 import 'package:my_happy_plants_flutter/providers/plant_provider.dart';
@@ -14,6 +15,7 @@ void main() {
     providers: [
       ChangeNotifierProvider(create: (context) => PlantProvider()),
       ChangeNotifierProvider(create: (context) => LoginProvider()),
+      ChangeNotifierProvider(create: (context) => AuthenticationProvider()),
     ],
     child: const MyApp(),
   ));

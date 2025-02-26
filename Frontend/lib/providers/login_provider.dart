@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 
 class LoginProvider extends ChangeNotifier {
-  final String _baseUrl = "/api/v1/user"; //Tror detta bör funka
+  final String _baseUrl = "/api/v1/auth"; //Tror detta bör funka
 
   String? _token;
   String? get token => _token;

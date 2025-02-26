@@ -19,7 +19,7 @@ class PlantProvider extends ChangeNotifier{
     }
 
     Map<String, String> _headers(String token) => {
-        "Content-Type": "application(json",
+        "Content-Type": "application/json",
         "Authorization": "Bearer $token",
     };
     
@@ -72,7 +72,7 @@ class PlantProvider extends ChangeNotifier{
     //Includes a token for verifications so might have to remove that.
 
     /**
-    final response = await _makeRequest("POST", "/yser/plant", context, body: {
+    final response = await _makeRequest("POST", "/user/plant", context, body: {
       "plantId": newPlant.plantId,
       "commonName": newPlant.commonName,
       "scientifiName": newPlant.scientificName,
