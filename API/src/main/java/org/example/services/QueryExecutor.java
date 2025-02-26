@@ -38,15 +38,16 @@ public class QueryExecutor implements IQueryExecutor {
 
     @Override
     public ResultSet executeQuery(String query, Object... parameters) {
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
+        try (Connection connection = sqlConfig.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
             for (int i = 0; i < parameters.length; i++) {
                 statement.setObject(i + 1, parameters[i]);
             }
             return statement.executeQuery();
         } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE, "Error executing query", e);
+            LOGGER.log(Level.SEVERE, "Error executing query: " + query, e);
+            return null;
         }
-        return null;
     }
 
     @Override

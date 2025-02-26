@@ -1,15 +1,14 @@
 package org.example.controllers;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
-import org.example.model.OwnedPlant;
+import org.example.model.UserPlant;
 import org.example.services.UserService;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class UserController {
-    private static final String API_VERSION = "/v1";
+    private static final String API_VERSION = "/api/v1";
 
     private final UserService userService;
 
@@ -18,59 +17,47 @@ public class UserController {
     }
 
     public void registerRoutes(Javalin app) {
-        //  user routes
-        app.post("/api" + API_VERSION + "/user", this::addUser);
-        app.post("/api" + API_VERSION + "/user/login", this::login);
-        app.get("/api" + API_VERSION + "/user/{email}", this::getUserByEmail);
-        app.delete("/api" + API_VERSION + "/user/{email}", this::deleteUser);
+        // authorization routes
+        app.post(API_VERSION + "/auth/login", this::login);
 
-        //  user plant library routes
-        app.post("/api" + API_VERSION + "/user/plant", this::addPlantToUserLibrary);
-        app.delete("/api" + API_VERSION + "/user/{email}/plant/{id}", this::deletePlantFromUserLibrary);
-        app.get("/api" + API_VERSION + "/user/{email}/plant", this::getUserPlants);
-        app.patch("/api" + API_VERSION + "/user/{email}/plant/{id}/water", this::waterPlant);
+        // user routes
+        app.post(API_VERSION + "/user", this::addUser);
+        app.delete(API_VERSION + "/user", this::deleteUser);
+
+        // user plant library routes
+        app.post(API_VERSION + "/user/plants", this::addPlantToUserLibrary);
+        app.delete(API_VERSION + "/user/plants/{id}", this::deletePlantFromUserLibrary);
+        app.get(API_VERSION + "/user/plants", this::getUserPlants);
+        app.patch(API_VERSION + "/user/plants/water/{id}", this::waterPlant);
     }
 
-    public void addUser(@NotNull Context ctx) {
-        userService.addUser(ctx);
+    private void login(Context context) {
+        // Implement login logic here
     }
 
-    public void login(@NotNull Context ctx) {
-        userService.login(ctx);
+    private void addUser(Context context) {
+        userService.addUser(context); // As implemented previously
     }
 
-    public void getUserByEmail(@NotNull Context ctx) {
-        userService.getUserByEmail(ctx);
+    private void deleteUser(Context context) {
+        // Implement user deletion logic here.  Likely needs a user identifier.
     }
 
-    public void deleteUser(@NotNull Context ctx) {
-        userService.deleteUser(ctx);
+    private void addPlantToUserLibrary(Context context) {
+        // Implement logic to add a plant to the user's library
     }
 
-    //  get users plant library
-    public void getUserPlants(@NotNull Context ctx) {
-        List<OwnedPlant> userPlants = userService.getUserPlants(ctx);
-        ctx.status(200).json(userPlants);
+
+    private void deletePlantFromUserLibrary(Context context) {
+        // Implement logic to delete a plant from the user's library.  Use context.pathParam("id") to get the plant ID.
     }
 
-    //  add plant to users library
-    public void addPlantToUserLibrary(@NotNull Context ctx) {
-        userService.addPlantToUserLibrary(ctx);
+    private void getUserPlants(Context context) {
+        // Implement logic to retrieve the plants in a user's library
     }
 
-    //  delete plant from users library
-    public void deletePlantFromUserLibrary(@NotNull Context ctx) {
-        userService.deletePlantFromUserLibrary(ctx);
-
+    private void waterPlant(Context context) {
+        // Implement logic to update a plant's watering status.  Use context.pathParam("id") to get the plant ID.
     }
 
-    //  update plant in users library
-    public void updatePlantInUserLibrary(@NotNull Context ctx) {
-        userService.updatePlantInUserLibrary(ctx);
-    }
-
-    // water plant
-    public void waterPlant(@NotNull Context ctx) {
-        userService.waterPlant(ctx);
-    }
 }

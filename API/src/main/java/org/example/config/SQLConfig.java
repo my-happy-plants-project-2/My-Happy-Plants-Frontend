@@ -1,25 +1,21 @@
 package org.example.config;
 
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 import io.github.cdimascio.dotenv.Dotenv;
 
-import java.net.UnknownHostException;
+import javax.sql.DataSource;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class SQLConfig implements ISQLConfig {
-    //
-    // TODO: Possibly implement HikariCP for connection pooling
-    //
-
-    // TODO: Implement SQLConfig and dont forget to use .env variables. NO username and password on git please.
 
     private static final Logger LOGGER = Logger.getLogger(SQLConfig.class.getName());
-    private static Connection conn;
+    private static DataSource dataSource;
 
-    private Connection createConnection() throws SQLException, UnknownHostException {
+    private DataSource createDataSource() {
         Dotenv dotenv = Dotenv.load();
         String url = dotenv.get("DB_URL");
         String user = dotenv.get("DB_USER");
@@ -29,31 +25,38 @@ public class SQLConfig implements ISQLConfig {
             LOGGER.log(Level.SEVERE, "Database connection information is missing in the .env file");
         }
 
-        SQLConfig.conn = DriverManager.getConnection(url, user, password);
-        return conn;
-    }
+        HikariConfig config = new HikariConfig();
+        config.setJdbcUrl(url);
+        config.setUsername(user);
+        config.setPassword(password);
+        config.setMaximumPoolSize(3);
 
+        return new HikariDataSource(config);
+    }
 
     @Override
     public Connection getConnection() {
-        if (conn == null) {
-            try {
-                conn = createConnection();
-            } catch (UnknownHostException | SQLException e) {
-                LOGGER.log(Level.SEVERE, "Error creating database connection", e);
+        try {
+            if (dataSource == null) {
+                dataSource = createDataSource();
             }
+            return dataSource.getConnection();
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Error getting database connection", e);
+            return null;
         }
-        return conn;
     }
 
     @Override
     public void closeConnection() {
         try {
-            conn.close();
+            if (dataSource instanceof HikariDataSource) {
+                ((HikariDataSource) dataSource).close();
+            }
+            dataSource = null;
+        } catch (Exception e) {
+            LOGGER.log(Level.WARNING, "Error closing data source", e);
         }
-        catch (SQLException e) {
-            LOGGER.log(Level.WARNING, "Error closing database connection", e);
-        }
-        conn = null;
+
     }
 }

@@ -1,14 +1,16 @@
 package org.example.model;
 
 public class User {
-    private String userID;
+    private String userName;
     private String email;
     private String password;
+    private int colorTheme;
 
-    public User(String userID, String email, String password) {
-        this.userID = userID;
+    public User(String userName, String email, String password, int colorTheme) {
+        this.userName = userName;
         this.email = email;
         this.password = password;
+        this.colorTheme = colorTheme;
     }
 
     public String getPassword() {
@@ -27,11 +29,19 @@ public class User {
         this.email = email;
     }
 
-    public String getUserID() {
-        return userID;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setUserID(String userID) {
-        this.userID = userID;
+    public void setUserName(String userID) {
+        this.userName = userName;
+    }
+
+    public int getColorTheme() {
+        return colorTheme;
+    }
+
+    public void setColorTheme(int colorTheme) {
+        this.colorTheme = colorTheme;
     }
 }

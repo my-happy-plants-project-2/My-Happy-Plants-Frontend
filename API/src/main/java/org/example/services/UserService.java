@@ -1,8 +1,7 @@
 package org.example.services;
 
 import io.javalin.http.Context;
-import org.example.model.OwnedPlant;
-import org.example.model.Plant;
+import org.example.model.UserPlant;
 import org.example.repositories.UserRepository;
 
 import java.util.List;
@@ -27,7 +26,7 @@ public class UserService {
         return false;
     }
 
-    public List<OwnedPlant> getUserPlants(Context context) {
+    public List<UserPlant> getUserPlants(Context context) {
         return userRepository.getUserPlants(context);
     }
 

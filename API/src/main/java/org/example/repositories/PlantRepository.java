@@ -1,7 +1,6 @@
 package org.example.repositories;
 
-import org.example.config.SQLConfig;
-import org.example.model.Plant;
+import org.example.model.Species;
 import org.example.services.IQueryExecutor;
 
 import java.sql.ResultSet;
@@ -21,24 +20,25 @@ public class PlantRepository {
     }
 
     // ToDo: Add object to connect to database
-    public List<Plant> getAllPlants() {
-        List<Plant> plants = new ArrayList<>();
-        try (ResultSet resultSet = queryExecutor.executeQuery("SELECT * FROM plants")){
+    public List<Species> getAllSpecies() {
+        List<Species> species = new ArrayList<>();
+        try (ResultSet resultSet = queryExecutor.executeQuery("SELECT * FROM species")){
             while (resultSet.next()) {
-                String plantID = resultSet.getString("plant_id"); // Replace with actual column name
-                String commonName = resultSet.getString("common_name"); // Replace with actual column name
-                String scientificName = resultSet.getString("scientific_name"); // Replace with actual column name
-                String familyName = resultSet.getString("family_name"); // Replace with actual column name
-                String imagePath = resultSet.getString("image_path"); // Replace with actual column name
-                int waterFrequency = resultSet.getInt("water_frequency"); // Replace with actual column name
+                String scientificName = resultSet.getString("scientific_name");
+                String family = resultSet.getString("family");
+                String commonName = resultSet.getString("common_name");
+                String category = resultSet.getString("category");
+                String imageUrl = resultSet.getString("image_url");
+                int lightReqs = resultSet.getInt("light_reqs");
+                int waterFrequency = resultSet.getInt("water_frequency");
 
-                plants.add(new Plant(plantID, commonName, scientificName, familyName, imagePath, waterFrequency));
+                species.add(new Species(scientificName, commonName, family, category, imageUrl, lightReqs, waterFrequency));
             }
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, "Error retrieving plants from database", e);
 
         }
-        return plants;
+        return species;
 
     }
 }

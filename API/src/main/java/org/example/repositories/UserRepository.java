@@ -1,7 +1,8 @@
 package org.example.repositories;
 
 import io.javalin.http.Context;
-import org.example.model.OwnedPlant;
+import org.example.model.Species;
+import org.example.model.UserPlant;
 import org.example.model.User;
 import org.example.services.IQueryExecutor;
 
@@ -21,86 +22,99 @@ public class UserRepository {
         this.queryExecutor = queryExecutor;
     }
 
-    public List<OwnedPlant> getUserPlants(Context context ) {
-        List<OwnedPlant> ownedPlants = new ArrayList<>();
-        String userId = context.cookie("user_id");
+    public List<UserPlant> getUserPlants(Context context) {
+        List<UserPlant> userPlants = new ArrayList<>();
+        String userEmail = context.pathParam("email");
 
-        String query = "SELECT op.id, op.nickname, op.last_watered, op.plant_id, op.image_url, " +
-                "s.scientific_name, s.genus, s.family, s.common_name, s.image_url AS species_image_url, " +
-                "s.light, s.url_wikipedia_en, s.water_frequency, " +
-                "u.email " +
-                "FROM plant op " +
-                "JOIN species s ON op.plant_id = s.id " +
-                "JOIN \"User\" u ON op.user_id = u.id " +
-                "WHERE op.user_id = ?";
-
-        try (Connection connection = queryExecutor.getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setString(1, userId);
-            try (ResultSet resultSet = statement.executeQuery()) {
-                while (resultSet.next()) {
-                    ownedPlants.add(plantOwnerResultSet(resultSet));
-                }
+        try (ResultSet resultSet = queryExecutor.executeQuery("SELECT up.*, s.* FROM user_plants up JOIN species " +
+                "s ON up.species = s.scientific_name WHERE owner = ?", userEmail)) {
+            while (resultSet.next()) {
+                userPlants.add(plantOwnerResultSet(resultSet));
             }
-
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, "Error retrieving user plants", e);
         }
-
-        return ownedPlants;
-
+        return userPlants;
     }
 
-    private OwnedPlant plantOwnerResultSet(ResultSet resultSet) throws SQLException {
+    private UserPlant plantOwnerResultSet(ResultSet resultSet) throws SQLException {
         String plantID = resultSet.getString("plant_id");
-        String commonName = resultSet.getString("common_name");
-        String scientificName = resultSet.getString("scientific_name");
-        String familyName = resultSet.getString("family");
-        String imagePath = resultSet.getString("species_image_url");
-        int waterFrequency = Integer.parseInt(resultSet.getString("water_frequency"));
         String nickname = resultSet.getString("nickname");
-        String lastWatered = resultSet.getString("last_watered");
-        String ownersEmail = resultSet.getString("email");
+        String owner = resultSet.getString("owner");
+        Date lastWatered = resultSet.getDate("last_watered");
+        String note = resultSet.getString("note");
 
-        return new OwnedPlant(plantID, commonName, scientificName, familyName, imagePath, waterFrequency, nickname,
-                lastWatered, ownersEmail);
+        String scientificName = resultSet.getString("scientific_name");
+        String commonName = resultSet.getString("common_name");
+        String family = resultSet.getString("family");
+        String category = resultSet.getString("category");
+        String imageUrl = resultSet.getString("image_url");
+        int lightReqs = resultSet.getInt("light_reqs");
+        int waterFrequency = resultSet.getInt("water_frequency");
+
+        Species species = new Species(scientificName, commonName, family, category, imageUrl, lightReqs, waterFrequency);
+
+        return new UserPlant(plantID, nickname, owner, species, lastWatered, note);
     }
 
     public boolean checkLogin(String email, String password) {
         String query = "SELECT password FROM \"User\" WHERE email = ?";
 
-        try (Connection connection = queryExecutor.getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setString(1, email);
-            try (ResultSet resultSet = statement.executeQuery()) {
-                if (resultSet.next()) {
-                    String hashedPassword = resultSet.getString(1);
-                    return BCrypt.checkpw(password, hashedPassword);
-                }
+        try (ResultSet resultSet = queryExecutor.executeQuery(query, email)) {
+            if (resultSet.next()) {
+                String hashedPassword = resultSet.getString(1);
+                return BCrypt.checkpw(password, hashedPassword);
             }
-
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, "Error during login check", e);
         }
         return false;
+    }
 
+    public boolean waterPlant(Context context) {
+        try {
+            String plantID = context.pathParam("plant_id");
+            String userId = context.cookie("user_id");
+
+            String query = "UPDATE owned_plants SET last_watered = CURRENT_DATE " +
+                    "WHERE plant_id = ? AND user_id = ?";
+
+            queryExecutor.beginTransaction();
+            queryExecutor.executeUpdate(query, plantID, userId);
+            queryExecutor.endTransaction();
+            return true;
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Error watering plant", e);
+            queryExecutor.rollbackTransaction();
+            context.status(500).result("Error watering plant.");
+            return false;
+        }
     }
 
     public boolean addUser(Context context) {
         try {
-            User user = context.bodyAsClass(User.class);
-            String hashedPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
+            String email = context.formParam("email");
+            String username = context.formParam("username");
+            String password = context.formParam("password");
+            String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
+            int colorTheme = Integer.parseInt(context.formParam("color_theme"));
 
-            String query = "INSERT INTO users (email, password_hash) VALUES (?, ?)";
-            queryExecutor.executeUpdate(query, user.getEmail(), hashedPassword);
+            queryExecutor.beginTransaction();
+            String insertQuery = "INSERT INTO users (email, username, password, color_theme) VALUES (?, ?, ?, ?)";
+            queryExecutor.executeUpdate(insertQuery, email, username, hashedPassword, colorTheme);
+            queryExecutor.endTransaction();
 
             return true;
+        } catch (NumberFormatException e) {
+            context.status(400).result("Invalid colorTheme format.");
+            queryExecutor.rollbackTransaction();
+            return false;
         } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "Error adding user", e);
+            LOGGER.log(Level.SEVERE, "Error adding user to database", e);
+            context.status(500).result("Error creating user.");
+            queryExecutor.rollbackTransaction();
             return false;
         }
-
-
     }
 
     public boolean deleteAccount(String email, String password) {
@@ -113,105 +127,64 @@ public class UserRepository {
         String queryDeletePlants = "DELETE FROM \"plant\" WHERE user_id = ?";
         String queryDeleteUser = "DELETE FROM \"User\" WHERE id = ?";
 
-        try (Connection connection = queryExecutor.getConnection()) {
+        try {
             queryExecutor.beginTransaction();
 
-            try (PreparedStatement selectStatement = connection.prepareStatement(querySelect);
-                 PreparedStatement deletePlantsStatement = connection.prepareStatement(queryDeletePlants);
-                 PreparedStatement deleteUserStatement = connection.prepareStatement(queryDeleteUser)) {
-
-                selectStatement.setString(1, email);
-
-                try (ResultSet resultSet = selectStatement.executeQuery()) {
-                    if (!resultSet.next()) {
-                        throw new SQLException("User not found");
-                    }
-                    int id = resultSet.getInt("id");
-
-
-                    deletePlantsStatement.setInt(1, id);
-                    deletePlantsStatement.executeUpdate();
-
-
-                    deleteUserStatement.setInt(1, id);
-                    deleteUserStatement.executeUpdate();
-
-                    queryExecutor.endTransaction();
-                    return true;
+            try (ResultSet resultSet = queryExecutor.executeQuery(querySelect, email)) {
+                if (!resultSet.next()) {
+                    throw new SQLException("User not found");
                 }
+                int id = resultSet.getInt("id");
+
+                queryExecutor.executeUpdate(queryDeletePlants, id);
+                queryExecutor.executeUpdate(queryDeleteUser, id);
+
+                queryExecutor.endTransaction();
+                return true;
             }
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, "Error deleting account", e);
             queryExecutor.rollbackTransaction();
-
         }
         return false;
     }
 
-    public User getUserDetails(Context context) {
-        User user = null;
-        String userID = context.pathParam("user_id");
-        String query = "SELECT id, email, notification_activated, fun_facts_activated FROM \"User\" WHERE id = ?";
+    public boolean addOwnerPlant(Context context) {
+        try {
+            String plantID = context.formParam("plant_id");
+            String nickname = context.formParam("nickname");
+            String owner = context.cookie("user_id");
+            String note = context.formParam("note");
 
-        try (ResultSet resultSet = queryExecutor.executeQuery(query, userID)) {
-            if (resultSet.next()) {
-                int uniqueID = resultSet.getInt("id");
-                String email = resultSet.getString("email");
-                boolean notificationActivated = resultSet.getBoolean("notification_activated");
-                boolean funFactsActivated = resultSet.getBoolean("fun_facts_activated");
+            queryExecutor.beginTransaction();
+            String insertQuery = "INSERT INTO user_plants (plant_id, nickname, owner, note) VALUES (?, ?, ?, ?)";
+            queryExecutor.executeUpdate(insertQuery, plantID, nickname, owner, note);
+            queryExecutor.endTransaction();
 
-                System.out.println("User details: " + uniqueID + " " + email + " " + notificationActivated + " " + funFactsActivated);
-                user = new User(String.valueOf(uniqueID), email, null);
-            }
-        } catch (SQLException sqlException) {
-            sqlException.printStackTrace();
-        }
-        return user;
-    }
-
-
-    public boolean changeNotifications(User user, boolean notifications) {
-        LOGGER.log(Level.INFO, "Changing notification settings for user: " + user.getEmail());
-
-        String query = "UPDATE \"User\" SET notification_activated = ? WHERE email = ?";
-        int notificationsActivated = notifications ? 1 : 0;
-
-        try (Connection connection = queryExecutor.getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
-
-            statement.setInt(1, notificationsActivated);
-            statement.setString(2, user.getEmail());
-
-            int rowsAffected = statement.executeUpdate();
-            return rowsAffected > 0; // Check if any rows were updated
-
-
-        } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE, "Error changing notification settings", e);
+            return true;
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Error adding user plant to database", e);
+            context.status(500).result("Error adding user plant.");
+            queryExecutor.rollbackTransaction();
             return false;
         }
     }
 
-    public boolean changeFunFacts(User user, Boolean funFactsActivated) {
-        LOGGER.log(Level.INFO, "Changing fun facts settings for user: " + user.getEmail());
+    public boolean deleteOwnerPlant(Context context) {
+        try {
+            String plantID = context.pathParam("plant_id");
 
-        String query = "UPDATE \"User\" SET fun_facts_activated = ? WHERE email = ?";
-        int funFactsBitValue = funFactsActivated ? 1 : 0;
+            queryExecutor.beginTransaction();
+            String deleteQuery = "DELETE FROM user_plants WHERE plant_id = ?";
+            queryExecutor.executeUpdate(deleteQuery, plantID);
+            queryExecutor.endTransaction();
 
-
-        try (Connection connection = queryExecutor.getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setInt(1, funFactsBitValue);
-            statement.setString(2, user.getEmail());
-
-            int rowsAffected = statement.executeUpdate();
-            return rowsAffected > 0; // Return true if update successful
-
-        } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE, "Error changing fun facts settings", e);
-            return false; // Indicate failure
+            return true;
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Error deleting user plant from database", e);
+            context.status(500).result("Error deleting user plant.");
+            queryExecutor.rollbackTransaction();
+            return false;
         }
     }
-
-
 }
