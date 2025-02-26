@@ -31,6 +31,8 @@ class _LoginPageState extends State<LoginPage> {
     final email = _emailController.text.trim();
     final password = _passwordController.text.trim();
 
+    //Navigator.pushNamed(context, '/home_page'); // TA BORT KOMMENTAREN OM NI VILL IN I PROGRAMMET
+
     // Check if email or password is empty, if so show a snackbar and return.
     if (email.isEmpty && password.isEmpty) {
       errorMessageOverlay(context, "Email and password is empty!");
@@ -135,7 +137,7 @@ class _LoginPageState extends State<LoginPage> {
                   padding:
                       const EdgeInsets.symmetric(vertical: 14, horizontal: 50),
                 ),
-                onPressed: _isSignUpMode? () => _signUp(context) : () => _login(context), //Kommentera bort denna raden och lägg in den under om ni vill in.
+                onPressed: _isSignUpMode? () => _signUp(context) : () => _login(context),
                 //Navigator.pushNamed(context, '/home_page');
                 child: Text(_isSignUpMode ? "Sign Up" : "Login", style: const TextStyle(fontSize: 18),
                 ),

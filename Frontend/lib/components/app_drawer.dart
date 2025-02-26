@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:my_happy_plants_flutter/providers/login_provider.dart';
+import 'package:provider/provider.dart';
 
 // @Author Filip Claesson, Pehr Nortén
 class AppDrawer extends StatelessWidget {
@@ -95,6 +97,7 @@ class AppDrawer extends StatelessWidget {
                   iconColor: Theme.of(context).colorScheme.onSurface,
                   selectedColor: Theme.of(context).colorScheme.secondary,
                   onTap: () {
+                    Provider.of<LoginProvider>(context, listen: false).logout();
                     Navigator.pushReplacementNamed(context,
                         '/login_page'); // Navigate to login page and remove all other routes from the stack
                   },

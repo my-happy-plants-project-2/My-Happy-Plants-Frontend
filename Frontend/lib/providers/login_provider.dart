@@ -31,4 +31,9 @@ class LoginProvider extends ChangeNotifier {
       return false;
     }
   }
+
+  void logout() {
+    _token = null;
+    notifyListeners();
+  }
 }
