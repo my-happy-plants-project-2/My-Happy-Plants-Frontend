@@ -20,6 +20,8 @@ public class UserController {
         // authorization routes
         app.post(API_VERSION + "/auth/login", this::login);
 
+        app.before(API_VERSION + "/user/*", new JWTMiddleware());
+
         // user routes
         app.post(API_VERSION + "/user", this::addUser);
         app.delete(API_VERSION + "/user", this::deleteUser);
@@ -32,32 +34,31 @@ public class UserController {
     }
 
     private void login(Context context) {
-        // Implement login logic here
+        userService.login(context);
     }
 
     private void addUser(Context context) {
-        userService.addUser(context); // As implemented previously
+        userService.addUser(context);
     }
 
     private void deleteUser(Context context) {
-        // Implement user deletion logic here.  Likely needs a user identifier.
+        userService.deleteUser(context);
     }
 
     private void addPlantToUserLibrary(Context context) {
-        // Implement logic to add a plant to the user's library
+        userService.addPlantToUserLibrary(context);
     }
 
-
     private void deletePlantFromUserLibrary(Context context) {
-        // Implement logic to delete a plant from the user's library.  Use context.pathParam("id") to get the plant ID.
+        userService.deletePlantFromUserLibrary(context);
     }
 
     private void getUserPlants(Context context) {
-        // Implement logic to retrieve the plants in a user's library
+        context.json(userService.getUserPlants(context));
     }
 
     private void waterPlant(Context context) {
-        // Implement logic to update a plant's watering status.  Use context.pathParam("id") to get the plant ID.
+        userService.waterPlant(context);
     }
 
 }

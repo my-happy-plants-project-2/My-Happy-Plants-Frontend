@@ -3,7 +3,6 @@ package org.example.repositories;
 import io.javalin.http.Context;
 import org.example.model.Species;
 import org.example.model.UserPlant;
-import org.example.model.User;
 import org.example.services.IQueryExecutor;
 
 import java.sql.*;
