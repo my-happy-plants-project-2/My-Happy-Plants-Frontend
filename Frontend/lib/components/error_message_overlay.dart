@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 // @Author Pehr Nortén
-
 void errorMessageOverlay(BuildContext context, String message) {
   // Create an OverlayEntry
   OverlayEntry overlayEntry = OverlayEntry(
