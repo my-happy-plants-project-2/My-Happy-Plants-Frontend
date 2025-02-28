@@ -159,6 +159,7 @@ class _MyPlantsPageState extends State<MyPlantsPage> {
     plantProvider.fillUserList(widget.plants);
   }
 
+  @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Padding(

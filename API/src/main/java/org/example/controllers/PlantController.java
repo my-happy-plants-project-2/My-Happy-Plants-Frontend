@@ -2,12 +2,14 @@ package org.example.controllers;
 
 import io.javalin.Javalin;
 import io.javalin.http.Context;
-import org.example.model.Plant;
+import org.example.model.Species;
 import org.example.services.PlantService;
 import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 public class PlantController {
+    private static final String API_VERSION = "/api/v1";
+
     private final PlantService plantService;
 
     public PlantController(PlantService plantService) {
@@ -15,16 +17,10 @@ public class PlantController {
     }
 
     public void registerRoutes(Javalin app) {
-        app.get("/api/v1/species", this::getAllSpecies);
+        app.get(API_VERSION + "/species", this::getAllPlants);
     }
 
-    public void getAllSpecies(@NotNull Context ctx) {
-        List<Plant> plants = plantService.getAllPlants();
-
-        if (plants.isEmpty()) {
-            ctx.status(200).json("[]");
-        } else {
-            ctx.json(plants);
-        }
+    public void getAllPlants(@NotNull Context context) {
+        plantService.getAllPlants(context);
     }
 }

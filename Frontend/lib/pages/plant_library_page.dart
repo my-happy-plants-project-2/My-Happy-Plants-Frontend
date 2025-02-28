@@ -157,6 +157,7 @@ class _PlantLibraryPageState extends State<PlantLibraryPage> {
     final plantProvider = Provider.of<PlantProvider>(context, listen: false);
     plantProvider.fillLibraryList(widget.plants);
   }
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface.withAlpha(200),
