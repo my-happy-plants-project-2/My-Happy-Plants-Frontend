@@ -1,13 +1,15 @@
 import 'dart:math';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:my_happy_plants_flutter/components/custom_icon_button.dart';
 import 'package:my_happy_plants_flutter/components/water_bar.dart';
 import 'package:my_happy_plants_flutter/model/plant.dart';
+import 'package:my_happy_plants_flutter/model/plant_facts.dart';
 import 'package:my_happy_plants_flutter/providers/plant_provider.dart';
 import 'package:provider/provider.dart';
 
-// @Author Filip Claesson, Pehr Nortén
+// @Author Filip Claesson, Pehr Nortén, Christian Storck
 class MyPlantsCard extends StatelessWidget {
   final Plant plant;
 
@@ -59,10 +61,6 @@ class MyPlantsCard extends StatelessWidget {
           ),
           Text(plant.commonName),
         ],
-      ),
-      CustomIconButton(
-        icon: Icons.delete,
-        onPressed: () => _deletePlant(context)
       ),
     ],
     ),
@@ -118,8 +116,19 @@ class MyPlantsCard extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             CustomIconButton(
-              icon: Icons.edit,
-              onPressed: () => _editPlantName(context),
+                icon: Icons.edit,
+                popupMenuItems: [
+                  PopupMenuItem<int>(
+                      value: 0,
+                      child: const Text('Edit Name'),
+                      onTap: () => _editPlantName(context),
+                  ),
+                  PopupMenuItem<int>(
+                    value: 1,
+                    child: const Text('Delete Plant'),
+                    onTap: () => _deletePlant(context),
+                  ),
+                ],
             ),
             _buildCustomImageButton(
               context,
@@ -128,13 +137,10 @@ class MyPlantsCard extends StatelessWidget {
                 color: Theme.of(context).colorScheme.onSurface,
               ),
               onPressed: () => _waterPlant(context),
-                // Todo: Add watering functionality here
             ),
             CustomIconButton(
               icon: Icons.info_outline,
-              onPressed: () {
-                // Todo: Add delete functionality here
-              },
+              onPressed: () => _showPlantInfoDialog(context),
             ),
           ],
         ),
@@ -165,7 +171,7 @@ class MyPlantsCard extends StatelessWidget {
               TextButton(onPressed: () {
                 final plantProvider = context.read<PlantProvider>();
 
-                plantProvider.changeNickName(plant.plantId, _controller.text);
+                plantProvider.changeNickName(context, plant.plantId, _controller.text);
 
                 Navigator.pop(context);
               },
@@ -180,13 +186,13 @@ class MyPlantsCard extends StatelessWidget {
   void _waterPlant(BuildContext context) {
     final plantProvider = context.read<PlantProvider>();
 
-    plantProvider.waterPlant(plant.plantId);
+    plantProvider.waterPlant(context, plant.plantId);
   }
 
   void _deletePlant(BuildContext context) {
     final plantProvider = context.read<PlantProvider>();
 
-    plantProvider.removePlant(plant.plantId);
+    plantProvider.removePlant(context, plant.plantId);
   }
 
   // Helper method to build the Image button section
@@ -218,6 +224,112 @@ class MyPlantsCard extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  void _showPlantInfoDialog(BuildContext context) {
+    String funFact = PlantFacts.getFact(plant.commonName);
+    showDialog(context: context,
+      barrierDismissible: true,
+      builder: (context) {
+        return Stack(
+          children: [
+            BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
+              child: Container(
+                color: Colors.black.withOpacity(0.2),
+              ),
+            ),
+            Center(
+              child: Dialog(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                backgroundColor: Theme
+                    .of(context)
+                    .colorScheme
+                    .primary,
+                child: Padding(
+                  padding: EdgeInsets.all(14.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        plant.nickname,
+                        style: const TextStyle(
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      Text(
+                        "Scientific Name: ${plant.scientificName}",
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.grey[650],
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Padding(padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Container(
+                        height: 240,
+                        width: 400,
+                        decoration: BoxDecoration(
+                          color: Colors.white.withAlpha(120),
+                          borderRadius: BorderRadius.circular(20),
+        ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Expanded(
+                                flex: 15,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(12),
+                                  child: FittedBox(
+                                    fit: BoxFit.contain,
+                                    child: Image.asset(
+                                      plant.imagePath,
+                                      height: 250,
+                                      width: 250,
+                                    ),
+                                  ),
+                                ),
+                              )
+                            ],
+                          )
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.primary,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Text(
+                          "Fun Fact: $funFact",
+                          style: const TextStyle(fontSize: 16),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: Text("Close",
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Theme.of(context).colorScheme.surface,
+                        ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }

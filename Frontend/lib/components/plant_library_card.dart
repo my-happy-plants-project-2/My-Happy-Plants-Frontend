@@ -105,9 +105,9 @@ class PlantLibraryCard extends StatelessWidget {
             print(_controller.text);
             print(plant.nickname);
             //plantProvider.saveNewPlantName(plant.plantId, _controller.text);
-            plantProvider.addPlants(plant, _controller.text);
+            plantProvider.addPlants(context, plant, _controller.text);
             Navigator.of(context, rootNavigator: true).pop();
-          },  //TODO: Add provider here so it connects to saveNameMethod.
+          },
           onCancel: () {
             _controller.clear();
             Navigator.pop(context);

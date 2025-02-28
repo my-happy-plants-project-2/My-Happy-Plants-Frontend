@@ -17,8 +17,14 @@ public class UserController {
     }
 
     public void registerRoutes(Javalin app) {
+      
         // authorization routes
         app.post(API_VERSION + "/auth/login", this::login);
+
+        //app.patch("/api/v1/user", this::changeUserName);
+        //app.patch("/api/v1/user/theme/{theme_id}", this::changeColorTheme);
+        //app.patch("/api/v1/user/plants/{id}", this::changeNickName);
+        //app.patch("/api/v1/user/plants/note/{id}", this::updateNote);
 
         app.before(API_VERSION + "/user/*", new JWTMiddleware());
 
