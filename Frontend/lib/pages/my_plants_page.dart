@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 
 import '../providers/plant_provider.dart';
 
-//@author Filip Claesson, Pehr Norten
+//@author Filip Claesson, Pehr Norten, Christian Storck
 class MyPlantsPage extends StatefulWidget {
   MyPlantsPage({super.key});
 

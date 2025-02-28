@@ -6,8 +6,10 @@ import 'package:provider/provider.dart';
 
 import 'login_provider.dart';
 
+//@author Christian Storck
+
 class AuthenticationProvider extends ChangeNotifier {
-  final String _baseUrl = "/api/v1";
+  final String _baseUrl = "http://localhost:8080/api/v1";
 
   String? _getToken(BuildContext context) {
     return Provider.of<LoginProvider>(context, listen: false).token;
