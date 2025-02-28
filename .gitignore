@@ -9,3 +9,6 @@ Frontend/windows/flutter/ephemeral/.plugin_symlinks/url_launcher_windows
 Frontend/windows/flutter/ephemeral/.plugin_symlinks/webview_windows
 Frontend/macos/Flutter/ephemeral/flutter_export_environment.sh
 Frontend/linux/flutter/ephemeral/.plugin_symlinks/url_launcher_linux
+Frontend/android/local.properties
+Frontend/build/flutter_assets/shaders/ink_sparkle.frag
+Frontend/build/flutter_assets/NOTICES
