@@ -23,7 +23,7 @@ class PlantLibraryAddDialog extends StatelessWidget {
     return AlertDialog(
       backgroundColor: Theme.of(context).colorScheme.primary,
       content: Container(
-        constraints: BoxConstraints(maxHeight: 300),
+        constraints: BoxConstraints(maxHeight: 305),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
