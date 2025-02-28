@@ -4,7 +4,7 @@ import 'package:my_happy_plants_flutter/providers/authentication_provider.dart';
 import 'package:my_happy_plants_flutter/providers/login_provider.dart';
 import 'package:provider/provider.dart';
 
-//@author Filip Claesson, Pehr Norten
+//@author Filip Claesson, Pehr Norten, Christian Storck
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 

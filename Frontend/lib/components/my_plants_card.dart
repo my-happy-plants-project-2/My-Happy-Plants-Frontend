@@ -9,7 +9,7 @@ import 'package:my_happy_plants_flutter/model/plant_facts.dart';
 import 'package:my_happy_plants_flutter/providers/plant_provider.dart';
 import 'package:provider/provider.dart';
 
-// @Author Filip Claesson, Pehr Nortén
+// @Author Filip Claesson, Pehr Nortén, Christian Storck
 class MyPlantsCard extends StatelessWidget {
   final Plant plant;
 

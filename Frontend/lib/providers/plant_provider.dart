@@ -6,9 +6,11 @@ import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 import '../model/plant.dart';
 
+//@author Christian Storck
+
 class PlantProvider extends ChangeNotifier{
 
-    final String _baseUrl = "/api/v1"; //TODO: Add actual URL
+    final String _baseUrl = "http://localhost:8080/api/v1";
     List<Plant> _allPlants = [];
     List<Plant> _userPlants = [];
     List<Plant> get userPlants => _userPlants;
