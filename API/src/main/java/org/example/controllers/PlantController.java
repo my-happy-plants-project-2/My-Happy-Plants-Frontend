@@ -20,13 +20,7 @@ public class PlantController {
         app.get(API_VERSION + "/species", this::getAllPlants);
     }
 
-    public void getAllPlants(@NotNull Context ctx) {
-        List<Species> species = plantService.getAllPlants();
-
-        if (species.isEmpty()) {
-            ctx.status(200).json("[]");
-        } else {
-            ctx.json(species);
-        }
+    public void getAllPlants(@NotNull Context context) {
+        plantService.getAllPlants(context);
     }
 }

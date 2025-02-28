@@ -7,6 +7,7 @@ import org.example.repositories.UserRepository;
 
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 
 public class UserService {
     private final UserRepository userRepository;
@@ -57,9 +58,13 @@ public class UserService {
     }
 
     public void getUserPlants(Context context) {
-        String email = context.pathParam("email");
-        List<UserPlant> userPlants = userRepository.getUserPlants(email);
-        context.json(userPlants);
+        try {
+            String email = context.pathParam("email");
+            List<UserPlant> userPlants = userRepository.getUserPlants(email);
+            context.json(userPlants);
+        } catch (Exception e) {
+            context.status(500).result("Error retrieving user plants");
+        }
     }
 
     public void addPlantToUserLibrary(Context context) {

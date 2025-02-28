@@ -35,24 +35,29 @@ public class UserRepository {
         return userPlants;
     }
 
-    private UserPlant plantOwnerResultSet(ResultSet resultSet) throws SQLException {
-        String plantID = resultSet.getString("plant_id");
-        String nickname = resultSet.getString("nickname");
-        String owner = resultSet.getString("owner");
-        Date lastWatered = resultSet.getDate("last_watered");
-        String note = resultSet.getString("note");
+    private UserPlant plantOwnerResultSet(ResultSet resultSet) {
+        try {
+            String plantID = resultSet.getString("plant_id");
+            String nickname = resultSet.getString("nickname");
+            String owner = resultSet.getString("owner");
+            Date lastWatered = resultSet.getDate("last_watered");
+            String note = resultSet.getString("note");
 
-        String scientificName = resultSet.getString("scientific_name");
-        String commonName = resultSet.getString("common_name");
-        String family = resultSet.getString("family");
-        String category = resultSet.getString("category");
-        String imageUrl = resultSet.getString("image_url");
-        int lightReqs = resultSet.getInt("light_reqs");
-        int waterFrequency = resultSet.getInt("water_frequency");
+            String scientificName = resultSet.getString("scientific_name");
+            String commonName = resultSet.getString("common_name");
+            String family = resultSet.getString("family");
+            String category = resultSet.getString("category");
+            String imageUrl = resultSet.getString("image_url");
+            int lightReqs = resultSet.getInt("light_reqs");
+            int waterFrequency = resultSet.getInt("water_frequency");
 
-        Species species = new Species(scientificName, commonName, family, category, imageUrl, lightReqs, waterFrequency);
+            Species species = new Species(scientificName, commonName, family, category, imageUrl, lightReqs, waterFrequency);
 
-        return new UserPlant(plantID, nickname, owner, species, lastWatered, note);
+            return new UserPlant(plantID, nickname, owner, species, lastWatered, note);
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Error processing result set", e);
+            return null;
+        }
     }
 
     public boolean checkLogin(String email, String password) {
