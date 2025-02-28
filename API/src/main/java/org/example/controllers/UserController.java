@@ -54,7 +54,7 @@ public class UserController {
     }
 
     private void getUserPlants(Context context) {
-        context.json(userService.getUserPlants(context));
+        userService.getUserPlants(context);
     }
 
     private void waterPlant(Context context) {

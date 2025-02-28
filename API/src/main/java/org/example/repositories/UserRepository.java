@@ -21,9 +21,8 @@ public class UserRepository {
         this.queryExecutor = queryExecutor;
     }
 
-    public List<UserPlant> getUserPlants(Context context) {
+    public List<UserPlant> getUserPlants(String userEmail) {
         List<UserPlant> userPlants = new ArrayList<>();
-        String userEmail = context.pathParam("email");
 
         try (ResultSet resultSet = queryExecutor.executeQuery("SELECT up.*, s.* FROM user_plants up JOIN species " +
                 "s ON up.species = s.scientific_name WHERE owner = ?", userEmail)) {
@@ -70,11 +69,8 @@ public class UserRepository {
         return false;
     }
 
-    public boolean waterPlant(Context context) {
+    public boolean waterPlant(String plantID, String userId) {
         try {
-            String plantID = context.pathParam("plant_id");
-            String userId = context.cookie("user_id");
-
             String query = "UPDATE owned_plants SET last_watered = CURRENT_DATE " +
                     "WHERE plant_id = ? AND user_id = ?";
 
@@ -85,33 +81,26 @@ public class UserRepository {
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Error watering plant", e);
             queryExecutor.rollbackTransaction();
-            context.status(500).result("Error watering plant.");
             return false;
         }
     }
 
-    public boolean addUser(Context context) {
+    public boolean addUser(String email, String username, String password, String colorTheme) {
         try {
-            String email = context.formParam("email");
-            String username = context.formParam("username");
-            String password = context.formParam("password");
             String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
-            int colorTheme = Integer.parseInt(context.formParam("color_theme"));
+            int colorThemeInt = Integer.parseInt(colorTheme);
 
             queryExecutor.beginTransaction();
             String insertQuery = "INSERT INTO users (email, username, password, color_theme) VALUES (?, ?, ?, ?)";
-            queryExecutor.executeUpdate(insertQuery, email, username, hashedPassword, colorTheme);
+            queryExecutor.executeUpdate(insertQuery, email, username, hashedPassword, colorThemeInt);
             queryExecutor.endTransaction();
 
             return true;
         } catch (NumberFormatException e) {
-            context.status(400).result("Invalid colorTheme format.");
-            queryExecutor.rollbackTransaction();
+            LOGGER.log(Level.SEVERE, "Invalid colorTheme format", e);
             return false;
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Error adding user to database", e);
-            context.status(500).result("Error creating user.");
-            queryExecutor.rollbackTransaction();
             return false;
         }
     }
@@ -148,13 +137,8 @@ public class UserRepository {
         return false;
     }
 
-    public boolean addOwnerPlant(Context context) {
+    public boolean addOwnerPlant(String plantID, String nickname, String owner, String note) {
         try {
-            String plantID = context.formParam("plant_id");
-            String nickname = context.formParam("nickname");
-            String owner = context.cookie("user_id");
-            String note = context.formParam("note");
-
             queryExecutor.beginTransaction();
             String insertQuery = "INSERT INTO user_plants (plant_id, nickname, owner, note) VALUES (?, ?, ?, ?)";
             queryExecutor.executeUpdate(insertQuery, plantID, nickname, owner, note);
@@ -163,16 +147,12 @@ public class UserRepository {
             return true;
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Error adding user plant to database", e);
-            context.status(500).result("Error adding user plant.");
-            queryExecutor.rollbackTransaction();
             return false;
         }
     }
 
-    public boolean deleteOwnerPlant(Context context) {
+    public boolean deleteOwnerPlant(String plantID) {
         try {
-            String plantID = context.pathParam("plant_id");
-
             queryExecutor.beginTransaction();
             String deleteQuery = "DELETE FROM user_plants WHERE plant_id = ?";
             queryExecutor.executeUpdate(deleteQuery, plantID);
@@ -181,9 +161,12 @@ public class UserRepository {
             return true;
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Error deleting user plant from database", e);
-            context.status(500).result("Error deleting user plant.");
-            queryExecutor.rollbackTransaction();
             return false;
         }
     }
+
+    public boolean upDateOwnerPlant() {
+        return false;
+    }
+
 }

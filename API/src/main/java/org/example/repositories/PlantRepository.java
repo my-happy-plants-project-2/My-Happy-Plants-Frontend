@@ -19,7 +19,6 @@ public class PlantRepository {
         this.queryExecutor = queryExecutor;
     }
 
-    // ToDo: Add object to connect to database
     public List<Species> getAllSpecies() {
         List<Species> species = new ArrayList<>();
         try (ResultSet resultSet = queryExecutor.executeQuery("SELECT * FROM species")){

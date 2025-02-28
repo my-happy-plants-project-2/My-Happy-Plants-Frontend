@@ -16,7 +16,12 @@ public class UserService {
     }
 
     public void addUser(Context context) {
-        if (userRepository.addUser(context)) {
+        String email = context.formParam("email");
+        String username = context.formParam("username");
+        String password = context.formParam("password");
+        String colorTheme = context.formParam("color_theme");
+
+        if (userRepository.addUser(email, username, password, colorTheme)) {
             context.status(201).result("User created successfully");
         } else {
             context.status(500).result("Error creating user");
@@ -40,53 +45,55 @@ public class UserService {
         }
     }
 
-    public boolean deleteUser(Context context) {
+    public void deleteUser(Context context) {
         String email = context.formParam("email");
         String password = context.formParam("password");
+
         if (userRepository.deleteAccount(email, password)) {
             context.status(200).result("User deleted successfully");
-            return true;
         } else {
             context.status(500).result("Error deleting user");
-            return false;
         }
     }
 
-    public List<UserPlant> getUserPlants(Context context) {
-        return userRepository.getUserPlants(context);
+    public void getUserPlants(Context context) {
+        String email = context.pathParam("email");
+        List<UserPlant> userPlants = userRepository.getUserPlants(email);
+        context.json(userPlants);
     }
 
-    public boolean addPlantToUserLibrary(Context context) {
-        if (userRepository.addOwnerPlant(context)) {
+    public void addPlantToUserLibrary(Context context) {
+        String plantID = context.formParam("plant_id");
+        String nickname = context.formParam("nickname");
+        String owner = context.cookie("user_id");
+        String note = context.formParam("note");
+
+        if (userRepository.addOwnerPlant(plantID, nickname, owner, note)) {
             context.status(201).result("Plant added to user library");
-            return true;
         } else {
             context.status(500).result("Error adding plant to user library");
-            return false;
         }
     }
 
-    public boolean deletePlantFromUserLibrary(Context context) {
-        if (userRepository.deleteOwnerPlant(context)) {
+    public void deletePlantFromUserLibrary(Context context) {
+        String plantID = context.pathParam("plant_id");
+
+        if (userRepository.deleteOwnerPlant(plantID)) {
             context.status(200).result("Plant deleted from user library");
-            return true;
         } else {
             context.status(500).result("Error deleting plant from user library");
-            return false;
         }
     }
 
-    public boolean updatePlantInUserLibrary(Context ctx) {
-        // Implement logic to update a plant in the user's library
-        return false;
-    }
+    public void waterPlant(Context context) {
+        String plantID = context.pathParam("plant_id");
+        String userId = context.cookie("user_id");
 
-    public boolean waterPlant(Context ctx) {
-        if (userRepository.waterPlant(ctx)) {
-            ctx.status(200).result("Plant watered successfully");
-            return true;
+        if (userRepository.waterPlant(plantID, userId)) {
+            context.status(200).result("Plant watered successfully");
         } else {
-            ctx.status(500).result("Error watering plant");
-            return false;
+            context.status(500).result("Error watering plant");
         }
-    }}
+    }
+
+}
