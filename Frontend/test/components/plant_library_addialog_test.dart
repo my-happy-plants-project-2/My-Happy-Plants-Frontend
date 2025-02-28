@@ -8,6 +8,8 @@ import 'package:my_happy_plants_flutter/model/plant.dart';
 //COL 04-F Naming of plant
 
 void main() {
+  //@author Filip Claesson
+  // T-01
   testWidgets(
     'PlantLibraryAddDialog saves the correct nickname when Save is clicked',
     (tester) async {
