@@ -20,9 +20,15 @@ class LoginProvider extends ChangeNotifier {
         body: jsonEncode({"email": email, "password": password}),
       );
 
+      print("Response Code: ${response.statusCode}");
+      print("Response Body: ${response.body}");
+
+      print(email + password);
+
       if(response.statusCode == 200) {
         final data =jsonDecode(response.body);
-        _token = data['token']; //Det är här auth token sparas. OM vi skickar det från data servern?
+        _token = data['token'];
+        print("Successfull login: ${response.statusCode}");//Det är här auth token sparas. OM vi skickar det från data servern?
         notifyListeners();
         return true;
       } else {
