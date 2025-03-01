@@ -23,16 +23,19 @@ class AuthenticationProvider extends ChangeNotifier {
   }
 
   Future<bool> createAccount (String userName, String email, String password) async {
-    final response = await _makeRequest("POST", "/user", null, body: {
+    final response = await _makeRequest("POST", "user", null, body: {
       "username" : userName,
       "email" : email,
       "password" : password,
+      "color_theme": "1",
     },
       requiresAuth: false,
     );
 
+    print(userName + email + password);
+
     if(response == null) {
-      print("Failed to create account");
+      print("Failed to create account, null");
       return false;
     }
 
@@ -41,6 +44,8 @@ class AuthenticationProvider extends ChangeNotifier {
       return true;
     } else {
       print("Failed to create account");
+      print("Status Code: ${response.statusCode}");
+      print("Response Body: ${response.body}");
       return false;
     }
   }
