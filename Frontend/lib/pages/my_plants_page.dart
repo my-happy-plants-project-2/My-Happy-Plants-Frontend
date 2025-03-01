@@ -9,6 +9,7 @@ import '../providers/plant_provider.dart';
 class MyPlantsPage extends StatefulWidget {
   MyPlantsPage({super.key});
 
+/**
   List<Plant> plants = [
     Plant(
       plantId: '1',
@@ -147,6 +148,7 @@ class MyPlantsPage extends StatefulWidget {
 void remakeplantlist(List<Plant> newPlants) {
   plants = newPlants;
 }
+*/
   @override
   State<MyPlantsPage> createState() => _MyPlantsPageState();
 }
@@ -155,8 +157,13 @@ class _MyPlantsPageState extends State<MyPlantsPage> {
   @override
   void initState() {
     super.initState();
+    _loadUserPlants();
+  }
+
+  Future<void> _loadUserPlants() async {
     final plantProvider = Provider.of<PlantProvider>(context, listen: false);
-    plantProvider.fillUserList(widget.plants);
+    List<Plant> userPlants = await plantProvider.getUserPlantList(context);
+    plantProvider.fillUserList(userPlants);
   }
 
   @override
