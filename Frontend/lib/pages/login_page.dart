@@ -157,6 +157,63 @@ class _LoginPageState extends State<LoginPage> {
                       style: const TextStyle(fontSize: 18),
                     ),
                   ),
+                  const SizedBox(height: 20),
+                  TextButton(
+                    onPressed: _toggleLoginMode,
+                    child: Text(
+                      _isSignUpMode
+                          ? "Already have an account? Login"
+                          : "Create Account",
+                      style: TextStyle(color: Colors.white70, fontSize: 16),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTextField(String hint, IconData icon,
+      TextEditingController controller, bool isPassword) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: TextField(
+        controller: controller,
+        obscureText: isPassword,
+        decoration: InputDecoration(
+          hintText: hint,
+          prefixIcon: Icon(icon),
+          filled: true,
+          fillColor: Colors.white.withAlpha(200),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(15),
+            borderSide: BorderSide.none,
+          ),
+        ),
+      ),
+    );
+  }
+} Theme.of(context).colorScheme.primary,
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 14, horizontal: 50),
+                    ),
+                    onPressed: _isSignUpMode
+                        ? () => _signUp(context)
+                        : () => _login(
+                            context), //Kommentera bort denna raden och lägg in den under om ni vill in.
+                    //Navigator.pushNamed(context, '/home_page');
+                    child: Text(
+                      _isSignUpMode ? "Sign Up" : "Login",
+                      style: const TextStyle(fontSize: 18),
+                    ),
+                  ),
                   padding:
                       const EdgeInsets.symmetric(vertical: 14, horizontal: 50),
                 ),
