@@ -10,11 +10,23 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Class for handling database connection configuration
+ * Contains methods for creating and closing a connection to the database
+ *
+ * @author Kasper Schröder
+ */
 public class SQLConfig implements ISQLConfig {
 
     private static final Logger LOGGER = Logger.getLogger(SQLConfig.class.getName());
     private static DataSource dataSource;
 
+    /**
+     * Creates a data source for connecting to the database
+     * @return a data source object
+     *
+     * @author Kasper Schröder
+     */
     private DataSource createDataSource() {
         Dotenv dotenv = Dotenv.load();
         String url = dotenv.get("DB_URL");
@@ -34,6 +46,12 @@ public class SQLConfig implements ISQLConfig {
         return new HikariDataSource(config);
     }
 
+    /**
+     * Retrieves a connection to the database, creating a new one if necessary
+     * @return a connection object
+     *
+     * @author Kasper Schröder
+     */
     @Override
     public Connection getConnection() {
         try {
@@ -47,6 +65,11 @@ public class SQLConfig implements ISQLConfig {
         }
     }
 
+    /**
+     * Closes the connection to the database
+     *
+     * @author Kasper Schröder
+     */
     @Override
     public void closeConnection() {
         try {

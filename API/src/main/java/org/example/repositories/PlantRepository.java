@@ -10,15 +10,34 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Repository class for handling plant-related database operations
+ * Contains methods for retrieving plant data from the database
+ *
+ * @author Pehr Norten
+ * @author Kasper Schröder
+ */
 public class PlantRepository {
 
     private static final Logger LOGGER = Logger.getLogger(PlantRepository.class.getName());
     private IQueryExecutor queryExecutor;
 
+    /**
+     * Constructor for PlantRepository
+     * @param queryExecutor the query executor to be used for executing database operations
+     *
+     * @author Kasper Schröder
+     */
     public PlantRepository(IQueryExecutor queryExecutor) {
         this.queryExecutor = queryExecutor;
     }
 
+    /**
+     * Retrieves all plants from the database
+     * @return a list of Species objects
+     *
+     * @author Kasper Schröder
+     */
     public List<Species> getAllSpecies() {
         List<Species> species = new ArrayList<>();
         try (ResultSet resultSet = queryExecutor.executeQuery("SELECT * FROM species")){

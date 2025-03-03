@@ -2,25 +2,44 @@ package org.example.services;
 
 import io.javalin.http.Context;
 import org.example.model.JWTUtil;
+import org.example.model.User;
 import org.example.model.UserPlant;
 import org.example.repositories.UserRepository;
 
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
 
+/**
+ * Service class for handling user-related operations
+ *
+ * @author Kasper Schröder
+ */
 public class UserService {
     private final UserRepository userRepository;
 
+    /**
+     * Constructor for UserService
+     * @param userRepository
+     *
+     * @author Kasper Schröder
+     */
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
+    /**
+     * Adds a user to the database
+     * @param context the context of the request made from a client
+     *
+     * @author Kasper Schröder
+     */
     public void addUser(Context context) {
-        String email = context.formParam("email");
-        String username = context.formParam("username");
-        String password = context.formParam("password");
-        String colorTheme = context.formParam("color_theme");
+        User user = context.bodyAsClass(User.class);
+
+        String email = user.getEmail();
+        String username = user.getUserName();
+        String password = user.getPassword();
+        int colorTheme = user.getColorTheme();
 
         if (userRepository.addUser(email, username, password, colorTheme)) {
             context.status(201).result("User created successfully");
@@ -29,9 +48,17 @@ public class UserService {
         }
     }
 
+    /**
+     * Verifies the login credentials of a user
+     * @param context the context of the request made from a client
+     *
+     * @author Kasper Schröder
+     */
     public void login(Context context) {
-        String email = context.formParam("email");
-        String password = context.formParam("password");
+        User user = context.bodyAsClass(User.class);
+
+        String email = user.getEmail();
+        String password = user.getPassword();
 
         if (email == null || password == null) {
             context.status(400).result("Email and password must be provided");
@@ -46,9 +73,17 @@ public class UserService {
         }
     }
 
+    /**
+     * Deletes a user from the database
+     * @param context the context of the request made from a client
+     *
+     * @author Kasper Schröder
+     */
     public void deleteUser(Context context) {
-        String email = context.formParam("email");
-        String password = context.formParam("password");
+        User user = context.bodyAsClass(User.class);
+
+        String email = user.getEmail();
+        String password = user.getPassword();
 
         if (userRepository.deleteAccount(email, password)) {
             context.status(200).result("User deleted successfully");
@@ -57,9 +92,17 @@ public class UserService {
         }
     }
 
+    /**
+     * Retrieves the plants owned by a user
+     * @param context the context of the request made from a client
+     *
+     * @author Kasper Schröder
+     */
     public void getUserPlants(Context context) {
         try {
-            String email = context.pathParam("email");
+            User user = context.bodyAsClass(User.class);
+            String email = user.getEmail();
+
             List<UserPlant> userPlants = userRepository.getUserPlants(email);
             context.json(userPlants);
         } catch (Exception e) {
@@ -67,19 +110,33 @@ public class UserService {
         }
     }
 
+    /**
+     * Adds a plant to a user's library
+     * @param context the context of the request made from a client
+     *
+     * @author Kasper Schröder
+     */
     public void addPlantToUserLibrary(Context context) {
-        String plantID = context.formParam("plant_id");
-        String nickname = context.formParam("nickname");
-        String owner = context.cookie("user_id");
-        String note = context.formParam("note");
+        UserPlant userPlant = context.bodyAsClass(UserPlant.class);
 
-        if (userRepository.addOwnerPlant(plantID, nickname, owner, note)) {
-            context.status(201).result("Plant added to user library");
+        String nickname = userPlant.getNickname();
+        String owner = userPlant.getOwner();
+        String species = userPlant.getSpecies();
+
+        String plantID = userRepository.addOwnerPlant(nickname, owner, species);
+        if (plantID != null) {
+            context.status(201).result("Plant added to user library").result(plantID);
         } else {
             context.status(500).result("Error adding plant to user library");
         }
     }
 
+    /**
+     * Deletes a plant from a user's library
+     * @param context the context of the request made from a client
+     *
+     * @author Kasper Schröder
+     */
     public void deletePlantFromUserLibrary(Context context) {
         String plantID = context.pathParam("plant_id");
 
@@ -90,6 +147,12 @@ public class UserService {
         }
     }
 
+    /**
+     * Waters a plant in a user's library
+     * @param context the context of the request made from a client
+     *
+     * @author Kasper Schröder
+     */
     public void waterPlant(Context context) {
         String plantID = context.pathParam("plant_id");
         String userId = context.cookie("user_id");
@@ -100,5 +163,4 @@ public class UserService {
             context.status(500).result("Error watering plant");
         }
     }
-
 }

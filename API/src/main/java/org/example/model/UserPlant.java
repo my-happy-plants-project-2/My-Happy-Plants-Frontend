@@ -6,12 +6,12 @@ public class UserPlant {
     private String plantID;
     private String nickname;
     private String owner;
-    private Species species;
+    private String species;
     private Date lastWatered;
     private String note;
 
 
-    public UserPlant(String plantID, String nickname, String owner, Species species, Date lastWatered, String note) {
+    public UserPlant(String plantID, String nickname, String owner, String species, Date lastWatered, String note) {
         this.plantID = plantID;
         this.nickname = nickname;
         this.owner = owner;
@@ -46,11 +46,11 @@ public class UserPlant {
         this.owner = owner;
     }
 
-    public Species getSpecies() {
+    public String getSpecies() {
         return species;
     }
 
-    public void setSpecies(Species species) {
+    public void setSpecies(String species) {
         this.species = species;
     }
 

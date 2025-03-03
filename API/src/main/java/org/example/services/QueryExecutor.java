@@ -7,12 +7,25 @@ import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Class for executing queries on the database
+ * Contains methods for executing queries and transactions
+ * on the database
+ *
+ * @author Kasper Schröder
+ */
 public class QueryExecutor implements IQueryExecutor {
 
     private static final Logger LOGGER = Logger.getLogger(SQLConfig.class.getName());
     private ISQLConfig sqlConfig;
     private Connection connection;
 
+    /**
+     * Constructor for QueryExecutor
+     * @param sqlConfig the SQL configuration to be used for database operations
+     *
+     * @author Kasper Schröder
+     */
     public QueryExecutor(ISQLConfig sqlConfig) {
         this.sqlConfig = sqlConfig;
         this.connection = sqlConfig.getConnection();
@@ -23,6 +36,13 @@ public class QueryExecutor implements IQueryExecutor {
         return connection;
     }
 
+    /**
+     * Executes an update query on the database
+     * @param query the query to be executed
+     * @param parameters the parameters to be used in the query
+     *
+     * @author Kasper Schröder
+     */
     @Override
     public void executeUpdate(String query, Object... parameters) {
         try (PreparedStatement statement = connection.prepareStatement(query)) {
@@ -36,6 +56,14 @@ public class QueryExecutor implements IQueryExecutor {
 
     }
 
+    /**
+     * Executes a query on the database
+     * @param query the query to be executed
+     * @param parameters the parameters to be used in the query
+     * @return the result set of the query
+     *
+     * @author Kasper Schröder
+     */
     @Override
     public ResultSet executeQuery(String query, Object... parameters) {
         try (Connection connection = sqlConfig.getConnection();
@@ -50,6 +78,11 @@ public class QueryExecutor implements IQueryExecutor {
         }
     }
 
+    /**
+     * Begins a transaction on the database
+     *
+     * @author Kasper Schröder
+     */
     @Override
     public void beginTransaction() {
         try {
@@ -60,6 +93,11 @@ public class QueryExecutor implements IQueryExecutor {
         }
     }
 
+    /**
+     * Ends a transaction on the database
+     *
+     * @author Kasper Schröder
+     */
     @Override
     public void endTransaction() {
         try {
@@ -70,6 +108,11 @@ public class QueryExecutor implements IQueryExecutor {
         }
     }
 
+    /**
+     * Rolls back a transaction on the database
+     *
+     * @author Kasper Schröder
+     */
     @Override
     public void rollbackTransaction() {
         try {
