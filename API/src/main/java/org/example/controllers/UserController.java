@@ -1,4 +1,5 @@
 package org.example.controllers;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 import org.example.model.UserPlant;
@@ -43,7 +44,7 @@ public class UserController {
         userService.login(context);
     }
 
-    private void addUser(Context context) {
+    private void addUser(Context context) throws JsonProcessingException {
         userService.addUser(context);
     }
 

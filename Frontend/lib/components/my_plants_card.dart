@@ -34,7 +34,7 @@ class MyPlantsCard extends StatelessWidget {
           children: [
             _buildPlantInfo(context),
             _buildPlantImage(context,
-                value: plant.calculateWaterLevel), // Set a random value between 0 and 1 for now can be calculated from the plant's water frequency and last watered date
+                value: plant.calculateWaterLevel),
             _buildActionButtons(context),
           ],
         ),
@@ -227,7 +227,7 @@ class MyPlantsCard extends StatelessWidget {
     );
   }
 
-  void _showPlantInfoDialog(BuildContext context) {
+  void _showPlantInfoDialog(BuildContext context) { // Method used to create the InfoBox for each plant. Change this, it do be ugly.
     String funFact = PlantFacts.getFact(plant.commonName);
     showDialog(context: context,
       barrierDismissible: true,

@@ -2,6 +2,7 @@ package org.example.services;
 
 import io.javalin.http.Context;
 import org.example.model.JWTUtil;
+import org.example.model.User;
 import org.example.model.UserPlant;
 import org.example.repositories.UserRepository;
 
@@ -17,12 +18,14 @@ public class UserService {
     }
 
     public void addUser(Context context) {
-        String email = context.formParam("email");
-        String username = context.formParam("username");
-        String password = context.formParam("password");
-        String colorTheme = context.formParam("color_theme");
+        User user = context.bodyAsClass(User.class);
 
-        if (userRepository.addUser(email, username, password, colorTheme)) {
+        String username = user.getUsername();
+        String email = user.getEmail();
+        String password = user.getPassword();
+        int colorTheme = user.getColorTheme();
+
+        if (userRepository.addUser(email, username, password, String.valueOf(colorTheme))) {
             context.status(201).result("User created successfully");
         } else {
             context.status(500).result("Error creating user");
@@ -30,8 +33,10 @@ public class UserService {
     }
 
     public void login(Context context) {
-        String email = context.formParam("email");
-        String password = context.formParam("password");
+        User user = context.bodyAsClass(User.class);
+
+        String email = user.getEmail();
+        String password = user.getPassword();
 
         if (email == null || password == null) {
             context.status(400).result("Email and password must be provided");
