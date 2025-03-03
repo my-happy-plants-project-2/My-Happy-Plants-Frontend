@@ -7,7 +7,8 @@ import 'package:http/http.dart' as http;
 import '../model/plant.dart';
 
 //@author Christian Storck
-
+//MEGAclass that handles all of the plant-related logic. Some methods should be moved to library provider.
+//Most of this class is "outcommented" remove the comments when the back-front end connection works.
 class PlantProvider extends ChangeNotifier{
 
     final String _baseUrl = "http://localhost:8080/api/v1";
@@ -25,7 +26,7 @@ class PlantProvider extends ChangeNotifier{
         "Authorization": "Bearer $token",
     };
     
-    Future<http.Response?> _makeRequest(
+    Future<http.Response?> _makeRequest( //See "authenticationprovider" for explanation.
         String method,
         String endpoint,
         BuildContext context,{
@@ -70,9 +71,6 @@ class PlantProvider extends ChangeNotifier{
       light: plant.light,
     );
 
-    //Below is hopefully a method that works for adding plants to the database.
-    //Includes a token for verifications so might have to remove that.
-
     /**
     final response = await _makeRequest("POST", "/user/plant", context, body: {
       "plantId": newPlant.plantId,
@@ -97,7 +95,7 @@ class PlantProvider extends ChangeNotifier{
       print("Error adding plant: $e");
     }
     */
-    _userPlants.add(newPlant);
+    _userPlants.add(newPlant); //This is duplicate, remove when the back-front end connection works.
     notifyListeners();
   }
 
@@ -114,8 +112,7 @@ class PlantProvider extends ChangeNotifier{
                 print("Failed to remove"),
               }
       */
-      _userPlants.removeWhere((p) => p.plantId == plantId);
-      //TODO: Update the plantlist in the database.
+      _userPlants.removeWhere((p) => p.plantId == plantId); //This is duplicate, remove when the back-front end connection works.
       notifyListeners();
     }
 
@@ -125,7 +122,7 @@ class PlantProvider extends ChangeNotifier{
 
 
           if(response != null && response.statusCode == 200) {
-          _userPlants.firstWhere((p) => p.plantId == plantId)lastWatered = DateTime.now();
+          _userPlants.firstWhere((p) => p.plantId == plantId).lastWatered = DateTime.now();
           notifyListeners();
           print("Plant Watered");
           } else {
@@ -133,7 +130,7 @@ class PlantProvider extends ChangeNotifier{
           }
        */
 
-      _userPlants.firstWhere((p) => p.plantId == plantId).lastWatered = DateTime.now();
+      _userPlants.firstWhere((p) => p.plantId == plantId).lastWatered = DateTime.now(); //This is duplicate, remove when the back-front end connection works.
       notifyListeners();
     }
 
@@ -148,13 +145,13 @@ class PlantProvider extends ChangeNotifier{
         print("Failed to change nickname");
       } */
 
-      _userPlants.firstWhere((p) => p.plantId == plantId).nickname = newName;
+      _userPlants.firstWhere((p) => p.plantId == plantId).nickname = newName; //This is duplicate, remove when the back-front end connection works.
       notifyListeners();
     }
 
     void fillLibraryList(List<Plant> plants) {
       _allPlants = plants;
-    } //TODO: These two methods will be removed and replaced with the ones below them.
+    }
 
     void fillUserList(List<Plant> plants) {
       _userPlants = plants;

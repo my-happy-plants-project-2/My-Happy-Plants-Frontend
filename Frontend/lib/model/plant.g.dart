@@ -2,6 +2,8 @@
 
 part of 'plant.dart';
 
+//An auto-generated file that handles Json files. Generated using the Json_serializable dependency.
+
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************

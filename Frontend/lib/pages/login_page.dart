@@ -21,7 +21,7 @@ class _LoginPageState extends State<LoginPage> {
 
   bool _isSignUpMode = false;
 
-  void _toggleLoginMode() {
+  void _toggleLoginMode() { //Changes state depending on if you want to login or create account.
     setState(() {
       _isSignUpMode = !_isSignUpMode;
     });
@@ -32,7 +32,7 @@ class _LoginPageState extends State<LoginPage> {
     final email = _emailController.text.trim();
     final password = _passwordController.text.trim();
 
-    //Navigator.pushNamed(context, '/home_page'); // TA BORT KOMMENTAREN OM NI VILL IN I PROGRAMMET
+    //Navigator.pushNamed(context, '/home_page'); // TODO: TA BORT KOMMENTAREN OM NI VILL IN I PROGRAMMET
 
     // Check if email or password is empty, if so show a snackbar and return.
     if (email.isEmpty && password.isEmpty) {
@@ -48,14 +48,14 @@ class _LoginPageState extends State<LoginPage> {
 
     final success = await loginProvider.login(email, password);
 
-    if (success) {
+    if (success) { // Redirects to the homepage if login is successfull
       Navigator.pushNamed(context, '/home_page');
     } else {
       errorMessageOverlay(context, "Invalid credentials");
     }
   }
 
-  void _signUp(BuildContext context) async {
+  void _signUp(BuildContext context) async { //Takes user input and sends it to the "AuthenticationProvider". Creates account if success.
     final authProvider = context.read<AuthenticationProvider>();
     final userName = _userNameController.text.trim();
     final email = _emailController.text.trim();
@@ -150,20 +150,12 @@ class _LoginPageState extends State<LoginPage> {
                     onPressed: _isSignUpMode
                         ? () => _signUp(context)
                         : () => _login(
-                            context), //Kommentera bort denna raden och lägg in den under om ni vill in.
-                    //Navigator.pushNamed(context, '/home_page');
+                            context),
                     child: Text(
                       _isSignUpMode ? "Sign Up" : "Login",
                       style: const TextStyle(fontSize: 18),
                     ),
                   ),
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 14, horizontal: 50),
-                ),
-                onPressed: _isSignUpMode? () => _signUp(context) : () => _login(context),
-                //Navigator.pushNamed(context, '/home_page');
-                child: Text(_isSignUpMode ? "Sign Up" : "Login", style: const TextStyle(fontSize: 18),
-                ),
                   const SizedBox(height: 20),
                   TextButton(
                     onPressed: _toggleLoginMode,
@@ -183,7 +175,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _buildTextField(String hint, IconData icon,
+  Widget _buildTextField(String hint, IconData icon, //Widget for the textfields.
       TextEditingController controller, bool isPassword) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 10),
@@ -204,3 +196,5 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 }
+
+

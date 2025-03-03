@@ -1,4 +1,6 @@
 class PlantFacts {
+
+  //Auto-generated class containing plant info. Placeholder for now, this sort of info should be contained on the database.
   static final Map<String, String> facts = {
     "Monstera": "Monstera plants develop natural holes in their leaves, called fenestrations, to adapt to rainforest conditions!",
     "Aloe Vera": "Aloe Vera can survive for weeks without water, making it one of the easiest plants to care for.",

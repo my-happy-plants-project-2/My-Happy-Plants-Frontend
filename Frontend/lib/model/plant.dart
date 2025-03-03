@@ -25,7 +25,7 @@ class Plant {
     required this.waterFrequency,
     required this.light,
   });
-
+//Helper method for calculating waterlevel.
   double get calculateWaterLevel {
     DateTime now = DateTime.now();
     int daysSinceWatered = now.difference(lastWatered).inDays;
