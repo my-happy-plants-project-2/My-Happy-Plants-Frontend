@@ -4,6 +4,10 @@ import org.example.config.ISQLConfig;
 import org.example.config.SQLConfig;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -37,13 +41,23 @@ public class QueryExecutor implements IQueryExecutor {
     }
 
     @Override
-    public ResultSet executeQuery(String query, Object... parameters) {
+    public List<Map<String, Object>> executeQuery(String query, Object... parameters) {
+        List<Map<String, Object>> results = new ArrayList<>();
+        Map<String, Object> row = new TreeMap<>();
         try (Connection connection = sqlConfig.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
             for (int i = 0; i < parameters.length; i++) {
                 statement.setObject(i + 1, parameters[i]);
             }
-            return statement.executeQuery();
+            ResultSet resultSet = statement.executeQuery();
+            while(resultSet.next()) {
+                ResultSetMetaData metaData = resultSet.getMetaData();
+                for (int i = 1; i <= metaData.getColumnCount(); i++) {
+                    row.put(metaData.getColumnName(i), resultSet.getObject(i));
+                }
+                results.add(row);
+            }
+            return results;
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, "Error executing query: " + query, e);
             return null;

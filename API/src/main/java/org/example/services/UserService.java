@@ -74,11 +74,12 @@ public class UserService {
 
     public void addPlantToUserLibrary(Context context) {
         String plantID = context.formParam("plant_id");
+        String species = context.formParam("species");
         String nickname = context.formParam("nickname");
         String owner = context.cookie("user_id");
         String note = context.formParam("note");
 
-        if (userRepository.addOwnerPlant(plantID, nickname, owner, note)) {
+        if (userRepository.addOwnerPlant(plantID, nickname, owner, note, species)) {
             context.status(201).result("Plant added to user library");
         } else {
             context.status(500).result("Error adding plant to user library");

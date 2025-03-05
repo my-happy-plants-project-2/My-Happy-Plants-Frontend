@@ -2,12 +2,15 @@ package org.example.services;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.util.List;
+import java.util.Map;
 
 public interface IQueryExecutor {
 
     void executeUpdate(String query, Object... parameters);
 
-    ResultSet executeQuery(String query, Object... parameters);
+//    ResultSet executeQuery(String query, Object... parameters);
+    List<Map<String, Object>> executeQuery(String query, Object... parameters);
 
     void beginTransaction();
 
