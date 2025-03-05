@@ -32,7 +32,7 @@ class _LoginPageState extends State<LoginPage> {
     final email = _emailController.text.trim();
     final password = _passwordController.text.trim();
 
-    //Navigator.pushNamed(context, '/home_page'); // TODO: TA BORT KOMMENTAREN OM NI VILL IN I PROGRAMMET
+    Navigator.pushNamed(context, '/home_page'); // TODO: TA BORT KOMMENTAREN OM NI VILL IN I PROGRAMMET
 
     // Check if email or password is empty, if so show a snackbar and return.
     if (email.isEmpty && password.isEmpty) {

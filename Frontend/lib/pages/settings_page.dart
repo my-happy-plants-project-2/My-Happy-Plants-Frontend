@@ -15,7 +15,7 @@ class _SettingsPageState extends State<SettingsPage> {
       child: Text('Settings Page'),
     );
   }
-}*/
+}
 
 //TA BORT ALL KOD NEDANFÖR HÄR NÄR NI VILL JOBBA I SETTINGS OCH KONVERTERA IN DET OVAN, ALTERNATIVT KOLLA MED DEVGRUPP FÖR SPRINT 1
 //@author Rick Astley
@@ -87,3 +87,84 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 }
+
+ */
+
+
+
+
+import 'package:flutter/material.dart';
+
+class SettingsPage extends StatefulWidget {
+  const SettingsPage({super.key});
+
+  @override
+  State<SettingsPage> createState() => _SettingsPageState();
+}
+
+class _SettingsPageState extends State<SettingsPage>{
+  void _confirmDeleteAccount() {
+    showDialog(context: context, builder: (context) => AlertDialog(
+      title: const Text ("Delete Account"),
+      content: const Text ("Are you sure you want to delete your account?"), 
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: const Text("Cancel"),
+        ),
+        ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.green,
+            ),
+            onPressed: () {
+              Navigator.of(context).pop();
+              _deleteAccount();
+            },
+            child: const Text("Delete", style: TextStyle(color: Colors.white))
+          ),
+        ],
+      ),
+    );
+  }
+  void _deleteAccount(){
+    //Databas kall för att radera konto, med errorMessage
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text("Account deleted successfully")),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context){
+    return Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Image.asset('lib/assets/images/plants/parlor_palm.png',height: 150),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.green,
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              ),
+              onPressed: _confirmDeleteAccount,
+              child: const Text("Delete Account", style: TextStyle(color: Colors.white)),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
