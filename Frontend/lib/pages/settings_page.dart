@@ -128,10 +128,21 @@ class _SettingsPageState extends State<SettingsPage>{
   }
   void _deleteAccount(){
     //Databas kall för att radera konto, med errorMessage
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text("Account deleted successfully")),
-    );
+
+
+    if (success){
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Account deleted successfully")),
+      );
+      Navigator.pushReplacementNamed(context, '/login_page');
+    }else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Failed to delete account")),
+      );
+    }
   }
+
+
 
   @override
   Widget build(BuildContext context){
