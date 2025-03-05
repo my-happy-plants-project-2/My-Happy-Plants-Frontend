@@ -49,8 +49,10 @@ class AuthenticationProvider extends ChangeNotifier {
   }
   
   Future<bool> deleteUser (BuildContext context) async {
-    final response = await _makeRequest("DELETE", "/user", context);
-
+  final response = await _makeRequest("DELETE", "user",
+        null,
+        body: jsonEncode({"email": email, "password": password}),
+        );
       if(response == null) {
         print("Failed to delete account");
         return false;

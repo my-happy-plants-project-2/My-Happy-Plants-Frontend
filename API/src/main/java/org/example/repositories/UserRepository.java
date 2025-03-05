@@ -119,7 +119,7 @@ public class UserRepository {
 
         try {
             queryExecutor.beginTransaction();
-            queryExecutor.executeUpdate(queryDeletePlants, email);
+//            queryExecutor.executeUpdate(queryDeletePlants, email);
             queryExecutor.executeUpdate(queryDeleteUser, email);
             queryExecutor.endTransaction();
             return true;

@@ -54,7 +54,7 @@ public class UserService {
     public void deleteUser(Context context) {
         String email = context.formParam("email");
         String password = context.formParam("password");
-
+        System.out.println("delete user method called");
         if (userRepository.deleteAccount(email, password)) {
             context.status(200).result("User deleted successfully");
         } else {
