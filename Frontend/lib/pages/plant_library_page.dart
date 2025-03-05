@@ -151,29 +151,66 @@ class PlantLibraryPage extends StatefulWidget {
 }
 
 class _PlantLibraryPageState extends State<PlantLibraryPage> {
+  TextEditingController _searchController = TextEditingController();
+  List<Plant> _filteredPlants = [];
+
   @override
   void initState() {
     super.initState();
     final plantProvider = Provider.of<PlantProvider>(context, listen: false);
     plantProvider.fillLibraryList(widget.plants);
+    _filteredPlants =widget.plants;
   }
+
+
+    void _filterPlants(String query){
+      setState(() {
+        _filteredPlants = widget.plants
+            .where((plant) =>
+               plant.commonName.toLowerCase().contains(query.toLowerCase()) || plant.scientificName.toLowerCase().contains(query.toLowerCase()))
+            .toList();
+      });
+    }
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface.withAlpha(200),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(12),
-          child: Center(
-            child: Wrap(
-              spacing: 8.0,
-              runSpacing: 8.0,
-              children: List.generate(widget.plants.length, (index) {
-                return PlantLibraryCard(plant: widget.plants[index]);
-              }),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(12),
+            child: TextField(
+              controller: _searchController,
+              onChanged: _filterPlants,
+              decoration: InputDecoration(
+                hintText: 'Search plants',
+                prefixIcon: Icon(Icons.search),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8)
+                ),
+              ),
             ),
           ),
-        ),
+          Expanded(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(12),
+                child: Center(
+                  child: Wrap(
+                    spacing: 8.0,
+                    runSpacing: 8.0,
+                    children: List.generate(_filteredPlants.length, (index) {
+                      return PlantLibraryCard(plant: _filteredPlants[index]);
+                    }),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
