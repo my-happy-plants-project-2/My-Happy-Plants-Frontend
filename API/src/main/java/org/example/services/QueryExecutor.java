@@ -44,7 +44,6 @@ public class QueryExecutor implements IQueryExecutor {
     @Override
     public List<Map<String, Object>> executeQuery(String query, Object... parameters) {
         List<Map<String, Object>> results = new ArrayList<>();
-        Map<String, Object> row = new TreeMap<>();
         try (Connection connection = sqlConfig.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
             for (int i = 0; i < parameters.length; i++) {
@@ -53,6 +52,7 @@ public class QueryExecutor implements IQueryExecutor {
             ResultSet resultSet = statement.executeQuery();
             System.out.println("Statement: " + statement.toString());
             while(resultSet.next()) {
+                Map<String, Object> row = new TreeMap<>();
                 ResultSetMetaData metaData = resultSet.getMetaData();
                 for (int i = 1; i <= metaData.getColumnCount(); i++) {
                     row.put(metaData.getColumnName(i), resultSet.getObject(i));
