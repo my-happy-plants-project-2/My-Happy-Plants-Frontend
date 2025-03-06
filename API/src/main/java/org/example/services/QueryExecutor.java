@@ -33,6 +33,7 @@ public class QueryExecutor implements IQueryExecutor {
             for (int i = 0; i < parameters.length; i++) {
                 statement.setObject(i + 1, parameters[i]);
             }
+            System.out.println("Statement: " + statement.toString());
             statement.executeUpdate();
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, "Error executing update", e);
@@ -50,6 +51,7 @@ public class QueryExecutor implements IQueryExecutor {
                 statement.setObject(i + 1, parameters[i]);
             }
             ResultSet resultSet = statement.executeQuery();
+            System.out.println("Statement: " + statement.toString());
             while(resultSet.next()) {
                 ResultSetMetaData metaData = resultSet.getMetaData();
                 for (int i = 1; i <= metaData.getColumnCount(); i++) {

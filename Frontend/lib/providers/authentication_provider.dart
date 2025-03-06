@@ -49,7 +49,7 @@ class AuthenticationProvider extends ChangeNotifier {
   }
   
   Future<bool> deleteUser (BuildContext context) async {
-  final response = await _makeRequest("DELETE", "user",
+/*  final response = await _makeRequest("DELETE", "user",
         null,
         body: jsonEncode({"email": email, "password": password}),
         );
@@ -62,9 +62,9 @@ class AuthenticationProvider extends ChangeNotifier {
         print("Account deleted");
         return true;
       } else {
-        print("Could not delete account");
+        print("Could not delete account");*/
         return false;
-      }
+      //}
   }
 
   Future<bool> changeUserName (BuildContext context, String newName) async {

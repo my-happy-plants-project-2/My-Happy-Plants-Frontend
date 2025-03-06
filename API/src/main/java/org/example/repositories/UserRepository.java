@@ -6,6 +6,7 @@ import org.example.model.UserPlant;
 import org.example.services.IQueryExecutor;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -25,15 +26,16 @@ public class UserRepository {
 
     public List<UserPlant> getUserPlants(String userEmail) {
         List<UserPlant> userPlants = new ArrayList<>();
-
-        List<Map<String, Object>> row = queryExecutor.executeQuery("SELECT up.*, s.* FROM user_plants up JOIN species " +
-                "s ON up.species = s.scientific_name WHERE owner = ?", userEmail);
-        for (Map map : row) {
+        String query = "SELECT * FROM user_plants JOIN species ON user_plants.species = species.scientific_name WHERE owner = ?";
+        List<Map<String, Object>> plantList = queryExecutor.executeQuery(query, userEmail);
+        System.out.println("Plant list: " + plantList);
+        for (Map map : plantList) {
             userPlants.add(plantOwnerResultSet(map));
         }
-        if (row.isEmpty()) {
+        if (plantList.isEmpty()) {
             LOGGER.log(Level.SEVERE, "Error retrieving user plants");
         }
+        System.out.println("User plants: " + userPlants);
         return userPlants;
     }
 
@@ -42,7 +44,7 @@ public class UserRepository {
             String plantID = resultSet.get("plant_id").toString();
             String nickname = resultSet.get("nickname").toString();
             String owner = resultSet.get("owner").toString();
-            Date lastWatered = Date.valueOf((String) resultSet.get("last_watered"));
+            Date lastWatered = (Date) resultSet.get("last_watered");
             String note = resultSet.get("note").toString();
             String scientificName = resultSet.get("scientific_name").toString();
             String commonName = resultSet.get("common_name").toString();
@@ -50,12 +52,13 @@ public class UserRepository {
             String category = resultSet.get("category").toString();
             String imageUrl = resultSet.get("image_url").toString();
             int lightReqs = Integer.parseInt(resultSet.get("light_reqs").toString());
-            int waterFrequency = Integer.parseInt(resultSet.get("water_frequency").toString());
+            int waterFrequency = Integer.parseInt(resultSet.get("waterfrequency").toString());
 
             Species species = new Species(scientificName, commonName, family, category, imageUrl, lightReqs, waterFrequency);
 
             return new UserPlant(plantID, nickname, owner, species, lastWatered, note);
         }
+        System.out.println("Empty result set in plantOwnerResultSet");
         LOGGER.log(Level.SEVERE, "Error processing result set");
         return null;
     }
@@ -74,8 +77,8 @@ public class UserRepository {
 
     public boolean waterPlant(String plantID, String userId) {
         try {
-            String query = "UPDATE owned_plants SET last_watered = CURRENT_DATE " +
-                    "WHERE plant_id = ? AND user_id = ?";
+            String query = "UPDATE user_plants SET last_watered = CURRENT_DATE " +
+                    "WHERE plant_id = ? AND owner = ?";
 
             queryExecutor.beginTransaction();
             queryExecutor.executeUpdate(query, plantID, userId);
@@ -108,18 +111,19 @@ public class UserRepository {
         }
     }
 
-    public boolean deleteAccount(String email, String password) {
+/*    public boolean deleteAccount(String email, String password) {
         if (!checkLogin(email, password)) {
             LOGGER.log(Level.INFO, "Login failure");
             return false;
-        }
+        }*/
+        public boolean deleteAccount(String email) {
 
         String queryDeletePlants = "DELETE * FROM \"user_plants\" WHERE owner = ?";
         String queryDeleteUser = "DELETE FROM \"users\" WHERE email = ?";
 
         try {
             queryExecutor.beginTransaction();
-//            queryExecutor.executeUpdate(queryDeletePlants, email);
+            queryExecutor.executeUpdate(queryDeletePlants, email);
             queryExecutor.executeUpdate(queryDeleteUser, email);
             queryExecutor.endTransaction();
             return true;
@@ -133,8 +137,9 @@ public class UserRepository {
     public boolean addOwnerPlant(String plantID, String nickname, String owner, String note, String species) {
         try {
             queryExecutor.beginTransaction();
-            String insertQuery = "INSERT INTO user_plants (plant_id, nickname, owner, note, species) VALUES (?, ?, ?, ?, ?)";
-            queryExecutor.executeUpdate(insertQuery, plantID, nickname, owner, note, species);
+            Date lastWatered = Date.valueOf(LocalDate.now());
+            String insertQuery = "INSERT INTO user_plants (plant_id, nickname, owner, note, species, last_watered) VALUES (?, ?, ?, ?, ?, ?)";
+            queryExecutor.executeUpdate(insertQuery, plantID, nickname, owner, note, species, lastWatered);
             queryExecutor.endTransaction();
 
             return true;

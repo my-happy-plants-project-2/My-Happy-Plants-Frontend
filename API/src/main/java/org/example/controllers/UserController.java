@@ -27,7 +27,8 @@ public class UserController {
         //app.patch("/api/v1/user/plants/{id}", this::changeNickName);
         //app.patch("/api/v1/user/plants/note/{id}", this::updateNote);
 
-        app.before(API_VERSION + "/user/*", new JWTMiddleware());
+//        app.before(API_VERSION + "/user/*", new JWTMiddleware());  // caused CORS error
+
 
         // user routes
         app.post(API_VERSION + "/user", this::addUser);
@@ -49,7 +50,6 @@ public class UserController {
     }
 
     private void deleteUser(Context context) {
-        System.out.println("delete user user controller");
         userService.deleteUser(context);
     }
 

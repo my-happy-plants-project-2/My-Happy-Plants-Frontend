@@ -71,55 +71,55 @@ class PlantProvider extends ChangeNotifier{
       light: plant.light,
     );
 
-    /**
-    final response = await _makeRequest("POST", "/user/plant", context, body: {
-      "plantId": newPlant.plantId,
-      "commonName": newPlant.commonName,
-      "scientifiName": newPlant.scientificName,
-      "familyName": newPlant.familyName,
-      "imagePath": newPlant.imagePath,
-      "nickName": newPlant.nickname,
-      "lastWatered": newPlant.lastWatered,
-      "waterFrequency": newPlant.waterFrequency,
-      "light": newPlant.light,
+
+    final response = await _makeRequest("POST", "user/plants", context, body: {
+      // "plantId": newPlant.plantId,
+      "plant_id": newPlant.plantId,
+      // "commonName": newPlant.commonName,
+      // "scientificName": newPlant.scientificName,
+      "species": newPlant.scientificName,
+      // "familyName": newPlant.familyName,
+      // "imagePath": newPlant.imagePath,
+      // "nickName": newPlant.nickname,
+      "nickname": newPlant.nickname,
+      "note": "",
+      // "lastWatered": newPlant.lastWatered.toIso8601String(),
+      // "waterFrequency": newPlant.waterFrequency,
+      // "light": newPlant.light,
     });
 
-      if(response.statusCode == 201) {
+      if(response?.statusCode == 201) {
         _userPlants.add(newPlant);
         notifyListeners();
         print("We added plant");
       } else{
         print("We did not add plant");
       }
-    } catch (e) {
-      print("Error adding plant: $e");
     }
-    */
-    _userPlants.add(newPlant); //This is duplicate, remove when the back-front end connection works.
-    notifyListeners();
-  }
+
+    // _userPlants.add(newPlant); //This is duplicate, remove when the back-front end connection works.
+    // notifyListeners();
+  //}
 
     Future <void> removePlant(BuildContext context, String plantId) async {
-      // final response = await _makeRequest("DELETE", "/user/plant/$plantId", context);
+       // final response = await _makeRequest("DELETE", "user/plants/$plantId", context);
+       final response = await _makeRequest("DELETE", "user/plants/1741283838525", context);
 
-      /** //TODO: Add this to the code when back-end is ready.
-       *
+
               if(response != null && response.statusCode == 200) {
                 _userPlants.removeWhere((p) => p.plantId == plantId);
                 notifyListeners();
                 print("Plant Removed");
               } else {
-                print("Failed to remove"),
+                print("Failed to remove");
               }
-      */
-      _userPlants.removeWhere((p) => p.plantId == plantId); //This is duplicate, remove when the back-front end connection works.
-      notifyListeners();
+
+      // _userPlants.removeWhere((p) => p.plantId == plantId); //This is duplicate, remove when the back-front end connection works.
+      // notifyListeners();
     }
 
     Future<void> waterPlant(BuildContext context, String plantId) async {
-      /**
-      final response = await _makeRequest("PATCH", "/user/plant/water/$plantId", context);
-
+      final response = await _makeRequest("PATCH", "user/plants/water/$plantId", context);
 
           if(response != null && response.statusCode == 200) {
           _userPlants.firstWhere((p) => p.plantId == plantId).lastWatered = DateTime.now();
@@ -128,10 +128,8 @@ class PlantProvider extends ChangeNotifier{
           } else {
           print("Failed to water plant");
           }
-       */
-
-      _userPlants.firstWhere((p) => p.plantId == plantId).lastWatered = DateTime.now(); //This is duplicate, remove when the back-front end connection works.
-      notifyListeners();
+      // _userPlants.firstWhere((p) => p.plantId == plantId).lastWatered = DateTime.now(); //This is duplicate, remove when the back-front end connection works.
+      // notifyListeners();
     }
 
     Future<void> changeNickName(BuildContext context, String plantId, String newName) async {
@@ -170,8 +168,7 @@ class PlantProvider extends ChangeNotifier{
     }
 
     Future<List<Plant>> getUserPlantList(BuildContext context) async {
-      final response = await _makeRequest("GET", "/plant", context);
-
+      final response = await _makeRequest("GET", "user/plants", context);
       if(response != null && response.statusCode == 200) {
         List<dynamic> responseData = jsonDecode(response.body);
         return responseData.map((plant) => Plant.fromJson(plant)).toList();
