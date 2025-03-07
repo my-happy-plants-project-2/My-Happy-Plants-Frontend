@@ -163,6 +163,7 @@ class _MyPlantsPageState extends State<MyPlantsPage> {
   Future<void> _loadUserPlants() async { //Method that fetches the plantlist from the plantprovider.
     final plantProvider = Provider.of<PlantProvider>(context, listen: false);
     List<Plant> userPlants = await plantProvider.getUserPlantList(context);
+    print(userPlants);
     plantProvider.fillUserList(userPlants);
   }
 
