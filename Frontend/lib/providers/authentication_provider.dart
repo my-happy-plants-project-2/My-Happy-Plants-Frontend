@@ -49,22 +49,20 @@ class AuthenticationProvider extends ChangeNotifier {
   }
   
   Future<bool> deleteUser (BuildContext context) async {
-/*  final response = await _makeRequest("DELETE", "user",
-        null,
-        body: jsonEncode({"email": email, "password": password}),
-        );
-      if(response == null) {
-        print("Failed to delete account");
-        return false;
-      }
+    final response = await _makeRequest("DELETE", "/user", context);
 
-      if(response.statusCode == 200) {
-        print("Account deleted");
-        return true;
-      } else {
-        print("Could not delete account");*/
-        return false;
-      //}
+    if(response == null) {
+      print("Failed to delete account");
+      return false;
+    }
+
+    if(response.statusCode == 200) {
+      print("Account deleted");
+      return true;
+    } else {
+      print("Could not delete account");
+      return false;
+    }
   }
 
   Future<bool> changeUserName (BuildContext context, String newName) async {
