@@ -118,8 +118,8 @@ public class UserRepository {
         }*/
         public boolean deleteAccount(String email) {
 
-        String queryDeletePlants = "DELETE * FROM \"user_plants\" WHERE owner = ?";
-        String queryDeleteUser = "DELETE FROM \"users\" WHERE email = ?";
+        String queryDeletePlants = "DELETE FROM user_plants WHERE owner = ?";
+        String queryDeleteUser = "DELETE FROM users WHERE email = ?";
 
         try {
             queryExecutor.beginTransaction();

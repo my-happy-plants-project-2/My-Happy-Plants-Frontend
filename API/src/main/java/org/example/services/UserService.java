@@ -58,6 +58,7 @@ public class UserService {
 
     public void deleteUser(Context context) {
         String email = getEmailFromToken(context);
+        System.out.println("deleteUser");
 //        if (userRepository.deleteAccount(email, password)) {
         if (userRepository.deleteAccount(email)) {
             context.status(200).result("User deleted successfully");
