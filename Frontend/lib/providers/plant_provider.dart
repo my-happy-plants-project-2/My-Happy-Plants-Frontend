@@ -102,8 +102,7 @@ class PlantProvider extends ChangeNotifier{
   //}
 
     Future <void> removePlant(BuildContext context, String plantId) async {
-       // final response = await _makeRequest("DELETE", "user/plants/$plantId", context);
-       final response = await _makeRequest("DELETE", "user/plants/1741283838525", context);
+       final response = await _makeRequest("DELETE", "user/plants/$plantId", context);
 
 
               if(response != null && response.statusCode == 200) {
@@ -149,10 +148,12 @@ class PlantProvider extends ChangeNotifier{
 
     void fillLibraryList(List<Plant> plants) {
       _allPlants = plants;
+      notifyListeners();
     }
 
     void fillUserList(List<Plant> plants) {
       _userPlants = plants;
+      notifyListeners();
     }
 
     Future<List<Plant>> getLibraryPlantList(BuildContext context) async {

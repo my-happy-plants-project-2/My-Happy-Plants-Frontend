@@ -9,15 +9,23 @@ part of 'plant.dart';
 // **************************************************************************
 
 Plant _$PlantFromJson(Map<String, dynamic> json) => Plant(
-      plantId: json['plantId'] as String,
-      commonName: json['commonName'] as String,
-      scientificName: json['scientificName'] as String,
-      familyName: json['familyName'] as String,
-      imagePath: json['imagePath'] as String,
+      // plantId: json['plantId'] as String,
+      plantId: json['plantID'] as String,
+      // commonName: json['commonName'] as String,
+      commonName: json['species']['commonName'] as String,
+      // scientificName: json['scientificName'] as String,
+      scientificName: json['species']['scientificName'] as String,
+      // familyName: json['familyName'] as String,
+      familyName: json['species']['family'] as String,
+      // imagePath: json['imagePath'] as String,
+      imagePath: json['species']['imageUrl'] as String,
       nickname: json['nickname'] as String,
-      lastWatered: DateTime.parse(json['lastWatered'] as String),
-      waterFrequency: (json['waterFrequency'] as num).toInt(),
-      light: (json['light'] as num).toInt(),
+      // lastWatered: DateTime.parse(json['lastWatered'] as String),
+      lastWatered: DateTime.fromMillisecondsSinceEpoch(json['lastWatered'] as int),
+      // waterFrequency: (json['waterFrequency'] as num).toInt(),
+      waterFrequency: (json['species']['waterFrequency'] as num).toInt(),
+      // light: (json['light'] as num).toInt(),
+      light: (json['species']['lightReqs'] as num).toInt(),
     );
 
 Map<String, dynamic> _$PlantToJson(Plant instance) => <String, dynamic>{
