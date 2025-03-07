@@ -52,6 +52,7 @@ class _LoginPageState extends State<LoginPage> {
       Navigator.pushNamed(context, '/home_page');
     } else {
       errorMessageOverlay(context, "Invalid credentials");
+      Navigator.pushNamed(context, '/login_page');
     }
   }
 
