@@ -1,26 +1,16 @@
 package org.example.model;
 
-import java.util.Calendar;
-import java.util.Date;
-
 public class Species {
-    private String scientificName;
     private String commonName;
     private String family;
     private String category;
     private String imageUrl;
     private int lightReqs;
     private int waterFrequency;
-    private Date lastWatered = new Date();
-    private String nickname = "";
-
-
-    private String plantID = "";
     private String species;
 
 
     public Species(String scientificName, String commonName, String family, String category, String imageUrl, int lightReqs, int waterFrequency) {
-        this.scientificName = scientificName;
         this.commonName = commonName;
         this.family = family;
         this.category = category;
@@ -31,29 +21,12 @@ public class Species {
     }
 
     // Getters and setters
-    public Date getLastWatered() {
-        return lastWatered;
-    }
 
-    public String getNickname() {
-        return nickname;
-    }
-
-    public String getPlantID() {
-        return plantID;
-    }
 
     public String getSpecies() {
         return species;
     }
 
-    public String getScientificName() {
-        return scientificName;
-    }
-
-    public void setScientificName(String scientificName) {
-        this.scientificName = scientificName;
-    }
 
     public String getCommonName() {
         return commonName;

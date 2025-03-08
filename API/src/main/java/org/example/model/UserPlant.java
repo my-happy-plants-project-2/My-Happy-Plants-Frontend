@@ -6,7 +6,6 @@ public class UserPlant {
     private String plantID;
     private String nickname;
     private String owner;
-//    private Species species;
     private Date lastWatered;
     private String note;
     private String species;
@@ -25,7 +24,7 @@ public class UserPlant {
         this.plantID = plantID;
         this.nickname = nickname;
         this.owner = owner;
-        this.species = species.getScientificName();
+        this.species = species.getSpecies();
         this.lastWatered = lastWatered;
         this.note = note;
         this.commonName = species.getCommonName();
