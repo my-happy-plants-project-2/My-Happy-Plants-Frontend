@@ -1,33 +1,32 @@
 package org.example.model;
 
 public class Species {
-    private String scientificName;
     private String commonName;
     private String family;
     private String category;
     private String imageUrl;
     private int lightReqs;
     private int waterFrequency;
+    private String species;
+
 
     public Species(String scientificName, String commonName, String family, String category, String imageUrl, int lightReqs, int waterFrequency) {
-        this.scientificName = scientificName;
         this.commonName = commonName;
         this.family = family;
         this.category = category;
         this.imageUrl = imageUrl;
         this.lightReqs = lightReqs;
         this.waterFrequency = waterFrequency;
+        this.species = scientificName;
     }
 
     // Getters and setters
 
-    public String getScientificName() {
-        return scientificName;
+
+    public String getSpecies() {
+        return species;
     }
 
-    public void setScientificName(String scientificName) {
-        this.scientificName = scientificName;
-    }
 
     public String getCommonName() {
         return commonName;

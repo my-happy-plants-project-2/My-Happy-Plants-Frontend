@@ -31,7 +31,7 @@ public class PlantRepository {
                 String category = map.get("category").toString();
                 String imageUrl = map.get("image_url").toString();
                 int lightReqs = Integer.parseInt(map.get("light_reqs").toString());
-                int waterFrequency = Integer.parseInt(map.get("water_frequency").toString());
+                int waterFrequency = Integer.parseInt(map.get("waterfrequency").toString());
                 species.add(new Species(scientificName, commonName, family, category, imageUrl, lightReqs, waterFrequency));
             }
             return  species;

@@ -157,10 +157,10 @@ class PlantProvider extends ChangeNotifier{
     }
 
     Future<List<Plant>> getLibraryPlantList(BuildContext context) async {
-      final response = await _makeRequest("GET", "/plants", context);
-
+      final response = await _makeRequest("GET", "species", context);
       if(response != null && response.statusCode == 200) {
         List<dynamic> responseData = jsonDecode(response.body);
+        print(responseData);
         return responseData.map((plant) => Plant.fromJson(plant)).toList();
       } else {
         print("Failed to fetch plants");
@@ -172,6 +172,7 @@ class PlantProvider extends ChangeNotifier{
       final response = await _makeRequest("GET", "user/plants", context);
       if(response != null && response.statusCode == 200) {
         List<dynamic> responseData = jsonDecode(response.body);
+        print(responseData);
         return responseData.map((plant) => Plant.fromJson(plant)).toList();
       } else {
         print("Failed to fetch plants");
