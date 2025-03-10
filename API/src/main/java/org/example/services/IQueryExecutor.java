@@ -7,7 +7,7 @@ import java.util.Map;
 
 public interface IQueryExecutor {
 
-    void executeUpdate(String query, Object... parameters);
+    boolean executeUpdate(String query, Object... parameters);
 
 //    ResultSet executeQuery(String query, Object... parameters);
     List<Map<String, Object>> executeQuery(String query, Object... parameters);

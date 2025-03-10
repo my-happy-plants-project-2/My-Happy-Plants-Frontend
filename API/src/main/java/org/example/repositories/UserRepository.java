@@ -113,9 +113,11 @@ public class UserRepository {
 
             queryExecutor.beginTransaction();
             String insertQuery = "INSERT INTO users (email, username, password, color_theme) VALUES (?, ?, ?, ?)";
-            queryExecutor.executeUpdate(insertQuery, email, username, hashedPassword, colorThemeInt);
+            if (!queryExecutor.executeUpdate(insertQuery, email, username, hashedPassword, colorThemeInt)) {
+                queryExecutor.endTransaction();
+                throw new Exception();
+            };
             queryExecutor.endTransaction();
-
             return true;
         } catch (NumberFormatException e) {
             LOGGER.log(Level.SEVERE, "Invalid colorTheme format", e);

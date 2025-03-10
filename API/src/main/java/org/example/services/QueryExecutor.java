@@ -28,7 +28,7 @@ public class QueryExecutor implements IQueryExecutor {
     }
 
     @Override
-    public void executeUpdate(String query, Object... parameters) {
+    public boolean executeUpdate(String query, Object... parameters) {
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             for (int i = 0; i < parameters.length; i++) {
                 statement.setObject(i + 1, parameters[i]);
@@ -37,8 +37,9 @@ public class QueryExecutor implements IQueryExecutor {
             statement.executeUpdate();
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, "Error executing update", e);
+            return false;
         }
-
+        return true;
     }
 
     @Override
