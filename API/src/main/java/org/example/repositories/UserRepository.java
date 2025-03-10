@@ -91,6 +91,21 @@ public class UserRepository {
         }
     }
 
+    public boolean changeNickname(String plantID, String nickname, String username) {
+        try {
+            String query = "UPDATE user_plants SET nickname = ? WHERE plant_id = ? AND owner = ?";
+            queryExecutor.beginTransaction();
+            queryExecutor.executeUpdate(query,nickname, plantID, username);
+            queryExecutor.endTransaction();
+            return true;
+        }
+        catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Error changing nickname", e);
+            queryExecutor.rollbackTransaction();
+            return false;
+        }
+    }
+
     public boolean addUser(String email, String username, String password, String colorTheme) {
         try {
             String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());

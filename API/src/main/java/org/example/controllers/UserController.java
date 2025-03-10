@@ -24,7 +24,6 @@ public class UserController {
 
         //app.patch("/api/v1/user", this::changeUserName);
         //app.patch("/api/v1/user/theme/{theme_id}", this::changeColorTheme);
-        //app.patch("/api/v1/user/plants/{id}", this::changeNickName);
         //app.patch("/api/v1/user/plants/note/{id}", this::updateNote);
 
 //        app.before(API_VERSION + "/user/*", new JWTMiddleware());  // caused CORS error
@@ -39,6 +38,7 @@ public class UserController {
         app.delete(API_VERSION + "/user/plants/{id}", this::deletePlantFromUserLibrary);
         app.get(API_VERSION + "/user/plants", this::getUserPlants);
         app.patch(API_VERSION + "/user/plants/water/{id}", this::waterPlant);
+        app.patch(API_VERSION + "/user/plants/{id}", this::changeNickName);
     }
 
     private void login(Context context) {
@@ -68,6 +68,10 @@ public class UserController {
 
     private void waterPlant(Context context) {
         userService.waterPlant(context);
+    }
+
+    private void changeNickName(Context context) {
+        userService.changeNickname(context);
     }
 
 }

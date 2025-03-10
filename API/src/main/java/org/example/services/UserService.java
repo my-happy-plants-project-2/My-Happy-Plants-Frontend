@@ -134,6 +134,29 @@ public class UserService {
         }
     }
 
+    public void changeNickname(Context context) {
+        String plantID = context.pathParam("id");
+        String nickname = "";
+        String email = getEmailFromToken(context);
+
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            JsonNode node = mapper.readTree(context.body());
+            nickname = node.get("nickname").toString().replaceAll("\"", "");
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            context.status(400).result("Invalid request body");
+            return;
+        }
+
+        if (userRepository.changeNickname(plantID, nickname, email)) {
+            context.status(200).result("Nickname changed successfully");
+        } else {
+            context.status(500).result("Error changing nickname");
+        }
+    }
+
     public String getEmailFromToken(Context context) {
         String tokenString = context.header("Authorization").substring(7);
         ObjectMapper mapper = new ObjectMapper();

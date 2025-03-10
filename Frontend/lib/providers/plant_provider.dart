@@ -132,7 +132,7 @@ class PlantProvider extends ChangeNotifier{
     }
 
     Future<void> changeNickName(BuildContext context, String plantId, String newName) async {
-      /*final response = await _makeRequest("PATCH", "/user/plant/$plantId", context);
+      final response = await _makeRequest("PATCH", "user/plants/$plantId", context, body: { "nickname": newName });
 
       if(response != null && response.statusCode == 200) {
         _userPlants.firstWhere((p) => p.plantId == plantId).nickname = newName;
@@ -140,10 +140,10 @@ class PlantProvider extends ChangeNotifier{
         print("Plant nickname changed");
       } else {
         print("Failed to change nickname");
-      } */
+      }
 
-      _userPlants.firstWhere((p) => p.plantId == plantId).nickname = newName; //This is duplicate, remove when the back-front end connection works.
-      notifyListeners();
+      // _userPlants.firstWhere((p) => p.plantId == plantId).nickname = newName; //This is duplicate, remove when the back-front end connection works.
+      // notifyListeners();
     }
 
     void fillLibraryList(List<Plant> plants) {
