@@ -114,16 +114,17 @@ public class UserRepository {
             queryExecutor.beginTransaction();
             String insertQuery = "INSERT INTO users (email, username, password, color_theme) VALUES (?, ?, ?, ?)";
             if (!queryExecutor.executeUpdate(insertQuery, email, username, hashedPassword, colorThemeInt)) {
-                queryExecutor.endTransaction();
                 throw new Exception();
             };
             queryExecutor.endTransaction();
             return true;
         } catch (NumberFormatException e) {
             LOGGER.log(Level.SEVERE, "Invalid colorTheme format", e);
+            queryExecutor.rollbackTransaction();
             return false;
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Error adding user to database", e);
+            queryExecutor.rollbackTransaction();
             return false;
         }
     }
