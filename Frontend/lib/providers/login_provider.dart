@@ -21,10 +21,6 @@ class LoginProvider extends ChangeNotifier {
         body: jsonEncode({"email": email, "password": password}),
       );
 
-      print("Response Code: ${response.statusCode}");  //This is just for troubleshooting.
-      print("Response Body: ${response.body}");
-      print(email + password);
-
       if(response.statusCode == 200) { //Statuscode 200 = OK
         final data =jsonDecode(response.body); // We extract the information server gives.
         _token = data['token']; // Extracts the info that has the key "token".

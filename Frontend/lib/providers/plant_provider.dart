@@ -73,19 +73,10 @@ class PlantProvider extends ChangeNotifier{
 
 
     final response = await _makeRequest("POST", "user/plants", context, body: {
-      // "plantId": newPlant.plantId,
       "plant_id": newPlant.plantId,
-      // "commonName": newPlant.commonName,
-      // "scientificName": newPlant.scientificName,
       "species": newPlant.scientificName,
-      // "familyName": newPlant.familyName,
-      // "imagePath": newPlant.imagePath,
-      // "nickName": newPlant.nickname,
       "nickname": newPlant.nickname,
       "note": "",
-      // "lastWatered": newPlant.lastWatered.toIso8601String(),
-      // "waterFrequency": newPlant.waterFrequency,
-      // "light": newPlant.light,
     });
 
       if(response?.statusCode == 201) {
@@ -96,10 +87,6 @@ class PlantProvider extends ChangeNotifier{
         print("We did not add plant");
       }
     }
-
-    // _userPlants.add(newPlant); //This is duplicate, remove when the back-front end connection works.
-    // notifyListeners();
-  //}
 
     Future <void> removePlant(BuildContext context, String plantId) async {
        final response = await _makeRequest("DELETE", "user/plants/$plantId", context);
@@ -112,9 +99,6 @@ class PlantProvider extends ChangeNotifier{
               } else {
                 print("Failed to remove");
               }
-
-      // _userPlants.removeWhere((p) => p.plantId == plantId); //This is duplicate, remove when the back-front end connection works.
-      // notifyListeners();
     }
 
     Future<void> waterPlant(BuildContext context, String plantId) async {
@@ -127,8 +111,6 @@ class PlantProvider extends ChangeNotifier{
           } else {
           print("Failed to water plant");
           }
-      // _userPlants.firstWhere((p) => p.plantId == plantId).lastWatered = DateTime.now(); //This is duplicate, remove when the back-front end connection works.
-      // notifyListeners();
     }
 
     Future<void> changeNickName(BuildContext context, String plantId, String newName) async {
@@ -141,9 +123,6 @@ class PlantProvider extends ChangeNotifier{
       } else {
         print("Failed to change nickname");
       }
-
-      // _userPlants.firstWhere((p) => p.plantId == plantId).nickname = newName; //This is duplicate, remove when the back-front end connection works.
-      // notifyListeners();
     }
 
     void fillLibraryList(List<Plant> plants) {
@@ -160,7 +139,6 @@ class PlantProvider extends ChangeNotifier{
       final response = await _makeRequest("GET", "species", context);
       if(response != null && response.statusCode == 200) {
         List<dynamic> responseData = jsonDecode(response.body);
-        print(responseData);
         return responseData.map((plant) => Plant.fromJson(plant)).toList();
       } else {
         print("Failed to fetch plants");
@@ -172,7 +150,6 @@ class PlantProvider extends ChangeNotifier{
       final response = await _makeRequest("GET", "user/plants", context);
       if(response != null && response.statusCode == 200) {
         List<dynamic> responseData = jsonDecode(response.body);
-        print(responseData);
         return responseData.map((plant) => Plant.fromJson(plant)).toList();
       } else {
         print("Failed to fetch plants");
