@@ -10,7 +10,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -28,14 +27,12 @@ public class UserRepository {
         List<UserPlant> userPlants = new ArrayList<>();
         String query = "SELECT * FROM user_plants JOIN species ON user_plants.species = species.scientific_name WHERE owner = ?";
         List<Map<String, Object>> plantList = queryExecutor.executeQuery(query, userEmail);
-        System.out.println("Plant list: " + plantList);
         for (Map map : plantList) {
             userPlants.add(plantOwnerResultSet(map));
         }
         if (plantList.isEmpty()) {
             LOGGER.log(Level.SEVERE, "Error retrieving user plants");
         }
-        System.out.println("User plants: " + userPlants);
         return userPlants;
     }
 
@@ -58,7 +55,6 @@ public class UserRepository {
 
             return new UserPlant(plantID, nickname, owner, species, lastWatered, note);
         }
-        System.out.println("Empty result set in plantOwnerResultSet");
         LOGGER.log(Level.SEVERE, "Error processing result set");
         return null;
     }
@@ -95,7 +91,7 @@ public class UserRepository {
         try {
             String query = "UPDATE user_plants SET nickname = ? WHERE plant_id = ? AND owner = ?";
             queryExecutor.beginTransaction();
-            queryExecutor.executeUpdate(query,nickname, plantID, username);
+            queryExecutor.executeUpdate(query, nickname, plantID, username);
             queryExecutor.endTransaction();
             return true;
         }
@@ -128,13 +124,7 @@ public class UserRepository {
             return false;
         }
     }
-
-/*    public boolean deleteAccount(String email, String password) {
-        if (!checkLogin(email, password)) {
-            LOGGER.log(Level.INFO, "Login failure");
-            return false;
-        }*/
-        public boolean deleteAccount(String email) {
+    public boolean deleteAccount(String email) {
 
         String queryDeletePlants = "DELETE FROM user_plants WHERE owner = ?";
         String queryDeleteUser = "DELETE FROM users WHERE email = ?";
@@ -163,6 +153,7 @@ public class UserRepository {
             return true;
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Error adding user plant to database", e);
+            queryExecutor.rollbackTransaction();
             return false;
         }
     }
@@ -176,6 +167,7 @@ public class UserRepository {
 
             return true;
         } catch (Exception e) {
+            queryExecutor.rollbackTransaction();
             LOGGER.log(Level.SEVERE, "Error deleting user plant from database", e);
             return false;
         }

@@ -50,7 +50,6 @@ public class UserController {
     }
 
     private void deleteUser(Context context) {
-        System.out.println("Deleting user method");
         userService.deleteUser(context);
     }
 

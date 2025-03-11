@@ -59,7 +59,6 @@ public class UserService {
     public void deleteUser(Context context) {
         String email = getEmailFromToken(context);
         System.out.println("deleteUser");
-//        if (userRepository.deleteAccount(email, password)) {
         if (userRepository.deleteAccount(email)) {
             context.status(200).result("User deleted successfully");
         } else {
@@ -80,11 +79,6 @@ public class UserService {
     }
 
     public void addPlantToUserLibrary(Context context) {
-/*        String plantID = context.formParam("plant_id");
-        String species = context.formParam("species");
-        String nickname = context.formParam("nickname");
-        String owner = context.cookie("user_id");
-        String note = context.formParam("note");*/
         String plantID = "";
         String species = "";
         String nickname = "";
@@ -124,7 +118,6 @@ public class UserService {
 
     public void waterPlant(Context context) {
         String plantID = context.pathParam("id");
-//        String userId = context.cookie("user_id");
         String email = getEmailFromToken(context);
 
         if (userRepository.waterPlant(plantID, email)) {
@@ -145,7 +138,6 @@ public class UserService {
             nickname = node.get("nickname").toString().replaceAll("\"", "");
         }
         catch (Exception e) {
-            e.printStackTrace();
             context.status(400).result("Invalid request body");
             return;
         }
