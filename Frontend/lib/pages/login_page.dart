@@ -86,8 +86,20 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: Padding(
+      backgroundColor: Colors.transparent,
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Color.fromARGB(192, 156, 224, 156), // Muted light green
+              Color.fromARGB(166, 255, 255, 200),
+            ],
+          ),
+        ),
+
+      child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Center(
           // Added this to center everything
@@ -98,6 +110,14 @@ class _LoginPageState extends State<LoginPage> {
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.primary,
                 borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.green.withOpacity(0.3),
+                    spreadRadius: 7,
+                    blurRadius: 7,
+                    offset: Offset(0, 3), // Shadow position
+                  ),
+                ],
               ),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -170,6 +190,7 @@ class _LoginPageState extends State<LoginPage> {
             ),
           ),
         ),
+      ),
       ),
     );
   }
