@@ -12,4 +12,7 @@ class PlantFacts {
   static String getFact(String commonName) {
     return facts[commonName] ?? "This plant is amazing in its own unique way!";
   }
+  static String getCaringTips(String commonName){
+    return facts[commonName] ??"This plant is amazing in its own unique way!";
+  }
 }

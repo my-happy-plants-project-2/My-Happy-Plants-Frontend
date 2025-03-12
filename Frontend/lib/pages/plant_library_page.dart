@@ -4,6 +4,7 @@ import 'package:my_happy_plants_flutter/model/plant.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/plant_provider.dart';
+import 'dart:async';
 
 //@author Filip Claesson, Pehr Norten
 //Main page for the plantlibrary
@@ -28,19 +29,32 @@ class _PlantLibraryPageState extends State<PlantLibraryPage> {
   Future<void> _loadLibraryPlants() async {
     final plantProvider = Provider.of<PlantProvider>(context, listen: false);
     libraryPlants = await plantProvider.getLibraryPlantList(context);
-    plantProvider.fillLibraryList(libraryPlants);
-    _filteredPlants = libraryPlants;
-    setState(() {});
+    if (mounted) {
+      setState(() {
+        plantProvider.fillLibraryList(libraryPlants);
+        _filteredPlants = libraryPlants;
+      });
+    }
   }
 
-    void _filterPlants(String query){
+  Timer? _debounce;
+  void _filterPlants(String query) {
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+    _debounce = Timer(const Duration(milliseconds: 300), () {
       setState(() {
         _filteredPlants = libraryPlants
             .where((plant) =>
-               plant.commonName.toLowerCase().contains(query.toLowerCase()) || plant.scientificName.toLowerCase().contains(query.toLowerCase()))
+        plant.commonName.toLowerCase().contains(query.toLowerCase()) ||
+            plant.scientificName.toLowerCase().contains(query.toLowerCase()))
             .toList();
       });
-    }
+    });
+  }
+  Future<void> _loadUserPlants() async {
+    final plantProvider = Provider.of<PlantProvider>(context, listen: false);
+    List<Plant> userPlants = await plantProvider.getUserPlantList(context);
+    plantProvider.fillUserList(userPlants);
+  }
 
 
 
