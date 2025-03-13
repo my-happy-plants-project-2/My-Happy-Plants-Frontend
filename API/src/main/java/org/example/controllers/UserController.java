@@ -1,4 +1,5 @@
 package org.example.controllers;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
@@ -18,7 +19,7 @@ public class UserController {
     }
 
     public void registerRoutes(Javalin app) {
-      
+
         // authorization routes
         app.post(API_VERSION + "/auth/login", this::login);
 
@@ -26,7 +27,12 @@ public class UserController {
         //app.patch("/api/v1/user/theme/{theme_id}", this::changeColorTheme);
         //app.patch("/api/v1/user/plants/note/{id}", this::updateNote);
 
-//        app.before(API_VERSION + "/user/*", new JWTMiddleware());  // caused CORS error
+        app.before(API_VERSION + "/user/*",
+                context -> {
+                    if (!context.method().toString().equals("OPTIONS")) {
+                        new JWTMiddleware().handle(context);
+                    }
+                });
 
 
         // user routes
