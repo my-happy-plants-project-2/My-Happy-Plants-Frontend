@@ -5,180 +5,92 @@ import 'package:provider/provider.dart';
 
 import '../providers/plant_provider.dart';
 
-//@author Filip Claesson, Pehr Norten
+//@author Filip Claesson, Pehr Norten, Christian Storck
 class MyPlantsPage extends StatefulWidget {
   MyPlantsPage({super.key});
 
-  List<Plant> plants = [
-    Plant(
-      plantId: '1',
-      commonName: 'Devil\'s Ivy',
-      scientificName: 'Epipremnum aureum',
-      familyName: 'Araceae',
-      imagePath: 'lib/assets/images/plants/devils_ivy.png',
-      nickname: 'Ivy',
-      lastWatered: DateTime.now().subtract(Duration(days: 3)),
-      waterFrequency: 5,
-      light: 4,
-    ),
-    Plant(
-      plantId: '2',
-      commonName: 'Monstera',
-      scientificName: 'Monstera deliciosa',
-      familyName: 'Araceae',
-      imagePath: 'lib/assets/images/plants/monstera.png',
-      nickname: 'Vera',
-      lastWatered: DateTime.now(),
-      waterFrequency: 6,
-      light: 7,
-    ),
-    Plant(
-      plantId: '3',
-      commonName: "Snake Plant",
-      scientificName: "Sansevieria trifasciata",
-      familyName: "Asparagaceae",
-      imagePath: 'lib/assets/images/plants/snake_plant.png',
-      nickname: 'Lily',
-      lastWatered: DateTime.now().subtract(Duration(days: 2)),
-      waterFrequency: 2,
-      light: 3,
-    ),
-    Plant(
-      plantId: '4',
-      commonName: "Parlor Palm",
-      scientificName: "Chamaedorea elegans",
-      familyName: "Arecaceae",
-      imagePath: 'lib/assets/images/plants/parlor_palm.png',
-      nickname: 'Spidey',
-      lastWatered: DateTime.now(),
-      waterFrequency: 5,
-      light: 5,
-    ),
-    Plant(
-      plantId: '5',
-      commonName: "Anthurium Plant",
-      scientificName: "Anthurium andraeanum",
-      familyName: "Arums",
-      imagePath: 'lib/assets/images/plants/anthurium_plant.png',
-      nickname: 'Spidey',
-      lastWatered: DateTime.now().subtract(Duration(days: 5)),
-      waterFrequency: 6,
-      light: 7,
-    ),
-    Plant(
-      plantId: '6',
-      commonName: "Spider Plant",
-      scientificName: "Chlorophytum comosum",
-      familyName: "Asparagaceae",
-      imagePath: 'lib/assets/images/plants/spider_plant.png',
-      nickname: 'Spidey',
-      lastWatered: DateTime.now(),
-      waterFrequency: 7,
-      light: 4,
-    ),
-    Plant(
-      plantId: '7',
-      commonName: "Fiddle Leaf Fig",
-      scientificName: "Ficus lyrata",
-      familyName: "Moraceae",
-      imagePath: 'lib/assets/images/plants/fiddle_leaf_fig.png',
-      nickname: 'Figgy',
-      lastWatered: DateTime.now().subtract(Duration(days: 7)),
-      waterFrequency: 7,
-      light: 8,
-    ),
-    Plant(
-      plantId: '8',
-      commonName: "Dragon Tree",
-      scientificName: "Dracaena marginata",
-      familyName: "Asparagaceae",
-      imagePath: 'lib/assets/images/plants/dragon_tree.png',
-      nickname: 'Drago',
-      lastWatered: DateTime.now(),
-      waterFrequency: 7,
-      light: 7,
-    ),
-    Plant(
-      plantId: '9',
-      commonName: "Orange Tree",
-      scientificName: "Citrus × sinensis",
-      familyName: "Rutaceae",
-      imagePath: 'lib/assets/images/plants/orange_tree.png',
-      nickname: 'Sunny',
-      lastWatered: DateTime.now().subtract(Duration(days: 1)),
-      waterFrequency: 5,
-      light: 9,
-    ),
-    Plant(
-      plantId: '10',
-      commonName: "Peace Lily",
-      scientificName: "Spathiphyllum",
-      familyName: "Araceae",
-      imagePath: 'lib/assets/images/plants/peace_lily.png',
-      nickname: 'Lily',
-      lastWatered: DateTime.now(),
-      waterFrequency: 4,
-      light: 6,
-    ),
-    Plant(
-      plantId: '11',
-      commonName: "Bromeliad",
-      scientificName: "Bromeliaceae",
-      familyName: "Bromeliads",
-      imagePath: 'lib/assets/images/plants/bromeliad.png',
-      nickname: 'Flare',
-      lastWatered: DateTime.now(),
-      waterFrequency: 5,
-      light: 7,
-    ),
-    Plant(
-      plantId: '12',
-      commonName: "Trailing Peperomia",
-      scientificName: "Peperomia angulata",
-      familyName: "Piperaceae",
-      imagePath: 'lib/assets/images/plants/trailing_peperomia.png',
-      nickname: 'Green Cascade',
-      lastWatered: DateTime.now(),
-      waterFrequency: 5,
-      light: 4,
-    ),
-  ];
-
-void remakeplantlist(List<Plant> newPlants) {
-  plants = newPlants;
-}
   @override
   State<MyPlantsPage> createState() => _MyPlantsPageState();
 }
 
 class _MyPlantsPageState extends State<MyPlantsPage> {
+  bool _isSortedAscending = true;
+
   @override
   void initState() {
     super.initState();
-    final plantProvider = Provider.of<PlantProvider>(context, listen: false);
-    plantProvider.fillUserList(widget.plants);
+    _loadUserPlants();
   }
 
+  Future<void> _loadUserPlants() async { //Method that fetches the plantlist from the plantprovider.
+    final plantProvider = Provider.of<PlantProvider>(context, listen: false);
+    List<Plant> userPlants = await plantProvider.getUserPlantList(context);
+    plantProvider.fillUserList(userPlants);
+  }
+  void _sortByWaterNeeds(PlantProvider plantProvider) {
+    setState(() {
+      _isSortedAscending = !_isSortedAscending; // Toggle sorting order
+
+      plantProvider.userPlants.sort((a, b) {
+        return _isSortedAscending
+            ? a.waterFrequency.compareTo(b.waterFrequency) //Ascending order
+            : b.waterFrequency.compareTo(a.waterFrequency); //Descending order
+      });
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Consumer<PlantProvider>(
-          builder: (context, plantProvider, child) {
-            return Center(
-              child: Wrap(
-                spacing: 8.0,
-                runSpacing: 8.0,
-                alignment: WrapAlignment.start,
-                children: List.generate(
-                  plantProvider.userPlants.length,
-                      (index) {
-                    return MyPlantsCard(plant: plantProvider.userPlants[index]);
-                  },
-                ),
-              ),
-            );
-          },
+    return Scaffold(
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Color.fromARGB(192, 204, 255, 204), // Very light green
+              Color.fromARGB(166, 255, 255, 204), // Very light yellow
+            ],
+          ),
+        ),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(12),
+            child: Consumer<PlantProvider>(
+              builder: (context, plantProvider, child) {
+                return Column(
+                  children: [
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: ElevatedButton.icon(
+                        onPressed: () => _sortByWaterNeeds(plantProvider),
+                        icon: Icon(Icons.water_drop),
+                        label: Text(
+                          _isSortedAscending
+                              ? 'Water Needs: High to Low'
+                              : 'Water Needs: Low to High',
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Center(
+                      child: Wrap(
+                        spacing: 8.0,
+                        runSpacing: 8.0,
+                        alignment: WrapAlignment.start,
+                        children: List.generate(
+                          plantProvider.userPlants.length,
+                              (index) {
+                            return MyPlantsCard(plant: plantProvider.userPlants[index]);
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ),
+          ),
         ),
       ),
     );

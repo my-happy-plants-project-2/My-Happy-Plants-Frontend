@@ -9,8 +9,8 @@ import 'package:my_happy_plants_flutter/providers/plant_provider.dart';
 import 'package:my_happy_plants_flutter/themes/light_mode.dart';
 import 'package:provider/provider.dart';
 
-// @Author Filip Claesson, Pehr Nortén
-void main() {
+// @Author Filip Claesson, Pehr Nortén, Christian Storck
+void main() { //Registers the providers to all of the application.
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (context) => PlantProvider()),

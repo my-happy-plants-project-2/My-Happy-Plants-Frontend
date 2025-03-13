@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-// @Author Filip Claesson, Pehr Nortén
+// @Author Filip Claesson, Pehr Nortén, Christian Storck
 class CustomIconButton extends StatelessWidget {
   final IconData icon;
   final VoidCallback? onPressed;
@@ -51,7 +51,7 @@ class CustomIconButton extends StatelessWidget {
       decoration: buttonStyle,
       child: PopupMenuButton<int>(
         icon: Padding(
-          padding: const EdgeInsets.all(8.0), // Maintain padding
+          padding: const EdgeInsets.all(8.0),
           child: Icon(icon, color: Theme.of(context).colorScheme.onSurface),
         ),
         onSelected: (value) {

@@ -1,13 +1,15 @@
 import 'dart:math';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:my_happy_plants_flutter/components/custom_icon_button.dart';
 import 'package:my_happy_plants_flutter/components/water_bar.dart';
 import 'package:my_happy_plants_flutter/model/plant.dart';
+import 'package:my_happy_plants_flutter/model/plant_facts.dart';
 import 'package:my_happy_plants_flutter/providers/plant_provider.dart';
 import 'package:provider/provider.dart';
 
-// @Author Filip Claesson, Pehr Nortén
+// @Author Filip Claesson, Pehr Nortén, Christian Storck
 class MyPlantsCard extends StatelessWidget {
   final Plant plant;
 
@@ -32,7 +34,7 @@ class MyPlantsCard extends StatelessWidget {
           children: [
             _buildPlantInfo(context),
             _buildPlantImage(context,
-                value: plant.calculateWaterLevel), // Set a random value between 0 and 1 for now can be calculated from the plant's water frequency and last watered date
+                value: plant.calculateWaterLevel),
             _buildActionButtons(context),
           ],
         ),
@@ -59,10 +61,6 @@ class MyPlantsCard extends StatelessWidget {
           ),
           Text(plant.commonName),
         ],
-      ),
-      CustomIconButton(
-        icon: Icons.delete,
-        onPressed: () => _deletePlant(context)
       ),
     ],
     ),
@@ -98,10 +96,13 @@ class MyPlantsCard extends StatelessWidget {
               Positioned(
                 top: 20,
                 right: 20,
-                child: Icon(
-                  Icons.warning,
-                  color: Colors.red.shade700,
-                  size: 35,
+                child: Tooltip(
+                  message: "Plant needs water!!",
+                  child: Icon(
+                    Icons.warning,
+                    color: Colors.red.shade700,
+                    size: 35,
+                  ),
                 ),
               ),
           ],
@@ -132,18 +133,31 @@ class MyPlantsCard extends StatelessWidget {
                   ),
                 ],
             ),
-            _buildCustomImageButton(
-              context,
-              child: Image.asset(
-                'lib/assets/images/watering_can.png',
-                color: Theme.of(context).colorScheme.onSurface,
+            Tooltip(
+              message: "Water the plant",
+              child: _buildCustomImageButton(
+                context,
+                child: Image.asset(
+                  'lib/assets/images/watering_can.png',
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
+                onPressed: () => _waterPlant(context),
               ),
-              onPressed: () => _waterPlant(context),
             ),
             CustomIconButton(
               icon: Icons.info_outline,
-              onPressed: () {
-              },
+              popupMenuItems: [
+                PopupMenuItem<int>(
+                  value: 0,
+                  child: const Text("Fun Fact"),
+                  onTap: () => _showPlantInfoDialog(context),
+                ),
+                PopupMenuItem<int>(
+                  value: 1,
+                  child: const Text("Caring Tips"),
+                  onTap: () => _showCaringTipsDialog(context),
+                ),
+              ],
             ),
           ],
         ),
@@ -229,4 +243,93 @@ class MyPlantsCard extends StatelessWidget {
       ),
     );
   }
+  void _showCaringTipsDialog(BuildContext context) {
+    String caringTips = PlantFacts.getCaringTips(plant.commonName);
+
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (context) {
+        return _buildInfoDialog(
+          context,
+          title: "Caring Tips",
+          content: caringTips,
+        );
+      },
+    );
+  }
+
+  void _showPlantInfoDialog(BuildContext context) {
+    String funFact = PlantFacts.getFact(plant.commonName);
+
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (context) {
+        return _buildInfoDialog(
+          context,
+          title: "Fun Fact",
+          content: funFact,
+        );
+      },
+    );
+  }
+
+  Widget _buildInfoDialog(BuildContext context, {required String title, required String content}) {
+    return Stack(
+      children: [
+        BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
+          child: Container(
+            color: Colors.black.withOpacity(0.2),
+          ),
+        ),
+        Center(
+          child: Dialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            backgroundColor: Theme.of(context).colorScheme.primary,
+            child: Padding(
+              padding: const EdgeInsets.all(14.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 10),
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Text(
+                      content,
+                      style: const TextStyle(fontSize: 16),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: Text(
+                      "Close",
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Theme.of(context).colorScheme.surface,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+  
 }
