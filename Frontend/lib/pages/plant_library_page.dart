@@ -4,6 +4,7 @@ import 'package:my_happy_plants_flutter/model/plant.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/plant_provider.dart';
+import 'dart:async';
 
 //@author Filip Claesson, Pehr Norten
 //Main page for the plantlibrary
@@ -28,59 +29,83 @@ class _PlantLibraryPageState extends State<PlantLibraryPage> {
   Future<void> _loadLibraryPlants() async {
     final plantProvider = Provider.of<PlantProvider>(context, listen: false);
     libraryPlants = await plantProvider.getLibraryPlantList(context);
-    plantProvider.fillLibraryList(libraryPlants);
-    _filteredPlants = libraryPlants;
-    setState(() {});
+    if (mounted) {
+      setState(() {
+        plantProvider.fillLibraryList(libraryPlants);
+        _filteredPlants = libraryPlants;
+      });
+    }
   }
 
-    void _filterPlants(String query){
+  Timer? _debounce;
+  void _filterPlants(String query) {
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+    _debounce = Timer(const Duration(milliseconds: 300), () {
       setState(() {
         _filteredPlants = libraryPlants
             .where((plant) =>
-               plant.commonName.toLowerCase().contains(query.toLowerCase()) || plant.scientificName.toLowerCase().contains(query.toLowerCase()))
+        plant.commonName.toLowerCase().contains(query.toLowerCase()) ||
+            plant.scientificName.toLowerCase().contains(query.toLowerCase()))
             .toList();
       });
-    }
+    });
+  }
+  Future<void> _loadUserPlants() async {
+    final plantProvider = Provider.of<PlantProvider>(context, listen: false);
+    List<Plant> userPlants = await plantProvider.getUserPlantList(context);
+    plantProvider.fillUserList(userPlants);
+  }
 
 
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.surface.withAlpha(200),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(12),
-            child: TextField(
-              controller: _searchController,
-              onChanged: _filterPlants,
-              decoration: InputDecoration(
-                hintText: 'Search plants',
-                prefixIcon: Icon(Icons.search),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8)
-                ),
-              ),
-            ),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Color.fromARGB(192, 204, 255, 204), // Very light green
+              Color.fromARGB(166, 255, 255, 204), // Very light yellow
+            ],
           ),
-          Expanded(
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(12),
-                child: Center(
-                  child: Wrap(
-                    spacing: 8.0,
-                    runSpacing: 8.0,
-                    children: List.generate(_filteredPlants.length, (index) {
-                      return PlantLibraryCard(plant: _filteredPlants[index]);
-                    }),
+        ),
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(12),
+              child: TextField(
+                controller: _searchController,
+                onChanged: _filterPlants,
+                decoration: InputDecoration(
+                  hintText: 'Search plants',
+                  prefixIcon: Icon(Icons.search),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
                   ),
                 ),
               ),
             ),
-          ),
-        ],
+            Expanded(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: Center(
+                    child: Wrap(
+                      spacing: 8.0,
+                      runSpacing: 8.0,
+                      children: List.generate(_filteredPlants.length, (index) {
+                        return PlantLibraryCard(plant: _filteredPlants[index]);
+                      }),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

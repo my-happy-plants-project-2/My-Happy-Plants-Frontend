@@ -70,35 +70,14 @@ class _HomePageState extends State<HomePage> {
                   },
                   child: Padding(
                     padding: const EdgeInsets.only(right:20),
-                  child: TextButton(
-                    onPressed: () {
-                      print("DU TRYCKTE SÖK"); //TODO: Lägg in searchfunktion här.
-                    },
-                    style: TextButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                      backgroundColor: _isHovered
-                        ? Theme.of(context).colorScheme.primary.withOpacity(0.5)
-                          : Theme.of(context).colorScheme.surface.withOpacity(0.2),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
             child: Row(
               children: [
-                Icon(Icons.search, color: Theme.of(context).colorScheme.inversePrimary),
-                const SizedBox(width: 6),
-                Text(
-                  'Search',
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.inversePrimary,
-                    fontSize: 18,
-                  ),
-                ),
+
               ],
             ),
           ),
                 ),
-                ),
+
       ],
         ),
       drawer: AppDrawer(

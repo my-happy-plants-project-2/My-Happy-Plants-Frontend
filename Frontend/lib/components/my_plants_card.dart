@@ -96,10 +96,13 @@ class MyPlantsCard extends StatelessWidget {
               Positioned(
                 top: 20,
                 right: 20,
-                child: Icon(
-                  Icons.warning,
-                  color: Colors.red.shade700,
-                  size: 35,
+                child: Tooltip(
+                  message: "Plant needs water!!",
+                  child: Icon(
+                    Icons.warning,
+                    color: Colors.red.shade700,
+                    size: 35,
+                  ),
                 ),
               ),
           ],
@@ -130,17 +133,31 @@ class MyPlantsCard extends StatelessWidget {
                   ),
                 ],
             ),
-            _buildCustomImageButton(
-              context,
-              child: Image.asset(
-                'lib/assets/images/watering_can.png',
-                color: Theme.of(context).colorScheme.onSurface,
+            Tooltip(
+              message: "Water the plant",
+              child: _buildCustomImageButton(
+                context,
+                child: Image.asset(
+                  'lib/assets/images/watering_can.png',
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
+                onPressed: () => _waterPlant(context),
               ),
-              onPressed: () => _waterPlant(context),
             ),
             CustomIconButton(
               icon: Icons.info_outline,
-              onPressed: () => _showPlantInfoDialog(context),
+              popupMenuItems: [
+                PopupMenuItem<int>(
+                  value: 0,
+                  child: const Text("Fun Fact"),
+                  onTap: () => _showPlantInfoDialog(context),
+                ),
+                PopupMenuItem<int>(
+                  value: 1,
+                  child: const Text("Caring Tips"),
+                  onTap: () => _showCaringTipsDialog(context),
+                ),
+              ],
             ),
           ],
         ),
@@ -226,110 +243,93 @@ class MyPlantsCard extends StatelessWidget {
       ),
     );
   }
+  void _showCaringTipsDialog(BuildContext context) {
+    String caringTips = PlantFacts.getCaringTips(plant.commonName);
 
-  void _showPlantInfoDialog(BuildContext context) { // Method used to create the InfoBox for each plant. Change this, it do be ugly.
-    String funFact = PlantFacts.getFact(plant.commonName);
-    showDialog(context: context,
+    showDialog(
+      context: context,
       barrierDismissible: true,
       builder: (context) {
-        return Stack(
-          children: [
-            BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
-              child: Container(
-                color: Colors.black.withOpacity(0.2),
-              ),
-            ),
-            Center(
-              child: Dialog(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                backgroundColor: Theme
-                    .of(context)
-                    .colorScheme
-                    .primary,
-                child: Padding(
-                  padding: EdgeInsets.all(14.0),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        plant.nickname,
-                        style: const TextStyle(
-                          fontSize: 28,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      Text(
-                        "Scientific Name: ${plant.scientificName}",
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.grey[650],
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      Padding(padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Container(
-                        height: 240,
-                        width: 400,
-                        decoration: BoxDecoration(
-                          color: Colors.white.withAlpha(120),
-                          borderRadius: BorderRadius.circular(20),
-        ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Expanded(
-                                flex: 15,
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(12),
-                                  child: FittedBox(
-                                    fit: BoxFit.contain,
-                                    child: Image.asset(
-                                      plant.imagePath,
-                                      height: 250,
-                                      width: 250,
-                                    ),
-                                  ),
-                                ),
-                              )
-                            ],
-                          )
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                      Container(
-                        padding: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.primary,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Text(
-                          "Fun Fact: $funFact",
-                          style: const TextStyle(fontSize: 16),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                      TextButton(
-                        onPressed: () => Navigator.pop(context),
-                        child: Text("Close",
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Theme.of(context).colorScheme.surface,
-                        ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ],
+        return _buildInfoDialog(
+          context,
+          title: "Caring Tips",
+          content: caringTips,
         );
       },
     );
   }
+
+  void _showPlantInfoDialog(BuildContext context) {
+    String funFact = PlantFacts.getFact(plant.commonName);
+
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (context) {
+        return _buildInfoDialog(
+          context,
+          title: "Fun Fact",
+          content: funFact,
+        );
+      },
+    );
+  }
+
+  Widget _buildInfoDialog(BuildContext context, {required String title, required String content}) {
+    return Stack(
+      children: [
+        BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
+          child: Container(
+            color: Colors.black.withOpacity(0.2),
+          ),
+        ),
+        Center(
+          child: Dialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            backgroundColor: Theme.of(context).colorScheme.primary,
+            child: Padding(
+              padding: const EdgeInsets.all(14.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 10),
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Text(
+                      content,
+                      style: const TextStyle(fontSize: 16),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: Text(
+                      "Close",
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Theme.of(context).colorScheme.surface,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+  
 }

@@ -67,26 +67,39 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Image.asset(
-                'lib/assets/images/plants/parlor_palm.png', height: 150),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green,
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 24, vertical: 12),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8)),
-              ),
-              onPressed: _confirmDeleteAccount,
-              child: const Text(
-                  "Delete Account", style: TextStyle(color: Colors.white)),
+        backgroundColor: Colors.transparent, // Make the background transparent so the gradient can show
+        body: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Color.fromARGB(192, 204, 255, 204), // Very light green
+                Color.fromARGB(166, 255, 255, 204), // Very light yellow
+              ],
             ),
-          ],
+          ),
+        child: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Image.asset(
+                  'lib/assets/images/plants/parlor_palm.png', height: 150),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color.fromARGB(239, 61, 148, 66),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 24, vertical: 12),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8)),
+                ),
+                onPressed: _confirmDeleteAccount,
+                child: const Text(
+                    "Delete Account", style: TextStyle(color: Colors.white)),
+              ),
+            ],
+          ),
         ),
       ),
     );
