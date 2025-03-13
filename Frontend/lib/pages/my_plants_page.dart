@@ -41,40 +41,56 @@ class _MyPlantsPageState extends State<MyPlantsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Consumer<PlantProvider>(
-          builder: (context, plantProvider, child) {
-            return Column(
-              children: [ //sorting button
-              Align(
-              alignment: Alignment.centerLeft,
-              child: ElevatedButton.icon(
-                onPressed: () => _sortByWaterNeeds(plantProvider),
-                icon: Icon(Icons.water_drop),
-                label: Text(
-                  _isSortedAscending ? 'Water Needs: High to Low' : 'Water Needs: Low to High',
-                ),
-              ),
-            ),
-            const SizedBox(height: 12),
-            Center(
-              child: Wrap(
-                spacing: 8.0,
-                runSpacing: 8.0,
-                alignment: WrapAlignment.start,
-                children: List.generate(
-                  plantProvider.userPlants.length,
-                      (index) {
-                    return MyPlantsCard(plant: plantProvider.userPlants[index]);
-                  },
-                ),
-              ),
-            ),
+    return Scaffold(
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Color.fromARGB(192, 204, 255, 204), // Very light green
+              Color.fromARGB(166, 255, 255, 204), // Very light yellow
             ],
-            );
-          },
+          ),
+        ),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(12),
+            child: Consumer<PlantProvider>(
+              builder: (context, plantProvider, child) {
+                return Column(
+                  children: [
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: ElevatedButton.icon(
+                        onPressed: () => _sortByWaterNeeds(plantProvider),
+                        icon: Icon(Icons.water_drop),
+                        label: Text(
+                          _isSortedAscending
+                              ? 'Water Needs: High to Low'
+                              : 'Water Needs: Low to High',
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Center(
+                      child: Wrap(
+                        spacing: 8.0,
+                        runSpacing: 8.0,
+                        alignment: WrapAlignment.start,
+                        children: List.generate(
+                          plantProvider.userPlants.length,
+                              (index) {
+                            return MyPlantsCard(plant: plantProvider.userPlants[index]);
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ),
+          ),
         ),
       ),
     );

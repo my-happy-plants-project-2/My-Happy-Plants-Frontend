@@ -61,40 +61,51 @@ class _PlantLibraryPageState extends State<PlantLibraryPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.surface.withAlpha(200),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(12),
-            child: TextField(
-              controller: _searchController,
-              onChanged: _filterPlants,
-              decoration: InputDecoration(
-                hintText: 'Search plants',
-                prefixIcon: Icon(Icons.search),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8)
-                ),
-              ),
-            ),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Color.fromARGB(192, 204, 255, 204), // Very light green
+              Color.fromARGB(166, 255, 255, 204), // Very light yellow
+            ],
           ),
-          Expanded(
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(12),
-                child: Center(
-                  child: Wrap(
-                    spacing: 8.0,
-                    runSpacing: 8.0,
-                    children: List.generate(_filteredPlants.length, (index) {
-                      return PlantLibraryCard(plant: _filteredPlants[index]);
-                    }),
+        ),
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(12),
+              child: TextField(
+                controller: _searchController,
+                onChanged: _filterPlants,
+                decoration: InputDecoration(
+                  hintText: 'Search plants',
+                  prefixIcon: Icon(Icons.search),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
                   ),
                 ),
               ),
             ),
-          ),
-        ],
+            Expanded(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: Center(
+                    child: Wrap(
+                      spacing: 8.0,
+                      runSpacing: 8.0,
+                      children: List.generate(_filteredPlants.length, (index) {
+                        return PlantLibraryCard(plant: _filteredPlants[index]);
+                      }),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
