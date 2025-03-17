@@ -7,10 +7,11 @@ public class Species {
     private String imageUrl;
     private int lightReqs;
     private int waterFrequency;
+    private String description;
     private String species;
 
 
-    public Species(String scientificName, String commonName, String family, String category, String imageUrl, int lightReqs, int waterFrequency) {
+    public Species(String scientificName, String commonName, String family, String category, String imageUrl, int lightReqs, int waterFrequency, String description) {
         this.commonName = commonName;
         this.family = family;
         this.category = category;
@@ -18,6 +19,7 @@ public class Species {
         this.lightReqs = lightReqs;
         this.waterFrequency = waterFrequency;
         this.species = scientificName;
+        this.description = description;
     }
 
     // Getters and setters
@@ -74,5 +76,13 @@ public class Species {
 
     public void setWaterFrequency(int waterFrequency) {
         this.waterFrequency = waterFrequency;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

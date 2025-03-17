@@ -16,7 +16,6 @@ class PlantProvider extends ChangeNotifier{
     List<Plant> _userPlants = [];
     List<Plant> get userPlants => _userPlants;
     List<Plant> get allPlants => _allPlants;
-    
     String? _getToken(BuildContext context) {
       return Provider.of<LoginProvider>(context, listen: false).token;
     }
@@ -156,4 +155,39 @@ class PlantProvider extends ChangeNotifier{
         return [];
       }
     }
+    Future<String?> getPlantDescription(BuildContext context, String plantName) async {
+      if (plantName.isEmpty) {
+        print("Plant name is empty.");
+        return null;
+      }
+
+      String endpoint = "species?common_name=$plantName";
+      print("Fetching plant description from: $endpoint");
+
+      final response = await _makeRequest("GET", endpoint, context);
+
+      if (response != null && response.statusCode == 200) {
+        final List<dynamic> responseData = jsonDecode(response.body);
+        print("API Response: $responseData");
+
+        //Filter the plants based on common_name and find the plant with the correct description
+        final plant = responseData.firstWhere(
+              (plant) => plant["commonName"].toLowerCase() == plantName.toLowerCase(),
+          orElse: () => null, //no matching plant is found
+        );
+
+        if (plant != null && plant.containsKey("description")) {
+          return plant["description"];
+        } else {
+          print("No description found for $plantName.");
+          return null;
+        }
+      } else {
+        print("Failed to fetch plant information. Status: ${response?.statusCode}");
+        return null;
+      }
+    }
+
+
+
 }

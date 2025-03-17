@@ -42,7 +42,7 @@ class MyPlantsCard extends StatelessWidget {
     );
   }
 
-  // Helper method to build the plant info section
+  //Helper method to build the plant info section
   Widget _buildPlantInfo(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -67,7 +67,7 @@ class MyPlantsCard extends StatelessWidget {
     );
   }
 
-// Helper method to build the plant image section
+//Helper method to build the plant image section
   Widget _buildPlantImage(BuildContext context, {required double value}) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -111,7 +111,7 @@ class MyPlantsCard extends StatelessWidget {
     );
   }
 
-  // Helper method to build the action buttons section
+  //Helper method to build the action buttons section
   Widget _buildActionButtons(BuildContext context) {
     return Expanded(
       child: Center(
@@ -150,12 +150,7 @@ class MyPlantsCard extends StatelessWidget {
                 PopupMenuItem<int>(
                   value: 0,
                   child: const Text("Fun Fact"),
-                  onTap: () => _showPlantInfoDialog(context),
-                ),
-                PopupMenuItem<int>(
-                  value: 1,
-                  child: const Text("Caring Tips"),
-                  onTap: () => _showCaringTipsDialog(context),
+                  onTap: () => _fetchDescription(context),
                 ),
               ],
             ),
@@ -243,38 +238,34 @@ class MyPlantsCard extends StatelessWidget {
       ),
     );
   }
-  void _showCaringTipsDialog(BuildContext context) {
-    String caringTips = PlantFacts.getCaringTips(plant.commonName);
 
+  void _fetchDescription(BuildContext context) async { //Fetches the plant description based on its common name
+    String? description = await Provider.of<PlantProvider>(context, listen: false)
+        .getPlantDescription(context, plant.commonName);
+
+    if (description != null) {
+      _showDescriptionDialog(context, description);
+    } else {
+      _showDescriptionDialog(context, "No description found.");
+    }
+  }
+
+//Helper function to show the description in a dialog
+  void _showDescriptionDialog(BuildContext context, String description) {
     showDialog(
       context: context,
       barrierDismissible: true,
       builder: (context) {
         return _buildInfoDialog(
           context,
-          title: "Caring Tips",
-          content: caringTips,
+          title: "Fun Fact about ${plant.commonName}",
+          content: description,
         );
       },
     );
   }
 
-  void _showPlantInfoDialog(BuildContext context) {
-    String funFact = PlantFacts.getFact(plant.commonName);
-
-    showDialog(
-      context: context,
-      barrierDismissible: true,
-      builder: (context) {
-        return _buildInfoDialog(
-          context,
-          title: "Fun Fact",
-          content: funFact,
-        );
-      },
-    );
-  }
-
+//Custom dialog that shows information
   Widget _buildInfoDialog(BuildContext context, {required String title, required String content}) {
     return Stack(
       children: [
@@ -331,5 +322,6 @@ class MyPlantsCard extends StatelessWidget {
       ],
     );
   }
-  
+
+
 }

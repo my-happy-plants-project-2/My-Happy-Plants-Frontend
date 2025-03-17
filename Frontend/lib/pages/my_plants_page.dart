@@ -53,46 +53,56 @@ class _MyPlantsPageState extends State<MyPlantsPage> {
             ],
           ),
         ),
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(12),
-            child: Consumer<PlantProvider>(
-              builder: (context, plantProvider, child) {
-                return Column(
-                  children: [
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: ElevatedButton.icon(
-                        onPressed: () => _sortByWaterNeeds(plantProvider),
-                        icon: Icon(Icons.water_drop),
-                        label: Text(
-                          _isSortedAscending
-                              ? 'Water Needs: High to Low'
-                              : 'Water Needs: Low to High',
+        child: SizedBox.expand(
+          child: Column(
+            children: [
+              Align(
+                alignment: Alignment.centerLeft,
+                child: ElevatedButton.icon(
+                  onPressed: () => _sortByWaterNeeds(context.read<PlantProvider>()),
+                  icon: Icon(Icons.water_drop),
+                  label: Text(
+                    _isSortedAscending
+                        ? 'Water Needs: High to Low'
+                        : 'Water Needs: Low to High',
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
+              Expanded(
+                child: Consumer<PlantProvider>(
+                  builder: (context, plantProvider, child) {
+                    if (plantProvider.userPlants.isEmpty) {
+                      return Center(
+                        child: Text(
+                          "No plants added yet!",
+                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                      );
+                    }
+                    return SingleChildScrollView(
+                      child: Center(
+                        child: Wrap(
+                          spacing: 8.0,
+                          runSpacing: 8.0,
+                          alignment: WrapAlignment.start,
+                          children: List.generate(
+                            plantProvider.userPlants.length,
+                                (index) {
+                              return MyPlantsCard(plant: plantProvider.userPlants[index]);
+                            },
+                          ),
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 12),
-                    Center(
-                      child: Wrap(
-                        spacing: 8.0,
-                        runSpacing: 8.0,
-                        alignment: WrapAlignment.start,
-                        children: List.generate(
-                          plantProvider.userPlants.length,
-                              (index) {
-                            return MyPlantsCard(plant: plantProvider.userPlants[index]);
-                          },
-                        ),
-                      ),
-                    ),
-                  ],
-                );
-              },
-            ),
+                    );
+                  },
+                ),
+              ),
+            ],
           ),
         ),
       ),
     );
   }
+
 }
