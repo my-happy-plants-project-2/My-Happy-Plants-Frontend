@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:my_happy_plants_flutter/providers/authentication_provider.dart';
 
-//@author Filip Claesson, Pehr Norten
+//@author Filip Claesson, Pehr Norten, Ida Nordenswa
 
-
+//Setting page where users can delete their account
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
 
@@ -13,6 +13,7 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
+  //Confirmation dialog before deleting users account
   void _confirmDeleteAccount() {
     showDialog(
       context: context,
@@ -23,7 +24,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 "Are you sure you want to delete your account?"),
             actions: [
               TextButton(
-                onPressed: () => Navigator.of(context).pop(),
+                onPressed: () => Navigator.of(context).pop(), //Close dialog
                 child: const Text("Cancel"),
               ),
               ElevatedButton(
@@ -31,8 +32,8 @@ class _SettingsPageState extends State<SettingsPage> {
                   backgroundColor: Colors.green,
                 ),
                 onPressed: () {
-                  Navigator.of(context).pop();
-                  _deleteUser();
+                  Navigator.of(context).pop(); //Close dialog
+                  _deleteUser(); //Account deletion
                 },
                 child: const Text(
                     "Delete", style: TextStyle(color: Colors.white)),
@@ -42,6 +43,7 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
+  //Handles the deletion of a user account
   void _deleteUser() async {
     final authentication = context.read<AuthenticationProvider>();
     try {
@@ -51,7 +53,7 @@ class _SettingsPageState extends State<SettingsPage> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("Account deleted")),
         );
-        Navigator.pushReplacementNamed(context, '/login_page');
+        Navigator.pushReplacementNamed(context, '/login_page'); //Redirects to the login page
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("Account could not be deleted")),
@@ -67,15 +69,15 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.transparent, // Make the background transparent so the gradient can show
+        backgroundColor: Colors.transparent,
         body: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                Color.fromARGB(192, 204, 255, 204), // Very light green
-                Color.fromARGB(166, 255, 255, 204), // Very light yellow
+                Color.fromARGB(192, 204, 255, 204), //Very light green
+                Color.fromARGB(166, 255, 255, 204), //Very light yellow
               ],
             ),
           ),
@@ -84,7 +86,7 @@ class _SettingsPageState extends State<SettingsPage> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Image.asset(
-                  'lib/assets/images/plants/parlor_palm.png', height: 150),
+                  'lib/assets/images/plants/parlor_palm.png', height: 150), //Image above deletion button
               const SizedBox(height: 20),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
@@ -94,7 +96,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8)),
                 ),
-                onPressed: _confirmDeleteAccount,
+                onPressed: _confirmDeleteAccount, //open deletion dialog
                 child: const Text(
                     "Delete Account", style: TextStyle(color: Colors.white)),
               ),

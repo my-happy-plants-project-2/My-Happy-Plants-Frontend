@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:my_happy_plants_flutter/components/custom_icon_button.dart';
 import 'package:my_happy_plants_flutter/components/water_bar.dart';
 import 'package:my_happy_plants_flutter/model/plant.dart';
-import 'package:my_happy_plants_flutter/model/plant_facts.dart';
 import 'package:my_happy_plants_flutter/providers/plant_provider.dart';
+import 'package:my_happy_plants_flutter/providers/library_provider.dart';
 import 'package:provider/provider.dart';
 
 // @Author Filip Claesson, Pehr Nortén, Christian Storck
@@ -240,7 +240,7 @@ class MyPlantsCard extends StatelessWidget {
   }
 
   void _fetchDescription(BuildContext context) async { //Fetches the plant description based on its common name
-    String? description = await Provider.of<PlantProvider>(context, listen: false)
+    String? description = await Provider.of<LibraryProvider>(context, listen: false)
         .getPlantDescription(context, plant.commonName);
 
     if (description != null) {

@@ -6,7 +6,8 @@ import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 import '../model/plant.dart';
 
-//@author Christian Storck
+//@author Christian Storck, Ida Nordenswan
+
 //MEGAclass that handles all of the plant-related logic. Some methods should be moved to library provider.
 //Most of this class is "outcommented" remove the comments when the back-front end connection works.
 class PlantProvider extends ChangeNotifier{
@@ -124,26 +125,11 @@ class PlantProvider extends ChangeNotifier{
       }
     }
 
-    void fillLibraryList(List<Plant> plants) {
-      _allPlants = plants;
-      notifyListeners();
-    }
-
     void fillUserList(List<Plant> plants) {
       _userPlants = plants;
       notifyListeners();
     }
 
-    Future<List<Plant>> getLibraryPlantList(BuildContext context) async {
-      final response = await _makeRequest("GET", "species", context);
-      if(response != null && response.statusCode == 200) {
-        List<dynamic> responseData = jsonDecode(response.body);
-        return responseData.map((plant) => Plant.fromJson(plant)).toList();
-      } else {
-        print("Failed to fetch plants");
-        return [];
-      }
-    }
 
     Future<List<Plant>> getUserPlantList(BuildContext context) async {
       final response = await _makeRequest("GET", "user/plants", context);
@@ -155,39 +141,4 @@ class PlantProvider extends ChangeNotifier{
         return [];
       }
     }
-    Future<String?> getPlantDescription(BuildContext context, String plantName) async {
-      if (plantName.isEmpty) {
-        print("Plant name is empty.");
-        return null;
-      }
-
-      String endpoint = "species?common_name=$plantName";
-      print("Fetching plant description from: $endpoint");
-
-      final response = await _makeRequest("GET", endpoint, context);
-
-      if (response != null && response.statusCode == 200) {
-        final List<dynamic> responseData = jsonDecode(response.body);
-        print("API Response: $responseData");
-
-        //Filter the plants based on common_name and find the plant with the correct description
-        final plant = responseData.firstWhere(
-              (plant) => plant["commonName"].toLowerCase() == plantName.toLowerCase(),
-          orElse: () => null, //no matching plant is found
-        );
-
-        if (plant != null && plant.containsKey("description")) {
-          return plant["description"];
-        } else {
-          print("No description found for $plantName.");
-          return null;
-        }
-      } else {
-        print("Failed to fetch plant information. Status: ${response?.statusCode}");
-        return null;
-      }
-    }
-
-
-
 }

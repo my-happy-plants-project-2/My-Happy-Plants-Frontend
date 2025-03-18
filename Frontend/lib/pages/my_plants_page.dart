@@ -5,31 +5,34 @@ import 'package:provider/provider.dart';
 
 import '../providers/plant_provider.dart';
 
-//@author Filip Claesson, Pehr Norten, Christian Storck
+//@author Filip Claesson, Pehr Norten, Christian Storck, Ida Nordenswan
 class MyPlantsPage extends StatefulWidget {
   MyPlantsPage({super.key});
 
+  //Stateful widget representing the My Plants page
   @override
   State<MyPlantsPage> createState() => _MyPlantsPageState();
 }
 
 class _MyPlantsPageState extends State<MyPlantsPage> {
-  bool _isSortedAscending = true;
+  bool _isSortedAscending = true; //Controls the order of plants based on their water needs
 
   @override
   void initState() {
     super.initState();
-    _loadUserPlants();
+    _loadUserPlants(); //The users plants are loaded when the page is initialized
   }
 
-  Future<void> _loadUserPlants() async { //Method that fetches the plantlist from the plantprovider.
+  Future<void> _loadUserPlants() async { //Method that fetches the plantlist from the plantprovider, and updates the users plant list.
     final plantProvider = Provider.of<PlantProvider>(context, listen: false);
     List<Plant> userPlants = await plantProvider.getUserPlantList(context);
     plantProvider.fillUserList(userPlants);
   }
+
+  //Method for toggle sorting the order of plants based on their water needs
   void _sortByWaterNeeds(PlantProvider plantProvider) {
     setState(() {
-      _isSortedAscending = !_isSortedAscending; // Toggle sorting order
+      _isSortedAscending = !_isSortedAscending; //Toggle sorting order
 
       plantProvider.userPlants.sort((a, b) {
         return _isSortedAscending
@@ -60,7 +63,7 @@ class _MyPlantsPageState extends State<MyPlantsPage> {
                 alignment: Alignment.centerLeft,
                 child: ElevatedButton.icon(
                   onPressed: () => _sortByWaterNeeds(context.read<PlantProvider>()),
-                  icon: Icon(Icons.water_drop),
+                  icon: Icon(Icons.water_drop), //Water drop icon for sorting button
                   label: Text(
                     _isSortedAscending
                         ? 'Water Needs: High to Low'

@@ -14,6 +14,7 @@ void main() { //Registers the providers to all of the application.
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (context) => PlantProvider()),
+      ChangeNotifierProvider(create: (context) => LibraryProvider()),
       ChangeNotifierProvider(create: (context) => LoginProvider()),
       ChangeNotifierProvider(create: (context) => AuthenticationProvider()),
     ],
