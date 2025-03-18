@@ -59,15 +59,18 @@ class _MyPlantsPageState extends State<MyPlantsPage> {
         child: SizedBox.expand(
           child: Column(
             children: [
-              Align(
-                alignment: Alignment.centerLeft,
-                child: ElevatedButton.icon(
-                  onPressed: () => _sortByWaterNeeds(context.read<PlantProvider>()),
-                  icon: Icon(Icons.water_drop), //Water drop icon for sorting button
-                  label: Text(
-                    _isSortedAscending
+              Padding(
+                padding: const EdgeInsets.only(top: 20.0),
+                child: Align(
+                  alignment: Alignment.center,
+                  child: ElevatedButton.icon(
+                    onPressed: () => _sortByWaterNeeds(context.read<PlantProvider>()),
+                    icon: Icon(Icons.water_drop), //Water drop icon for sorting button
+                    label: Text(
+                      _isSortedAscending
                         ? 'Water Needs: High to Low'
                         : 'Water Needs: Low to High',
+                    ),
                   ),
                 ),
               ),
