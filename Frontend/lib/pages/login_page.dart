@@ -29,7 +29,7 @@ class _LoginPageState extends State<LoginPage> {
 
   void _login(BuildContext context) async {
     final loginProvider = context.read<LoginProvider>();
-    final email = _emailController.text.trim();
+    final email = _emailController.text.trim().toLowerCase();
     final password = _passwordController.text.trim();
 
     // Check if email or password is empty, if so show a snackbar and return.
@@ -57,7 +57,7 @@ class _LoginPageState extends State<LoginPage> {
   void _signUp(BuildContext context) async { //Takes user input and sends it to the "AuthenticationProvider". Creates account if success.
     final authProvider = context.read<AuthenticationProvider>();
     final userName = _userNameController.text.trim();
-    final email = _emailController.text.trim();
+    final email = _emailController.text.trim().toLowerCase();
     final password = _passwordController.text.trim();
     final confirmPassword = _passwordVerifyController.text.trim();
 

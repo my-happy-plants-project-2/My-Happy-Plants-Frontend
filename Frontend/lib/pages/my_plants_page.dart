@@ -87,16 +87,19 @@ class _MyPlantsPageState extends State<MyPlantsPage> {
                       );
                     }
                     return SingleChildScrollView(
-                      child: Center(
-                        child: Wrap(
-                          spacing: 8.0,
-                          runSpacing: 8.0,
-                          alignment: WrapAlignment.start,
-                          children: List.generate(
-                            plantProvider.userPlants.length,
-                                (index) {
-                              return MyPlantsCard(plant: plantProvider.userPlants[index]);
-                            },
+                      child: Padding(
+                        padding: const EdgeInsets.all(12),
+                        child: Center(
+                          child: Wrap(
+                            spacing: 8.0,
+                            runSpacing: 8.0,
+                            alignment: WrapAlignment.start,
+                            children: List.generate(
+                              plantProvider.userPlants.length,
+                                  (index) {
+                                return MyPlantsCard(plant: plantProvider.userPlants[index]);
+                              },
+                            ),
                           ),
                         ),
                       ),
