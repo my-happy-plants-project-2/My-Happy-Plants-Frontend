@@ -51,8 +51,9 @@ public class UserRepository {
             int lightReqs = Integer.parseInt(resultSet.get("light_reqs").toString());
             int waterFrequency = Integer.parseInt(resultSet.get("waterfrequency").toString());
             String description = resultSet.get("description").toString();
+            String caring = resultSet.get("caring").toString();
 
-            Species species = new Species(scientificName, commonName, family, category, imageUrl, lightReqs, waterFrequency, description);
+            Species species = new Species(scientificName, commonName, family, category, imageUrl, lightReqs, waterFrequency, description, caring);
 
             return new UserPlant(plantID, nickname, owner, species, lastWatered, note);
         }

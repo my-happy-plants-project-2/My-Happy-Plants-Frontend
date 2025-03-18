@@ -94,4 +94,37 @@ class LibraryProvider extends ChangeNotifier {
       }
     }
 
+    //Fetching plants care tip based on its common name
+    Future<String?> getPlantCare(BuildContext context, String plantName) async {
+      if (plantName.isEmpty) {
+        print("Plant name is empty.");
+        return null;
+      }
+
+      String endpoint = "species?common_name=$plantName";
+      print("Fetching plant description from: $endpoint");
+
+      final response = await _makeRequest("GET", endpoint, context);
+
+      if (response != null && response.statusCode == 200) {
+        final List<dynamic> responseData = jsonDecode(response.body);
+        //print("API Response: $responseData");
+
+        //Filter the plants based on common_name and find the plant with the correct description
+        final plant = responseData.firstWhere(
+              (plant) => plant["commonName"].toLowerCase() == plantName.toLowerCase(),
+          orElse: () => null, //no matching plant is found
+        );
+
+        if (plant != null && plant.containsKey("caring")) {
+          return plant["caring"];
+        } else {
+          print("No care tip found for $plantName.");
+          return null;
+        }
+      } else {
+        print("Failed to fetch plant care tip. Status: ${response?.statusCode}");
+        return null;
+      }
+    }
 }

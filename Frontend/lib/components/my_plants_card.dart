@@ -9,7 +9,8 @@ import 'package:my_happy_plants_flutter/providers/plant_provider.dart';
 import 'package:my_happy_plants_flutter/providers/library_provider.dart';
 import 'package:provider/provider.dart';
 
-// @Author Filip Claesson, Pehr Nortén, Christian Storck
+
+// @Author Filip Claesson, Pehr Nortén, Christian Storck, Ida Nordenswan
 class MyPlantsCard extends StatelessWidget {
   final Plant plant;
 
@@ -152,6 +153,11 @@ class MyPlantsCard extends StatelessWidget {
                   child: const Text("Fun Fact"),
                   onTap: () => _fetchDescription(context),
                 ),
+                PopupMenuItem<int>(
+                  value: 1,
+                  child: const Text("Caring Tips"),
+                  onTap: () => _fetchCaringTip(context),
+                ),
               ],
             ),
           ],
@@ -195,7 +201,7 @@ class MyPlantsCard extends StatelessWidget {
     );
   }
 
-  void _waterPlant(BuildContext context) {
+  void _waterPlant(BuildContext context) async {
     final plantProvider = context.read<PlantProvider>();
 
     plantProvider.waterPlant(context, plant.plantId);
@@ -244,14 +250,25 @@ class MyPlantsCard extends StatelessWidget {
         .getPlantDescription(context, plant.commonName);
 
     if (description != null) {
-      _showDescriptionDialog(context, description);
+      _showDescriptionDialogDescription(context, description);
     } else {
-      _showDescriptionDialog(context, "No description found.");
+      _showDescriptionDialogDescription(context, "No description found.");
+    }
+  }
+
+  void _fetchCaringTip(BuildContext context) async { //Fetches the plant care tip based on its common name
+    String? description = await Provider.of<LibraryProvider>(context, listen: false)
+        .getPlantCare(context, plant.commonName);
+
+    if (description != null) {
+      _showDescriptionDialogCaring(context, description);
+    } else {
+      _showDescriptionDialogCaring(context, "No description found.");
     }
   }
 
 //Helper function to show the description in a dialog
-  void _showDescriptionDialog(BuildContext context, String description) {
+  void _showDescriptionDialogDescription(BuildContext context, String description) {
     showDialog(
       context: context,
       barrierDismissible: true,
@@ -264,6 +281,22 @@ class MyPlantsCard extends StatelessWidget {
       },
     );
   }
+
+  //Helper function to show the care tip in a dialog
+  void _showDescriptionDialogCaring(BuildContext context, String caring) {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (context) {
+        return _buildInfoDialog(
+          context,
+          title: "Care tip for  ${plant.commonName}",
+          content: caring,
+        );
+      },
+    );
+  }
+
 
 //Custom dialog that shows information
   Widget _buildInfoDialog(BuildContext context, {required String title, required String content}) {
@@ -322,6 +355,4 @@ class MyPlantsCard extends StatelessWidget {
       ],
     );
   }
-
-
 }
