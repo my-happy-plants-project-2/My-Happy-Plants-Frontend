@@ -50,8 +50,10 @@ public class UserRepository {
             String imageUrl = resultSet.get("image_url").toString();
             int lightReqs = Integer.parseInt(resultSet.get("light_reqs").toString());
             int waterFrequency = Integer.parseInt(resultSet.get("waterfrequency").toString());
+            String description = resultSet.get("description").toString();
+            String caring = resultSet.get("caring").toString();
 
-            Species species = new Species(scientificName, commonName, family, category, imageUrl, lightReqs, waterFrequency);
+            Species species = new Species(scientificName, commonName, family, category, imageUrl, lightReqs, waterFrequency, description, caring);
 
             return new UserPlant(plantID, nickname, owner, species, lastWatered, note);
         }
@@ -142,12 +144,15 @@ public class UserRepository {
         }
     }
 
-    public boolean addOwnerPlant(String plantID, String nickname, String owner, String note, String species) {
+    public boolean addOwnerPlant(String plantID, String nickname, String owner, String note, String species, String description) {
         try {
             queryExecutor.beginTransaction();
             Date lastWatered = Date.valueOf(LocalDate.now());
             String insertQuery = "INSERT INTO user_plants (plant_id, nickname, owner, note, species, last_watered) VALUES (?, ?, ?, ?, ?, ?)";
             queryExecutor.executeUpdate(insertQuery, plantID, nickname, owner, note, species, lastWatered);
+//            String updateSpeciesQuery = "UPDATE species SET description = ? WHERE scientific_name = ?";
+//            queryExecutor.executeUpdate(updateSpeciesQuery, description,species);
+
             queryExecutor.endTransaction();
 
             return true;

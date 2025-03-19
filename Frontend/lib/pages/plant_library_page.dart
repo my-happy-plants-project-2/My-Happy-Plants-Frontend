@@ -3,10 +3,11 @@ import 'package:my_happy_plants_flutter/components/plant_library_card.dart';
 import 'package:my_happy_plants_flutter/model/plant.dart';
 import 'package:provider/provider.dart';
 
-import '../providers/plant_provider.dart';
+import '../providers/library_provider.dart';
 import 'dart:async';
 
-//@author Filip Claesson, Pehr Norten
+//@author Filip Claesson, Pehr Norten, Ida Nordenswan
+
 //Main page for the plantlibrary
 class PlantLibraryPage extends StatefulWidget {
   PlantLibraryPage({super.key});
@@ -16,27 +17,29 @@ class PlantLibraryPage extends StatefulWidget {
 }
 
 class _PlantLibraryPageState extends State<PlantLibraryPage> {
-  TextEditingController _searchController = TextEditingController();
-  List<Plant> _filteredPlants = [];
-  List<Plant> libraryPlants = [];
+  TextEditingController _searchController = TextEditingController(); //Controller for search input
+  List<Plant> _filteredPlants = []; //List to store filtered plants based on search
+  List<Plant> libraryPlants = [];//Complete list of plants
 
   @override
   void initState() {
     super.initState();
-    _loadLibraryPlants();
+    _loadLibraryPlants(); //Load the library whe page is initialized
   }
 
+  //Fetches the plant library list from the PlantProvider, and updates the library
   Future<void> _loadLibraryPlants() async {
-    final plantProvider = Provider.of<PlantProvider>(context, listen: false);
-    libraryPlants = await plantProvider.getLibraryPlantList(context);
+    final libraryProvider = Provider.of<LibraryProvider>(context, listen: false);
+    libraryPlants = await libraryProvider.getLibraryPlantList(context);
     if (mounted) {
       setState(() {
-        plantProvider.fillLibraryList(libraryPlants);
-        _filteredPlants = libraryPlants;
+        libraryProvider.fillLibraryList(libraryPlants);
+        _filteredPlants = libraryPlants; //Initialize filtered list with all the plants
       });
     }
   }
 
+  //Filters the plants based on search query
   Timer? _debounce;
   void _filterPlants(String query) {
     if (_debounce?.isActive ?? false) _debounce!.cancel();
@@ -50,13 +53,6 @@ class _PlantLibraryPageState extends State<PlantLibraryPage> {
       });
     });
   }
-  Future<void> _loadUserPlants() async {
-    final plantProvider = Provider.of<PlantProvider>(context, listen: false);
-    List<Plant> userPlants = await plantProvider.getUserPlantList(context);
-    plantProvider.fillUserList(userPlants);
-  }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +74,7 @@ class _PlantLibraryPageState extends State<PlantLibraryPage> {
               padding: const EdgeInsets.all(12),
               child: TextField(
                 controller: _searchController,
-                onChanged: _filterPlants,
+                onChanged: _filterPlants, //Calls the filtering method
                 decoration: InputDecoration(
                   hintText: 'Search plants',
                   prefixIcon: Icon(Icons.search),
@@ -97,7 +93,7 @@ class _PlantLibraryPageState extends State<PlantLibraryPage> {
                       spacing: 8.0,
                       runSpacing: 8.0,
                       children: List.generate(_filteredPlants.length, (index) {
-                        return PlantLibraryCard(plant: _filteredPlants[index]);
+                        return PlantLibraryCard(plant: _filteredPlants[index]); //Display filtered plants
                       }),
                     ),
                   ),

@@ -84,6 +84,7 @@ public class UserService {
         String nickname = "";
         String owner = "";
         String note = "";
+        String description = "";
 
         ObjectMapper mapper = new ObjectMapper();
         try {
@@ -92,6 +93,7 @@ public class UserService {
             species = node.get("species").toString().replaceAll("\"", "");
             nickname = node.get("nickname").toString().replaceAll("\"", "");
             owner = getEmailFromToken(context);
+            description = node.has("description") ? node.get("description").asText() : "";
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -99,7 +101,7 @@ public class UserService {
             return;
         }
 
-        if (userRepository.addOwnerPlant(plantID, nickname, owner, note, species)) {
+        if (userRepository.addOwnerPlant(plantID, nickname, owner, note, species,description)) {
             context.status(201).result("Plant added to user library");
         } else {
             context.status(500).result("Error adding plant to user library");

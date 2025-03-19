@@ -14,6 +14,7 @@ void main() { //Registers the providers to all of the application.
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (context) => PlantProvider()),
+      ChangeNotifierProvider(create: (context) => LibraryProvider()),
       ChangeNotifierProvider(create: (context) => LoginProvider()),
       ChangeNotifierProvider(create: (context) => AuthenticationProvider()),
     ],
@@ -29,7 +30,7 @@ class MyApp extends StatelessWidget {
     // Fixa färgen på overlay i Android
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(
-        systemNavigationBarColor: Color.fromARGB(255, 122, 162, 79),
+        systemNavigationBarColor: Color.fromARGB(239, 61, 148, 66),
         systemNavigationBarIconBrightness: Brightness.light,
       ),
     );

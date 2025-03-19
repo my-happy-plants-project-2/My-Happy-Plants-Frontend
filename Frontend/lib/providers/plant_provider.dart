@@ -6,7 +6,8 @@ import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 import '../model/plant.dart';
 
-//@author Christian Storck
+//@author Christian Storck, Ida Nordenswan
+
 //MEGAclass that handles all of the plant-related logic. Some methods should be moved to library provider.
 //Most of this class is "outcommented" remove the comments when the back-front end connection works.
 class PlantProvider extends ChangeNotifier{
@@ -16,7 +17,6 @@ class PlantProvider extends ChangeNotifier{
     List<Plant> _userPlants = [];
     List<Plant> get userPlants => _userPlants;
     List<Plant> get allPlants => _allPlants;
-    
     String? _getToken(BuildContext context) {
       return Provider.of<LoginProvider>(context, listen: false).token;
     }
@@ -125,26 +125,11 @@ class PlantProvider extends ChangeNotifier{
       }
     }
 
-    void fillLibraryList(List<Plant> plants) {
-      _allPlants = plants;
-      notifyListeners();
-    }
-
     void fillUserList(List<Plant> plants) {
       _userPlants = plants;
       notifyListeners();
     }
 
-    Future<List<Plant>> getLibraryPlantList(BuildContext context) async {
-      final response = await _makeRequest("GET", "species", context);
-      if(response != null && response.statusCode == 200) {
-        List<dynamic> responseData = jsonDecode(response.body);
-        return responseData.map((plant) => Plant.fromJson(plant)).toList();
-      } else {
-        print("Failed to fetch plants");
-        return [];
-      }
-    }
 
     Future<List<Plant>> getUserPlantList(BuildContext context) async {
       final response = await _makeRequest("GET", "user/plants", context);

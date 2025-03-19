@@ -4,7 +4,7 @@ import 'package:my_happy_plants_flutter/providers/authentication_provider.dart';
 import 'package:my_happy_plants_flutter/providers/login_provider.dart';
 import 'package:provider/provider.dart';
 
-//@author Filip Claesson, Pehr Norten, Christian Storck
+//@author Filip Claesson, Pehr Norten, Christian Storck, Ida Nordenswan
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
@@ -29,7 +29,7 @@ class _LoginPageState extends State<LoginPage> {
 
   void _login(BuildContext context) async {
     final loginProvider = context.read<LoginProvider>();
-    final email = _emailController.text.trim();
+    final email = _emailController.text.trim().toLowerCase();
     final password = _passwordController.text.trim();
 
     // Check if email or password is empty, if so show a snackbar and return.
@@ -57,7 +57,7 @@ class _LoginPageState extends State<LoginPage> {
   void _signUp(BuildContext context) async { //Takes user input and sends it to the "AuthenticationProvider". Creates account if success.
     final authProvider = context.read<AuthenticationProvider>();
     final userName = _userNameController.text.trim();
-    final email = _emailController.text.trim();
+    final email = _emailController.text.trim().toLowerCase();
     final password = _passwordController.text.trim();
     final confirmPassword = _passwordVerifyController.text.trim();
 
@@ -86,15 +86,15 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: Colors.transparent, //Background
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              Color.fromARGB(192, 156, 224, 156), // Muted light green
-              Color.fromARGB(166, 255, 255, 200),
+              Color.fromARGB(192, 156, 224, 156), //Muted light green
+              Color.fromARGB(166, 255, 255, 200), //Muted light yellow
             ],
           ),
         ),
@@ -102,7 +102,7 @@ class _LoginPageState extends State<LoginPage> {
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Center(
-          // Added this to center everything
+          //Added this to center everything
           child: SingleChildScrollView(
             child: Container(
               width: 450,
@@ -115,7 +115,7 @@ class _LoginPageState extends State<LoginPage> {
                     color: Colors.green.withOpacity(0.3),
                     spreadRadius: 7,
                     blurRadius: 7,
-                    offset: Offset(0, 3), // Shadow position
+                    offset: Offset(0, 3), //Shadow position
                   ),
                 ],
               ),
