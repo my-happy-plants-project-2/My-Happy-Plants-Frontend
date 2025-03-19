@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
@@ -42,6 +41,23 @@ public class QueryExecutorTest {
         queryExecutor = new QueryExecutor(sqlConfig);
     }
 
+    /**
+     * <h1>testExecuteUpdate</h1>
+     * <p>Test the executeUpdate method.</p>
+     * <ul>
+     *  <li>Mocks the connection.prepareStatement method to return a prepared statement.</li>
+     * </ul>
+     * <p>
+     *  Calls the executeUpdate method with a query and parameters.
+     * <ul>
+     *  <li>Verifies that the connection.prepareStatement method was called with the query.</li>
+     *  <li>Verifies that the preparedStatement.setObject method was called and set the first parameter as "newUsername".</li>
+     *  <li>Verifies that the preparedStatement.setObject method was called and set the second parameter as "test@example.com".</li>
+     *  <li>Verifies that the preparedStatement.executeUpdate method was called.</li>
+     * </ul>
+     * @throws SQLException
+     * @author Kasper Schröder
+     */
     @Test
     void testExecuteUpdate() throws SQLException {
         when(connection.prepareStatement(anyString())).thenReturn(preparedStatement);
@@ -54,6 +70,24 @@ public class QueryExecutorTest {
         verify(preparedStatement).executeUpdate();
     }
 
+    /**
+     * <h1>testExecuteQuery</h1>
+     * <p>Test the executeQuery method.</p>
+     * <ul>
+     *  <li>Mocks the connection.prepareStatement method to return a prepared statement.</li>
+     *  <li>Mocks the preparedStatement.executeQuery method to return a result set.</li>
+     * </ul>
+     * <p>
+     *  Calls the executeQuery method with a query and parameters and stores the result in a list of maps.
+     * <ul>
+     *  <li>Asserts that the result is not null.</li>
+     *  <li>Verifies that the connection.prepareStatement method was called with the query.</li>
+     *  <li>Verifies that the preparedStatement.setObject method was called and set the first parameter as 1.</li>
+     *  <li>Verifies that the preparedStatement.executeQuery method was called.</li>
+     * </ul>
+     * @throws SQLException
+     * @author Kasper Schröder
+     */
     @Test
     void testExecuteQuery() throws SQLException {
         when(connection.prepareStatement(anyString())).thenReturn(preparedStatement);

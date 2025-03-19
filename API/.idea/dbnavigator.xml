@@ -36,7 +36,7 @@
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
     <connection id="28cbac58-d73a-4ecf-8eb1-ca00e9186ffb">
-      <console name="Connection" type="STANDARD" schema="public" session="Main"><![CDATA[select * from species]]></console>
+      <console name="Connection" type="STANDARD" schema="happyplants2" session="Main" />
     </connection>
   </component>
   <component name="DBNavigator.Project.DatabaseEditorStateManager">
@@ -55,6 +55,9 @@
   <component name="DBNavigator.Project.ObjectQuickFilterManager">
     <last-used-operator value="EQUAL" />
     <filters />
+  </component>
+  <component name="DBNavigator.Project.ParserDiagnosticsManager">
+    <diagnostics-history />
   </component>
   <component name="DBNavigator.Project.ScriptExecutionManager" clear-outputs="true">
     <recently-used-interfaces />
@@ -79,7 +82,10 @@
           <tns-profile value="" />
           <type value="USER_PASSWORD" />
           <user value="ao7328" />
-          <deprecated-pwd value="MnhlOWE0a3Y=" />
+          <token-type value="" />
+          <token-config-file value="" />
+          <token-profile value="" />
+          <session-user value="" />
         </database>
         <properties>
           <auto-commit value="false" />
@@ -89,10 +95,8 @@
           <proxy-host value="" />
           <proxy-port value="22" />
           <proxy-user value="" />
-          <deprecated-proxy-pwd value="" />
           <auth-type value="PASSWORD" />
           <key-file value="" />
-          <key-passphrase value="" />
         </ssh-settings>
         <ssl-settings>
           <active value="false" />
@@ -116,8 +120,17 @@
           <max-connection-pool-size value="7" />
           <alternative-statement-delimiter value="" />
         </details>
-        <object-filters hide-empty-schemas="false" hide-pseudo-columns="false">
-          <object-type-filter>
+        <debugger>
+          <compile-dependencies value="true" />
+          <tcp-driver-tunneling value="false" />
+          <tcp-host-address value="" />
+          <tcp-port-from value="4000" />
+          <tcp-port-to value="4999" />
+          <debugger-type value="ASK" />
+        </debugger>
+        <object-filters hide-empty-schemas="false" hide-pseudo-columns="false" hide-audit-columns="false">
+          <object-filters />
+          <object-type-filter use-master-settings="true">
             <object-type name="SCHEMA" enabled="true" />
             <object-type name="USER" enabled="true" />
             <object-type name="ROLE" enabled="true" />
@@ -140,11 +153,16 @@
             <object-type name="TYPE" enabled="true" />
             <object-type name="TYPE_ATTRIBUTE" enabled="true" />
             <object-type name="ARGUMENT" enabled="true" />
+            <object-type name="JAVA_CLASS" enabled="true" />
+            <object-type name="JAVA_INNER_CLASS" enabled="true" />
+            <object-type name="JAVA_FIELD" enabled="true" />
+            <object-type name="JAVA_METHOD" enabled="true" />
             <object-type name="DIMENSION" enabled="true" />
             <object-type name="CLUSTER" enabled="true" />
             <object-type name="DBLINK" enabled="true" />
+            <object-type name="CREDENTIAL" enabled="true" />
+            <object-type name="AI_PROFILE" enabled="true" />
           </object-type-filter>
-          <object-name-filters />
         </object-filters>
       </connection>
     </connections>

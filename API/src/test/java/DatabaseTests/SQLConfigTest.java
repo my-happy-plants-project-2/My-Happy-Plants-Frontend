@@ -18,6 +18,12 @@ public class SQLConfigTest {
         sqlConfig = new SQLConfig();
     }
 
+    /**
+     * <h1>testGetConnection</h1>
+     * <p>Test that the getConnection method works with the actual environmental variables for the database connection.</p>
+     * @throws SQLException
+     * @author Kasper Schröder
+     */
     @Test
     void testGetConnection() throws SQLException {
         Connection conn = sqlConfig.getConnection();
