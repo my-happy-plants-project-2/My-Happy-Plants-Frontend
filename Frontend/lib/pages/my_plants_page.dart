@@ -7,7 +7,7 @@ import '../providers/plant_provider.dart';
 
 //@author Filip Claesson, Pehr Norten, Christian Storck
 class MyPlantsPage extends StatefulWidget {
-  MyPlantsPage({super.key});
+  const MyPlantsPage({super.key});
 
 /**
   List<Plant> plants = [
