@@ -150,8 +150,8 @@ public class UserRepository {
             Date lastWatered = Date.valueOf(LocalDate.now());
             String insertQuery = "INSERT INTO user_plants (plant_id, nickname, owner, note, species, last_watered) VALUES (?, ?, ?, ?, ?, ?)";
             queryExecutor.executeUpdate(insertQuery, plantID, nickname, owner, note, species, lastWatered);
-            String updateSpeciesQuery = "UPDATE species SET description = ? WHERE scientific_name = ?";
-            queryExecutor.executeUpdate(updateSpeciesQuery, description,species);
+//            String updateSpeciesQuery = "UPDATE species SET description = ? WHERE scientific_name = ?";
+//            queryExecutor.executeUpdate(updateSpeciesQuery, description,species);
 
             queryExecutor.endTransaction();
 
