@@ -130,7 +130,7 @@ class MyPlantsCard extends StatelessWidget {
                   PopupMenuItem<int>(
                     value: 1,
                     child: const Text('Delete Plant'),
-                    onTap: () => _deletePlant(context),
+                    onTap: () => _confirmDeletePlant(context),
                   ),
                 ],
             ),
@@ -173,6 +173,7 @@ class MyPlantsCard extends StatelessWidget {
         context: context,
         builder: (context) {
           return AlertDialog(
+            // backgroundColor: Theme.of(context).colorScheme.primary,
             title:const Text("Edit Plant Name"),
             content: TextField(
               controller: _controller,
@@ -207,6 +208,34 @@ class MyPlantsCard extends StatelessWidget {
     plantProvider.waterPlant(context, plant.plantId);
   }
 
+  void _confirmDeletePlant(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) =>
+          AlertDialog(
+            title: const Text("Delete plant"),
+            content: const Text(
+                "Are you sure you want to delete this plant?"),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(), //Close dialog
+                child: const Text("Cancel"),
+              ),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green,
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop(); //Close dialog
+                  _deletePlant(context); //Plant deletion
+                },
+                child: const Text(
+                    "Delete", style: TextStyle(color: Colors.white)),
+              ),
+            ],
+          ),
+    );
+  }
   void _deletePlant(BuildContext context) {
     final plantProvider = context.read<PlantProvider>();
 
