@@ -24,6 +24,10 @@ class _LoginPageState extends State<LoginPage> {
   void _toggleLoginMode() { //Changes state depending on if you want to login or create account.
     setState(() {
       _isSignUpMode = !_isSignUpMode;
+      _emailController.clear();
+      _passwordController.clear();
+      _userNameController.clear();
+      _passwordVerifyController.clear();
     });
   }
 
