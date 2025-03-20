@@ -3,176 +3,104 @@ import 'package:my_happy_plants_flutter/components/plant_library_card.dart';
 import 'package:my_happy_plants_flutter/model/plant.dart';
 import 'package:provider/provider.dart';
 
-import '../providers/plant_provider.dart';
+import '../providers/library_provider.dart';
+import 'dart:async';
 
-//@author Filip Claesson, Pehr Norten
+//@author Filip Claesson, Pehr Norten, Ida Nordenswan
+
 //Main page for the plantlibrary
 class PlantLibraryPage extends StatefulWidget {
   PlantLibraryPage({super.key});
-
-  //Sample plant data, "hardcoded"
-  final List<Plant> plants = [
-    Plant(
-      plantId: '1',
-      commonName: 'Devil\'s Ivy',
-      scientificName: 'Epipremnum aureum',
-      familyName: 'Araceae',
-      imagePath: 'lib/assets/images/plants/devils_ivy.png',
-      nickname: 'Ivy',
-      lastWatered: DateTime.now(),
-      waterFrequency: 5,
-      light: 4,
-    ),
-    Plant(
-      plantId: '2',
-      commonName: 'Monstera',
-      scientificName: 'Monstera deliciosa',
-      familyName: 'Araceae',
-      imagePath: 'lib/assets/images/plants/monstera.png',
-      nickname: 'Vera',
-      lastWatered: DateTime.now(),
-      waterFrequency: 6,
-      light: 7,
-    ),
-    Plant(
-      plantId: '3',
-      commonName: "Snake Plant",
-      scientificName: "Sansevieria trifasciata",
-      familyName: "Asparagaceae",
-      imagePath: 'lib/assets/images/plants/snake_plant.png',
-      nickname: 'Lily',
-      lastWatered: DateTime.now(),
-      waterFrequency: 2,
-      light: 3,
-    ),
-    Plant(
-      plantId: '4',
-      commonName: "Parlor Palm",
-      scientificName: "Chamaedorea elegans",
-      familyName: "Arecaceae",
-      imagePath: 'lib/assets/images/plants/parlor_palm.png',
-      nickname: 'Spidey',
-      lastWatered: DateTime.now(),
-      waterFrequency: 5,
-      light: 5,
-    ),
-    Plant(
-      plantId: '5',
-      commonName: "Anthurium Plant",
-      scientificName: "Anthurium andraeanum",
-      familyName: "Arums",
-      imagePath: 'lib/assets/images/plants/anthurium_plant.png',
-      nickname: 'Spidey',
-      lastWatered: DateTime.now(),
-      waterFrequency: 6,
-      light: 7,
-    ),
-    Plant(
-      plantId: '6',
-      commonName: "Spider Plant",
-      scientificName: "Chlorophytum comosum",
-      familyName: "Asparagaceae",
-      imagePath: 'lib/assets/images/plants/spider_plant.png',
-      nickname: 'Spidey',
-      lastWatered: DateTime.now(),
-      waterFrequency: 7,
-      light: 4,
-    ),
-    Plant(
-      plantId: '7',
-      commonName: "Fiddle Leaf Fig",
-      scientificName: "Ficus lyrata",
-      familyName: "Moraceae",
-      imagePath: 'lib/assets/images/plants/fiddle_leaf_fig.png',
-      nickname: 'Figgy',
-      lastWatered: DateTime.now(),
-      waterFrequency: 7,
-      light: 8,
-    ),
-    Plant(
-      plantId: '8',
-      commonName: "Dragon Tree",
-      scientificName: "Dracaena marginata",
-      familyName: "Asparagaceae",
-      imagePath: 'lib/assets/images/plants/dragon_tree.png',
-      nickname: 'Drago',
-      lastWatered: DateTime.now(),
-      waterFrequency: 7,
-      light: 7,
-    ),
-    Plant(
-      plantId: '9',
-      commonName: "Orange Tree",
-      scientificName: "Citrus × sinensis",
-      familyName: "Rutaceae",
-      imagePath: 'lib/assets/images/plants/orange_tree.png',
-      nickname: 'Sunny',
-      lastWatered: DateTime.now(),
-      waterFrequency: 5,
-      light: 9,
-    ),
-    Plant(
-      plantId: '10',
-      commonName: "Peace Lily",
-      scientificName: "Spathiphyllum",
-      familyName: "Araceae",
-      imagePath: 'lib/assets/images/plants/peace_lily.png',
-      nickname: 'Lily',
-      lastWatered: DateTime.now(),
-      waterFrequency: 4,
-      light: 6,
-    ),
-    Plant(
-      plantId: '11',
-      commonName: "Bromeliad",
-      scientificName: "Bromeliaceae",
-      familyName: "Bromeliads",
-      imagePath: 'lib/assets/images/plants/bromeliad.png',
-      nickname: 'Flare',
-      lastWatered: DateTime.now(),
-      waterFrequency: 5,
-      light: 7,
-    ),
-    Plant(
-      plantId: '12',
-      commonName: "Trailing Peperomia",
-      scientificName: "Peperomia angulata",
-      familyName: "Piperaceae",
-      imagePath: 'lib/assets/images/plants/trailing_peperomia.png',
-      nickname: 'Green Cascade',
-      lastWatered: DateTime.now(),
-      waterFrequency: 5,
-      light: 4,
-    ),
-  ];
 
   @override
   State<PlantLibraryPage> createState() => _PlantLibraryPageState();
 }
 
 class _PlantLibraryPageState extends State<PlantLibraryPage> {
+  TextEditingController _searchController = TextEditingController(); //Controller for search input
+  List<Plant> _filteredPlants = []; //List to store filtered plants based on search
+  List<Plant> libraryPlants = [];//Complete list of plants
+
   @override
   void initState() {
     super.initState();
-    final plantProvider = Provider.of<PlantProvider>(context, listen: false);
-    plantProvider.fillLibraryList(widget.plants);
+    _loadLibraryPlants(); //Load the library whe page is initialized
   }
+
+  //Fetches the plant library list from the PlantProvider, and updates the library
+  Future<void> _loadLibraryPlants() async {
+    final libraryProvider = Provider.of<LibraryProvider>(context, listen: false);
+    libraryPlants = await libraryProvider.getLibraryPlantList(context);
+    if (mounted) {
+      setState(() {
+        libraryProvider.fillLibraryList(libraryPlants);
+        _filteredPlants = libraryPlants; //Initialize filtered list with all the plants
+      });
+    }
+  }
+
+  //Filters the plants based on search query
+  Timer? _debounce;
+  void _filterPlants(String query) {
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+    _debounce = Timer(const Duration(milliseconds: 300), () {
+      setState(() {
+        _filteredPlants = libraryPlants
+            .where((plant) =>
+        plant.commonName.toLowerCase().contains(query.toLowerCase()) ||
+            plant.scientificName.toLowerCase().contains(query.toLowerCase()))
+            .toList();
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.surface.withAlpha(200),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(12),
-          child: Center(
-            child: Wrap(
-              spacing: 8.0,
-              runSpacing: 8.0,
-              children: List.generate(widget.plants.length, (index) {
-                return PlantLibraryCard(plant: widget.plants[index]);
-              }),
-            ),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Color.fromARGB(192, 204, 255, 204), // Very light green
+              Color.fromARGB(166, 255, 255, 204), // Very light yellow
+            ],
           ),
+        ),
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(12),
+              child: TextField(
+                controller: _searchController,
+                onChanged: _filterPlants, //Calls the filtering method
+                decoration: InputDecoration(
+                  hintText: 'Search plants',
+                  prefixIcon: Icon(Icons.search),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+              ),
+            ),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: Center(
+                    child: Wrap(
+                      spacing: 8.0,
+                      runSpacing: 8.0,
+                      children: List.generate(_filteredPlants.length, (index) {
+                        return PlantLibraryCard(plant: _filteredPlants[index]); //Display filtered plants
+                      }),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

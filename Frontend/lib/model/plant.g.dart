@@ -2,20 +2,32 @@
 
 part of 'plant.dart';
 
+//An auto-generated file that handles Json files. Generated using the Json_serializable dependency.
+
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
 Plant _$PlantFromJson(Map<String, dynamic> json) => Plant(
-      plantId: json['plantId'] as String,
+      // plantId: json['plantId'] as String,
+      plantId: (json['plantID'] as String?) ?? 'No ID',
+      // commonName: json['commonName'] as String,
       commonName: json['commonName'] as String,
-      scientificName: json['scientificName'] as String,
-      familyName: json['familyName'] as String,
-      imagePath: json['imagePath'] as String,
-      nickname: json['nickname'] as String,
-      lastWatered: DateTime.parse(json['lastWatered'] as String),
+      // scientificName: json['scientificName'] as String,
+      scientificName: json['species'] as String,
+      // familyName: json['familyName'] as String,
+      familyName: json['family'] as String,
+      // imagePath: json['imagePath'] as String,
+      imagePath: json['imageUrl'] as String,
+      // nickname: json['nickname'] as String,
+      nickname: (json['nickname'] as String?) ?? 'No nickname',
+      // lastWatered: DateTime.parse(json['lastWatered'] as String),
+      lastWatered: (json['lastWatered'] != null) ? DateTime.fromMillisecondsSinceEpoch(json['lastWatered'] as int) : DateTime.now(),
+      // lastWatered: (DateTime.fromMillisecondsSinceEpoch(json['lastWatered'] as int?) ?? DateTime.now()),
+      // waterFrequency: (json['waterFrequency'] as num).toInt(),
       waterFrequency: (json['waterFrequency'] as num).toInt(),
-      light: (json['light'] as num).toInt(),
+      // light: (json['light'] as num).toInt(),
+      light: (json['lightReqs'] as num).toInt(),
     );
 
 Map<String, dynamic> _$PlantToJson(Plant instance) => <String, dynamic>{

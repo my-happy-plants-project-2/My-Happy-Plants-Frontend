@@ -1,12 +1,15 @@
 package org.example.repositories;
 
+import io.javalin.http.Context;
+import org.example.model.Species;
 import org.example.model.UserPlant;
 import org.example.services.IQueryExecutor;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -40,14 +43,13 @@ public class UserRepository {
      */
     public List<UserPlant> getUserPlants(String userEmail) {
         List<UserPlant> userPlants = new ArrayList<>();
-
-        try (ResultSet resultSet = queryExecutor.executeQuery("SELECT up.*, s.* FROM user_plants up JOIN species " +
-                "s ON up.species = s.scientific_name WHERE owner = ?", userEmail)) {
-            while (resultSet.next()) {
-                userPlants.add(plantOwnerResultSet(resultSet));
-            }
-        } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE, "Error retrieving user plants", e);
+        String query = "SELECT * FROM user_plants JOIN species ON user_plants.species = species.scientific_name WHERE owner = ?";
+        List<Map<String, Object>> plantList = queryExecutor.executeQuery(query, userEmail);
+        for (Map map : plantList) {
+            userPlants.add(plantOwnerResultSet(map));
+        }
+        if (plantList.isEmpty()) {
+            LOGGER.log(Level.SEVERE, "Error retrieving user plants");
         }
         return userPlants;
     }
@@ -58,20 +60,29 @@ public class UserRepository {
      *
      * @author Kasper Schröder
      */
-    private UserPlant plantOwnerResultSet(ResultSet resultSet) {
-        try {
-            String plantID = resultSet.getString("plant_id");
-            String nickname = resultSet.getString("nickname");
-            String owner = resultSet.getString("owner");
-            String species = resultSet.getString("species");
-            Date lastWatered = resultSet.getDate("last_watered");
-            String note = resultSet.getString("note");
+    private UserPlant plantOwnerResultSet(Map<String, Object> resultSet) {
+        if (!resultSet.isEmpty()) {
+            String plantID = resultSet.get("plant_id").toString();
+            String nickname = resultSet.get("nickname").toString();
+            String owner = resultSet.get("owner").toString();
+            Date lastWatered = (Date) resultSet.get("last_watered");
+            String note = resultSet.get("note").toString();
+            String scientificName = resultSet.get("scientific_name").toString();
+            String commonName = resultSet.get("common_name").toString();
+            String family = resultSet.get("family").toString();
+            String category = resultSet.get("category").toString();
+            String imageUrl = resultSet.get("image_url").toString();
+            int lightReqs = Integer.parseInt(resultSet.get("light_reqs").toString());
+            int waterFrequency = Integer.parseInt(resultSet.get("waterfrequency").toString());
+            String description = resultSet.get("description").toString();
+            String caring = resultSet.get("caring").toString();
+
+            Species species = new Species(scientificName, commonName, family, category, imageUrl, lightReqs, waterFrequency, description, caring);
 
             return new UserPlant(plantID, nickname, owner, species, lastWatered, note);
-        } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE, "Error processing result set", e);
-            return null;
         }
+        LOGGER.log(Level.SEVERE, "Error processing result set");
+        return null;
     }
 
 
@@ -83,16 +94,14 @@ public class UserRepository {
      * @author Kasper Schröder
      */
     public boolean checkLogin(String email, String password) {
-        String query = "SELECT password FROM \"User\" WHERE email = ?";
-
-        try (ResultSet resultSet = queryExecutor.executeQuery(query, email)) {
-            if (resultSet.next()) {
-                String hashedPassword = resultSet.getString(1);
-                return BCrypt.checkpw(password, hashedPassword);
-            }
-        } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE, "Error during login check", e);
+        String query = "SELECT password FROM \"users\" WHERE email = ?";
+        List<Map<String, Object>> results = queryExecutor.executeQuery(query, email);
+        if (!results.isEmpty()) {
+            String hashedPassword = results.getFirst().get("password").toString();
+            return BCrypt.checkpw(password, hashedPassword);
         }
+        LOGGER.log(Level.INFO, "Invalid login credentials");
+
         return false;
     }
 
@@ -106,8 +115,8 @@ public class UserRepository {
      */
     public boolean waterPlant(String plantID, String userId) {
         try {
-            String query = "UPDATE owned_plants SET last_watered = CURRENT_DATE " +
-                    "WHERE plant_id = ? AND user_id = ?";
+            String query = "UPDATE user_plants SET last_watered = CURRENT_DATE " +
+                    "WHERE plant_id = ? AND owner = ?";
 
             queryExecutor.beginTransaction();
             queryExecutor.executeUpdate(query, plantID, userId);
@@ -115,6 +124,21 @@ public class UserRepository {
             return true;
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Error watering plant", e);
+            queryExecutor.rollbackTransaction();
+            return false;
+        }
+    }
+
+    public boolean changeNickname(String plantID, String nickname, String username) {
+        try {
+            String query = "UPDATE user_plants SET nickname = ? WHERE plant_id = ? AND owner = ?";
+            queryExecutor.beginTransaction();
+            queryExecutor.executeUpdate(query, nickname, plantID, username);
+            queryExecutor.endTransaction();
+            return true;
+        }
+        catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Error changing nickname", e);
             queryExecutor.rollbackTransaction();
             return false;
         }
@@ -130,21 +154,25 @@ public class UserRepository {
      *
      * @author Kasper Schröder
      */
-    public boolean addUser(String email, String username, String password, int colorTheme) {
+    public boolean addUser(String email, String username, String password, String colorTheme) {
         try {
             String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
+            int colorThemeInt = Integer.parseInt(colorTheme);
 
             queryExecutor.beginTransaction();
             String insertQuery = "INSERT INTO users (email, username, password, color_theme) VALUES (?, ?, ?, ?)";
-            queryExecutor.executeUpdate(insertQuery, email, username, hashedPassword, colorTheme);
+            if (!queryExecutor.executeUpdate(insertQuery, email, username, hashedPassword, colorThemeInt)) {
+                throw new Exception();
+            };
             queryExecutor.endTransaction();
-
             return true;
         } catch (NumberFormatException e) {
             LOGGER.log(Level.SEVERE, "Invalid colorTheme format", e);
+            queryExecutor.rollbackTransaction();
             return false;
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Error adding user to database", e);
+            queryExecutor.rollbackTransaction();
             return false;
         }
     }
@@ -157,36 +185,22 @@ public class UserRepository {
      *
      * @author Kasper Schröder
      */
-    public boolean deleteAccount(String email, String password) {
-        if (!checkLogin(email, password)) {
-            LOGGER.log(Level.INFO, "Login failure");
-            return false;
-        }
+    public boolean deleteAccount(String email) {
 
-        String querySelect = "SELECT id FROM \"User\" WHERE email = ?";
-        String queryDeletePlants = "DELETE FROM \"plant\" WHERE user_id = ?";
-        String queryDeleteUser = "DELETE FROM \"User\" WHERE id = ?";
+        String queryDeletePlants = "DELETE FROM user_plants WHERE owner = ?";
+        String queryDeleteUser = "DELETE FROM users WHERE email = ?";
 
         try {
             queryExecutor.beginTransaction();
+            queryExecutor.executeUpdate(queryDeletePlants, email);
+            queryExecutor.executeUpdate(queryDeleteUser, email);
+            queryExecutor.endTransaction();
+            return true;
 
-            try (ResultSet resultSet = queryExecutor.executeQuery(querySelect, email)) {
-                if (!resultSet.next()) {
-                    throw new SQLException("User not found");
-                }
-                int id = resultSet.getInt("id");
-
-                queryExecutor.executeUpdate(queryDeletePlants, id);
-                queryExecutor.executeUpdate(queryDeleteUser, id);
-
-                queryExecutor.endTransaction();
-                return true;
-            }
-        } catch (SQLException e) {
+        } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Error deleting account", e);
-            queryExecutor.rollbackTransaction();
+            return false;
         }
-        return false;
     }
 
     /**
@@ -198,19 +212,22 @@ public class UserRepository {
      *
      * @author Kasper Schröder
      */
-    public String addOwnerPlant(String nickname, String owner, String species) {
+    public boolean addOwnerPlant(String plantID, String nickname, String owner, String note, String species, String description) {
         try {
-            String plantID = UUID.randomUUID().toString();
-
             queryExecutor.beginTransaction();
-            String insertQuery = "INSERT INTO user_plants (plant_id, nickname, owner, species) VALUES (?, ?, ?, ?)";
-            queryExecutor.executeUpdate(insertQuery, plantID, nickname, owner, species);
+            Date lastWatered = Date.valueOf(LocalDate.now());
+            String insertQuery = "INSERT INTO user_plants (plant_id, nickname, owner, note, species, last_watered) VALUES (?, ?, ?, ?, ?, ?)";
+            queryExecutor.executeUpdate(insertQuery, plantID, nickname, owner, note, species, lastWatered);
+//            String updateSpeciesQuery = "UPDATE species SET description = ? WHERE scientific_name = ?";
+//            queryExecutor.executeUpdate(updateSpeciesQuery, description,species);
+
             queryExecutor.endTransaction();
 
-            return plantID;
+            return true;
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Error adding user plant to database", e);
-            return null;
+            queryExecutor.rollbackTransaction();
+            return false;
         }
     }
 
@@ -230,14 +247,9 @@ public class UserRepository {
 
             return true;
         } catch (Exception e) {
+            queryExecutor.rollbackTransaction();
             LOGGER.log(Level.SEVERE, "Error deleting user plant from database", e);
             return false;
         }
     }
-
-    // TODO: Implement this method to update nickname and/or note of a users plant
-    public boolean upDateOwnerPlant() {
-        return false;
-    }
-
 }

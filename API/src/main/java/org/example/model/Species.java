@@ -1,33 +1,36 @@
 package org.example.model;
 
 public class Species {
-    private String scientificName;
     private String commonName;
     private String family;
     private String category;
     private String imageUrl;
     private int lightReqs;
     private int waterFrequency;
+    private String description;
+    private String species;
+    private String caring;
 
-    public Species(String scientificName, String commonName, String family, String category, String imageUrl, int lightReqs, int waterFrequency) {
-        this.scientificName = scientificName;
+
+    public Species(String scientificName, String commonName, String family, String category, String imageUrl, int lightReqs, int waterFrequency, String description, String caring) {
         this.commonName = commonName;
         this.family = family;
         this.category = category;
         this.imageUrl = imageUrl;
         this.lightReqs = lightReqs;
         this.waterFrequency = waterFrequency;
+        this.species = scientificName;
+        this.description = description;
+        this.caring = caring;
     }
 
     // Getters and setters
 
-    public String getScientificName() {
-        return scientificName;
+
+    public String getSpecies() {
+        return species;
     }
 
-    public void setScientificName(String scientificName) {
-        this.scientificName = scientificName;
-    }
 
     public String getCommonName() {
         return commonName;
@@ -75,5 +78,21 @@ public class Species {
 
     public void setWaterFrequency(int waterFrequency) {
         this.waterFrequency = waterFrequency;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getCaring() {
+        return caring;
+    }
+
+    public void setCaring(String caring) {
+        this.caring = caring;
     }
 }

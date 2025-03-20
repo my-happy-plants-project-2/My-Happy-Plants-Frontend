@@ -4,7 +4,7 @@ import 'package:my_happy_plants_flutter/providers/authentication_provider.dart';
 import 'package:my_happy_plants_flutter/providers/login_provider.dart';
 import 'package:provider/provider.dart';
 
-//@author Filip Claesson, Pehr Norten, Christian Storck
+//@author Filip Claesson, Pehr Norten, Christian Storck, Ida Nordenswan
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
@@ -21,18 +21,20 @@ class _LoginPageState extends State<LoginPage> {
 
   bool _isSignUpMode = false;
 
-  void _toggleLoginMode() {
+  void _toggleLoginMode() { //Changes state depending on if you want to login or create account.
     setState(() {
       _isSignUpMode = !_isSignUpMode;
+      _emailController.clear();
+      _passwordController.clear();
+      _userNameController.clear();
+      _passwordVerifyController.clear();
     });
   }
 
   void _login(BuildContext context) async {
     final loginProvider = context.read<LoginProvider>();
-    final email = _emailController.text.trim();
+    final email = _emailController.text.trim().toLowerCase();
     final password = _passwordController.text.trim();
-
-    //Navigator.pushNamed(context, '/home_page'); // TA BORT KOMMENTAREN OM NI VILL IN I PROGRAMMET
 
     // Check if email or password is empty, if so show a snackbar and return.
     if (email.isEmpty && password.isEmpty) {
@@ -48,17 +50,18 @@ class _LoginPageState extends State<LoginPage> {
 
     final success = await loginProvider.login(email, password);
 
-    if (success) {
+    if (success) { // Redirects to the homepage if login is successfull
       Navigator.pushNamed(context, '/home_page');
     } else {
       errorMessageOverlay(context, "Invalid credentials");
+      Navigator.pushNamed(context, '/login_page');
     }
   }
 
-  void _signUp(BuildContext context) async {
+  void _signUp(BuildContext context) async { //Takes user input and sends it to the "AuthenticationProvider". Creates account if success.
     final authProvider = context.read<AuthenticationProvider>();
     final userName = _userNameController.text.trim();
-    final email = _emailController.text.trim();
+    final email = _emailController.text.trim().toLowerCase();
     final password = _passwordController.text.trim();
     final confirmPassword = _passwordVerifyController.text.trim();
 
@@ -87,11 +90,23 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: Padding(
+      backgroundColor: Colors.transparent, //Background
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Color.fromARGB(192, 156, 224, 156), //Muted light green
+              Color.fromARGB(166, 255, 255, 200), //Muted light yellow
+            ],
+          ),
+        ),
+
+      child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Center(
-          // Added this to center everything
+          //Added this to center everything
           child: SingleChildScrollView(
             child: Container(
               width: 450,
@@ -99,6 +114,14 @@ class _LoginPageState extends State<LoginPage> {
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.primary,
                 borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.green.withOpacity(0.3),
+                    spreadRadius: 7,
+                    blurRadius: 7,
+                    offset: Offset(0, 3), //Shadow position
+                  ),
+                ],
               ),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -150,20 +173,12 @@ class _LoginPageState extends State<LoginPage> {
                     onPressed: _isSignUpMode
                         ? () => _signUp(context)
                         : () => _login(
-                            context), //Kommentera bort denna raden och lägg in den under om ni vill in.
-                    //Navigator.pushNamed(context, '/home_page');
+                            context),
                     child: Text(
                       _isSignUpMode ? "Sign Up" : "Login",
                       style: const TextStyle(fontSize: 18),
                     ),
                   ),
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 14, horizontal: 50),
-                ),
-                onPressed: _isSignUpMode? () => _signUp(context) : () => _login(context),
-                //Navigator.pushNamed(context, '/home_page');
-                child: Text(_isSignUpMode ? "Sign Up" : "Login", style: const TextStyle(fontSize: 18),
-                ),
                   const SizedBox(height: 20),
                   TextButton(
                     onPressed: _toggleLoginMode,
@@ -180,10 +195,11 @@ class _LoginPageState extends State<LoginPage> {
           ),
         ),
       ),
+      ),
     );
   }
 
-  Widget _buildTextField(String hint, IconData icon,
+  Widget _buildTextField(String hint, IconData icon, //Widget for the textfields.
       TextEditingController controller, bool isPassword) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 10),
@@ -204,3 +220,5 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 }
+
+

@@ -1,16 +1,30 @@
 package org.example.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import jdk.jfr.Percentage;
+
 public class User {
-    private String userName;
+    @JsonProperty("username")
+    private String username;
+
+    @JsonProperty("email")
     private String email;
+
+    @JsonProperty("password")
     private String password;
+
+    @JsonProperty("colorTheme")
     private int colorTheme;
 
-    public User(String userName, String email, String password, int colorTheme) {
-        this.userName = userName;
+    public User(String username, String email, String password, int colorTheme) {
+        this.username = username;
         this.email = email;
         this.password = password;
         this.colorTheme = colorTheme;
+    }
+
+    public User() {
+
     }
 
     public String getPassword() {
@@ -29,12 +43,12 @@ public class User {
         this.email = email;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUserName(String userID) {
-        this.userName = userName;
+    public void setUsername(String userID) {
+        this.username = userID;
     }
 
     public int getColorTheme() {
