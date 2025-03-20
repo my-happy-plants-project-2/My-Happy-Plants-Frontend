@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:my_happy_plants_flutter/components/custom_icon_button.dart';
+import 'package:my_happy_plants_flutter/components/custom_text_button.dart';
 import 'package:my_happy_plants_flutter/components/water_bar.dart';
 import 'package:my_happy_plants_flutter/model/plant.dart';
 import 'package:my_happy_plants_flutter/providers/plant_provider.dart';
@@ -170,34 +171,29 @@ class MyPlantsCard extends StatelessWidget {
     _controller.text = plant.nickname;
 
     showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            // backgroundColor: Theme.of(context).colorScheme.primary,
-            title:const Text("Edit Plant Name"),
-            content: TextField(
-              controller: _controller,
-              decoration: const InputDecoration(hintText: "Enter new name"),
-            ),
-            actions: [
-              TextButton(
-                  onPressed: () {
-                    _controller.clear();
-                    Navigator.pop(context);
-                  },
-                  child: const Text("Cancel"),
-              ),
-              TextButton(onPressed: () {
-                final plantProvider = context.read<PlantProvider>();
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: Theme.of(context).colorScheme.primary,
+          title:const Text("Edit Plant Name"),
+          content: TextField(
+            controller: _controller,
+            decoration: const InputDecoration(hintText: "Enter new name"),
+          ),
+          actions: [
+            CustomTextButton(text: "Cancel", onPressed: () {
+              _controller.clear();
+              Navigator.pop(context);
+            }),
+            CustomTextButton(text: "Save", onPressed: () {
+              final plantProvider = context.read<PlantProvider>();
 
-                plantProvider.changeNickName(context, plant.plantId, _controller.text);
+              plantProvider.changeNickName(context, plant.plantId, _controller.text);
 
-                Navigator.pop(context);
-              },
-                  child: const Text("Save")
-              ),
-            ],
-          );
+              Navigator.pop(context);
+            }),
+          ],
+        );
       },
     );
   }
@@ -213,25 +209,18 @@ class MyPlantsCard extends StatelessWidget {
       context: context,
       builder: (context) =>
           AlertDialog(
+            backgroundColor: Theme.of(context).colorScheme.primary,
             title: const Text("Delete plant"),
             content: const Text(
                 "Are you sure you want to delete this plant?"),
             actions: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(), //Close dialog
-                child: const Text("Cancel"),
-              ),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green,
-                ),
-                onPressed: () {
-                  Navigator.of(context).pop(); //Close dialog
-                  _deletePlant(context); //Plant deletion
-                },
-                child: const Text(
-                    "Delete", style: TextStyle(color: Colors.white)),
-              ),
+              CustomTextButton(text: "Cancel", onPressed: () {
+                Navigator.of(context).pop();
+              }),
+              CustomTextButton(text: "Delete", onPressed: () {
+                Navigator.of(context).pop();
+                _deletePlant(context);
+              }),
             ],
           ),
     );
