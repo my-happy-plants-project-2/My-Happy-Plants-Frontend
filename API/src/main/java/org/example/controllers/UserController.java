@@ -9,15 +9,34 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+/**
+ * Controller class for API endpoints related to users
+ * Contains methods for handling user-related requests
+ *
+ * @author Kasper Schröder
+ */
 public class UserController {
     private static final String API_VERSION = "/api/v1";
 
     private final UserService userService;
 
+    /**
+     * Constructor for UserController
+     * @param userService the user service to be used for handling user-related operations
+     *
+     * @author Peter Norten
+     */
     public UserController(UserService userService) {
         this.userService = userService;
     }
 
+    /**
+     * Registers routes for user-related endpoints
+     * @param app the Javalin application to register routes with
+     *
+     * @author Pehr Norten
+     * @author Kasper Schröder
+     */
     public void registerRoutes(Javalin app) {
 
         // authorization routes
