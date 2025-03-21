@@ -15,14 +15,41 @@ import java.util.logging.Logger;
 
 import org.mindrot.jbcrypt.BCrypt;
 
+/**
+ * Repository class responsible for handling user-related database operations.
+ * This class interacts with the database to retrieve, insert, update, and delete
+ * user-related data, including user authentication and plant ownership.
+ *
+ * Uses {@link IQueryExecutor} to abstract database operations.
+ *
+ * @author Kasper Schröder
+ * @author Pehr Norten
+ * @author Christian Storck
+ * @author Ida Nordenswan
+ */
 public class UserRepository {
     private static final Logger LOGGER = Logger.getLogger(UserRepository.class.getName());
     private IQueryExecutor queryExecutor;
 
+    /**
+     * Constructor for UserRepository
+     * Constructs a new UserRepository with a specified query executor.
+     *
+     * @param queryExecutor The query executor used for database interactions.     *
+     * @author Kasper Schröder
+     */
     public UserRepository(IQueryExecutor queryExecutor) {
         this.queryExecutor = queryExecutor;
     }
 
+    /**
+     * Retrieves all user plants associated with a given email.
+     *
+     * @param userEmail The email address of the user whose plants are being retrieved.
+     * @return A list of {@link UserPlant} objects belonging to the specified user.
+     *
+     * @author Kasper Schröder
+     */
     public List<UserPlant> getUserPlants(String userEmail) {
         List<UserPlant> userPlants = new ArrayList<>();
         String query = "SELECT * FROM user_plants JOIN species ON user_plants.species = species.scientific_name WHERE owner = ?";
@@ -36,6 +63,16 @@ public class UserRepository {
         return userPlants;
     }
 
+    /**
+     * Parses a database result set into a {@link UserPlant} object.
+     *
+     * @param resultSet The result set containing plant data.
+     * @return A {@link UserPlant} object representing the data, or null if parsing fails.
+     *
+     * @author Kasper Schröder
+     * @author Johnny Rosqnquist
+     * @author Ida Nordenswan
+     */
     private UserPlant plantOwnerResultSet(Map<String, Object> resultSet) {
         if (!resultSet.isEmpty()) {
             String plantID = resultSet.get("plant_id").toString();
@@ -61,6 +98,17 @@ public class UserRepository {
         return null;
     }
 
+
+    /**
+     * Checks if the provided login credentials match a user in the database.
+     *
+     * @param email The email address of the user attempting to log in.
+     * @param password The plaintext password to verify.
+     * @return True if authentication is successful, false otherwise.
+     *
+     * @author Kasper Schröder
+     * @author Johnny Rosenquist
+     */
     public boolean checkLogin(String email, String password) {
         String query = "SELECT password FROM \"users\" WHERE email = ?";
         List<Map<String, Object>> results = queryExecutor.executeQuery(query, email);
@@ -73,6 +121,14 @@ public class UserRepository {
         return false;
     }
 
+    /**
+     * Waters a plant in the user's library
+     * @param plantID the ID of the plant to water
+     * @param userId the ID of the user watering the plant
+     * @return true if the plant was watered successfully, false otherwise
+     *
+     * @author Kasper Schröder
+     */
     public boolean waterPlant(String plantID, String userId) {
         try {
             String query = "UPDATE user_plants SET last_watered = CURRENT_DATE " +
@@ -104,6 +160,16 @@ public class UserRepository {
         }
     }
 
+    /**
+     * Adds a user to the database
+     * @param email the email of the user
+     * @param username the username of the user
+     * @param password the password of the user
+     * @param colorTheme the color theme of the user
+     * @return true if the user was added successfully, false otherwise
+     *
+     * @author Kasper Schröder
+     */
     public boolean addUser(String email, String username, String password, String colorTheme) {
         try {
             String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
@@ -126,6 +192,15 @@ public class UserRepository {
             return false;
         }
     }
+
+    /**
+     * Deletes a user from the database
+     * @param email the email of the user
+     * @param password the password of the user
+     * @return true if the user was deleted successfully, false otherwise
+     *
+     * @author Kasper Schröder
+     */
     public boolean deleteAccount(String email) {
 
         String queryDeletePlants = "DELETE FROM user_plants WHERE owner = ?";
@@ -144,6 +219,15 @@ public class UserRepository {
         }
     }
 
+    /**
+     * Adds a plant to the user's library
+     * @param nickname the nickname of the plant
+     * @param owner the owner of the plant
+     * @param species the species of the plant
+     * @return the ID of the plant if it was added successfully, null otherwise
+     *
+     * @author Kasper Schröder
+     */
     public boolean addOwnerPlant(String plantID, String nickname, String owner, String note, String species, String description) {
         try {
             queryExecutor.beginTransaction();
@@ -163,6 +247,13 @@ public class UserRepository {
         }
     }
 
+    /**
+     * Deletes a plant from the user's library
+     * @param plantID the ID of the plant to delete
+     * @return true if the plant was deleted successfully, false otherwise
+     *
+     * @author Kasper Schröder
+     */
     public boolean deleteOwnerPlant(String plantID) {
         try {
             queryExecutor.beginTransaction();

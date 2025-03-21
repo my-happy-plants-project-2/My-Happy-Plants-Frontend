@@ -15,13 +15,44 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 
+/**
+ * Service class responsible for handling user-related operations,
+ * including authentication, user management, and user-plant interactions.
+ * It serves as a bridge between the HTTP request context and the underlying
+ * database repository layer.
+ * <p>
+ * This class interacts with {@link UserRepository} to perform database operations
+ * and uses JWT authentication for securing API endpoints.
+ *
+ * @author Kasper Schröder
+ * @author Pehr Norten
+ * @author Christian Storck
+ * @author Ida Nordenswan
+ */
 public class UserService {
     private final UserRepository userRepository;
 
+    /**
+     * Constructs a new UserService instance with the provided {@link UserRepository}.
+     *
+     * @param userRepository the repository responsible for user data management.
+     *
+     * @author Pehr Norten
+     */
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
+    /**
+     * Registers a new user in the system by storing their details in the database.
+     * The password is securely hashed before being stored.
+     *
+     * @param context the HTTP request context containing user details in the request body.
+     * The body must contain a valid JSON representation of a {@link User}.
+     *
+     * @author Kasper Schröder
+     * @author Christian Storck
+     */
     public void addUser(Context context) {
         User user = context.bodyAsClass(User.class);
 
@@ -37,6 +68,16 @@ public class UserService {
         }
     }
 
+    /**
+     * Authenticates a user by verifying their email and password.
+     * If successful, a JWT token is generated and returned.
+     *
+     * @param context the HTTP request context containing login credentials in the request body.
+     * The body must contain a valid JSON representation of a {@link User}.
+     *
+     * @author Kasper Schröder
+     * @author Christian Storck
+     */
     public void login(Context context) {
         User user = context.bodyAsClass(User.class);
 
@@ -56,6 +97,14 @@ public class UserService {
         }
     }
 
+    /**
+     * Retrieves all plants owned by the authenticated user.
+     *
+     * @param context the request context containing the authorization token.
+     *
+     * @author Kasper Schröder
+     * @author Johnny Rosenquist
+     */
     public void deleteUser(Context context) {
         String email = getEmailFromToken(context);
         System.out.println("deleteUser");
@@ -66,6 +115,14 @@ public class UserService {
         }
     }
 
+    /**
+     * Adds a plant to the authenticated user's library.
+     *
+     * @param context the request context containing plant data.
+     *
+     * @author Kasper Schröder
+     * @author Johnny Rosenquist
+     */
     public void getUserPlants(Context context) {
         String email = getEmailFromToken(context);
         try {
@@ -78,6 +135,13 @@ public class UserService {
         }
     }
 
+    /**
+     * Adds a plant to a user's library
+     * @param context the context of the request made from a client
+     *
+     * @author Kasper Schröder
+     * @author Johnny Rosenquist
+     */
     public void addPlantToUserLibrary(Context context) {
         String plantID = "";
         String species = "";
@@ -108,6 +172,14 @@ public class UserService {
         }
     }
 
+    /**
+     * Deletes a plant from the authenticated user's library.
+     *
+     * @param context the request context containing the plant ID.
+     *
+     * @author Kasper Schröder
+     * @author Johnny Rosenquist
+     */
     public void deletePlantFromUserLibrary(Context context) {
         String plantID = context.pathParam("id");
 
@@ -118,6 +190,13 @@ public class UserService {
         }
     }
 
+    /**
+     * Marks a plant as watered in the authenticated user's library.
+     *
+     * @param context the request context containing the plant ID.
+     *
+     * @author Johnny Rosenquist
+     */
     public void waterPlant(Context context) {
         String plantID = context.pathParam("id");
         String email = getEmailFromToken(context);
@@ -129,6 +208,13 @@ public class UserService {
         }
     }
 
+    /**
+     * Changes the nickname of a plant in the authenticated user's library.
+     *
+     * @param context the request context containing the new nickname and plant ID.
+     *
+     * @author Johnny Rosenquist
+     */
     public void changeNickname(Context context) {
         String plantID = context.pathParam("id");
         String nickname = "";
@@ -151,6 +237,14 @@ public class UserService {
         }
     }
 
+    /**
+     * Extracts the email of a user from the JWT token included in the request header.
+     *
+     * @param context the request context containing the authorization token.
+     * @return the email address of the authenticated user, or an empty string if extraction fails.
+     *
+     * @author Johnny Rosenquist
+     */
     public String getEmailFromToken(Context context) {
         String tokenString = context.header("Authorization").substring(7);
         ObjectMapper mapper = new ObjectMapper();
